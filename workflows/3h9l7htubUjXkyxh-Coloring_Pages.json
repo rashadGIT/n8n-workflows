@@ -1,9 +1,184 @@
-{"updatedAt":"2025-12-03T02:36:02.000Z","createdAt":"2025-12-02T01:26:34.734Z","id":"3h9l7htubUjXkyxh","name":"Coloring Pages","description":null,"active":false,"isArchived":true,"nodes":[{"parameters":{"rule":{"interval":[{"field":"hours","hoursInterval":8}]}},"type":"n8n-nodes-base.scheduleTrigger","typeVersion":1.2,"position":[-16,912],"id":"d3558fe9-af5f-47ff-8564-479cc47a2af2","name":"Schedule Trigger"},{"parameters":{"bucketName":"ai-book-image-storage","fileKey":"={{ $json.Key }}"},"type":"n8n-nodes-base.s3","typeVersion":1,"position":[656,912],"id":"f2d665ad-f2bb-4e75-aa0f-10490829d723","name":"Download a file","credentials":{"s3":{"id":"uLl30qp4lBJgjjbM","name":"S3 account"}}},{"parameters":{"operation":"getAll","bucketName":"ai-book-image-storage","returnAll":true,"options":{"folderKey":"content/originals/CHILDREN/ANGELS/"}},"type":"n8n-nodes-base.s3","typeVersion":1,"position":[208,912],"id":"0a349290-883f-4f98-8844-46674e600e25","name":"Get many files","credentials":{"s3":{"id":"uLl30qp4lBJgjjbM","name":"S3 account"}}},{"parameters":{"jsCode":"// Get all input items
-const items = $input.all();
-
-// Select a random item
-const randomIndex = Math.floor(Math.random() * items.length);
-const randomItem = items[randomIndex];
-
-// Return the random item
-return [randomItem];"},"id":"85de7190-6ebe-4374-ae87-f5e1d0a1f241","name":"Pick Random File","type":"n8n-nodes-base.code","typeVersion":2,"position":[432,912]}],"connections":{"Schedule Trigger":{"main":[[{"node":"Get many files","type":"main","index":0}]]},"Get many files":{"main":[[{"node":"Pick Random File","type":"main","index":0}]]},"Pick Random File":{"main":[[{"node":"Download a file","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"12f5f4b7-4ec4-4e07-aea8-20f2ea8deb4c","activeVersionId":null,"versionCounter":6,"triggerCount":0,"shared":[{"updatedAt":"2025-12-02T01:26:34.740Z","createdAt":"2025-12-02T01:26:34.740Z","role":"workflow:owner","workflowId":"3h9l7htubUjXkyxh","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":null}
+{
+  "updatedAt": "2025-12-03T02:36:02.000Z",
+  "createdAt": "2025-12-02T01:26:34.734Z",
+  "id": "3h9l7htubUjXkyxh",
+  "name": "Coloring Pages",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        912
+      ],
+      "id": "d3558fe9-af5f-47ff-8564-479cc47a2af2",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "bucketName": "ai-book-image-storage",
+        "fileKey": "={{ $json.Key }}"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        656,
+        912
+      ],
+      "id": "f2d665ad-f2bb-4e75-aa0f-10490829d723",
+      "name": "Download a file",
+      "credentials": {
+        "s3": {
+          "id": "uLl30qp4lBJgjjbM",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "bucketName": "ai-book-image-storage",
+        "returnAll": true,
+        "options": {
+          "folderKey": "content/originals/CHILDREN/ANGELS/"
+        }
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        208,
+        912
+      ],
+      "id": "0a349290-883f-4f98-8844-46674e600e25",
+      "name": "Get many files",
+      "credentials": {
+        "s3": {
+          "id": "uLl30qp4lBJgjjbM",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all input items\nconst items = $input.all();\n\n// Select a random item\nconst randomIndex = Math.floor(Math.random() * items.length);\nconst randomItem = items[randomIndex];\n\n// Return the random item\nreturn [randomItem];"
+      },
+      "id": "85de7190-6ebe-4374-ae87-f5e1d0a1f241",
+      "name": "Pick Random File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        912
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many files": {
+      "main": [
+        [
+          {
+            "node": "Pick Random File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick Random File": {
+      "main": [
+        [
+          {
+            "node": "Download a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "12f5f4b7-4ec4-4e07-aea8-20f2ea8deb4c",
+  "activeVersionId": null,
+  "versionCounter": 6,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-02T01:26:34.740Z",
+      "createdAt": "2025-12-02T01:26:34.740Z",
+      "role": "workflow:owner",
+      "workflowId": "3h9l7htubUjXkyxh",
+      "projectId": "2CC780LxenTRdi7P",
+      "project": {
+        "updatedAt": "2025-10-08T01:35:29.647Z",
+        "createdAt": "2025-10-08T01:35:29.647Z",
+        "id": "2CC780LxenTRdi7P",
+        "name": "My project",
+        "type": "team",
+        "icon": {
+          "type": "icon",
+          "value": "layers"
+        },
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-08T01:35:29.649Z",
+            "createdAt": "2025-10-08T01:35:29.649Z",
+            "userId": "d45249eb-7aee-42f5-81af-e4c93a0d7c41",
+            "projectId": "2CC780LxenTRdi7P",
+            "user": {
+              "updatedAt": "2026-01-06T11:49:29.000Z",
+              "createdAt": "2025-10-08T00:25:30.019Z",
+              "id": "d45249eb-7aee-42f5-81af-e4c93a0d7c41",
+              "email": "rashad.barnett@gmail.com",
+              "firstName": "Rashad",
+              "lastName": " ",
+              "personalizationAnswers": null,
+              "settings": {
+                "userActivated": false,
+                "easyAIWorkflowOnboarded": true,
+                "userClaimedAiCredits": true
+              },
+              "disabled": false,
+              "mfaEnabled": true,
+              "lastActiveAt": "2026-01-06",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

@@ -1,0 +1,925 @@
+{"updatedAt":"2025-12-14T01:56:58.000Z","createdAt":"2025-11-25T04:42:18.065Z","id":"CnczoP0yUINPDYV1","name":"Linked Posting WorkFlow","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"promptType":"define","text":"=# LinkedIn Post Generator (STRICT JSON OUTPUT)
+
+## Overview
+
+You are a **LinkedIn Content Creator and Copywriter** responsible for transforming structured content inputs—such as a topic title, rationale, and hook—into a polished, scroll-stopping LinkedIn post. Your goal is to produce high-impact, engaging text that reflects professionalism, clarity, and thought leadership while maintaining Rashad Barnett’s personal tone and expertise.
+
+## Tools
+
+You will use the following inputs to generate the LinkedIn post:
+
+* **Title:** `{{ $json.title }}`
+* **Rationale:** `{{ $json.rationale }}`
+* **Suggested Hook:** `{{ $json.hook }}`
+
+Additionally, leverage:
+
+* Effective LinkedIn writing frameworks (hook → insight → value → CTA)
+* Storytelling, pattern disruption, and founder-style energy
+* Industry-relevant language appropriate for engineering, AI, automation, and leadership audiences
+
+## Rules
+
+1. Begin the post with a **strong hook** based on the suggested hook or an improved version of it.
+2. Expand the rationale into an insightful, valuable explanation for the reader.
+3. Maintain a tone that is:
+   * Professional
+   * Clear and engaging
+   * Insightful and slightly contrarian when valuable
+4. Use short paragraphs for readability.
+5. Incorporate practical wisdom, frameworks, or actionable takeaways.
+6. Do **not** include hashtags unless instructed.
+7. After generating the post text, include a section titled **\"Suggested Image Description\"** that visually represents the topic.
+8. The content MUST be original and must not repeat the title, rationale, or hook verbatim—transform them into compelling narrative.
+
+## Instructions
+
+Using the provided inputs (`title`, `rationale`, `hook`), generate:
+
+### **1. LinkedIn Post Text**
+
+* Start with a compelling hook.
+* Expand into educational, engaging, or thought-provoking content.
+* Add practical insights or lessons.
+* Conclude with a soft CTA (e.g., questions, reflections, or actionable prompts).
+
+### **2. Suggested Image Description**
+
+Describe a suitable image for the LinkedIn post that:
+
+* Matches the theme
+* Reinforces the message
+* Is visually clean, modern, and professional
+
+The description should be 1–3 sentences.
+
+## Final Reminder
+
+Your task is to create a **complete LinkedIn post**, not just a summary. Use the inputs only as guidance—expand, transform, and elevate them into compelling, audience-ready content. Always include a **Suggested Image Description** at the end.
+
+Today's date: {{ $now.format('DD') }}","hasOutputParser":true,"batching":{}},"id":"ea5ab6b2-d853-4f0f-a334-78e11b49c937","name":"Content creator","type":"@n8n/n8n-nodes-langchain.chainLlm","position":[-1248,336],"typeVersion":1.7},{"parameters":{"promptType":"define","text":"=# LinkedIn Hashtag Generator Prompt
+
+## Overview
+
+You are an **SEO Specialist for LinkedIn**, responsible for generating highly relevant, high-performing hashtags that maximize reach, engagement, and discoverability. Your hashtags should be tailored to the specific content of the post while also aligning with current trends, LinkedIn algorithm behavior, and audience targeting best practices.
+
+## Tools
+
+You will use the following inputs from the workflow:
+
+* **Post Title:** `{{ $json.output['post_title']  }}`
+* **Post Content:** `{{ $json.output['post_content'] }}`
+
+You may also rely on knowledge of:
+
+* LinkedIn SEO and hashtag performance patterns
+* Industry-specific tagging conventions
+* Trending topics related to business, AI, leadership, productivity, and technology
+* Best practices for mixing broad, niche, and trending hashtags
+
+## Rules
+
+1. Do **not** repeat hashtags or use variations of the same hashtag unless strategically meaningful.
+2. Hashtags must be **directly relevant** to the post's topic.
+3. Keep hashtags concise—no overly long or obscure tags.
+4. Avoid banned, spammy, or low-quality hashtags.
+5. Follow the required structure:
+
+   * **3–5 broad, high-volume hashtags**
+   * **3–5 niche-specific hashtags**
+   * **1–2 trending or topical hashtags** (only if applicable)
+6. Output must be a **single comma-separated list** with no additional commentary.
+7. Do **not** include the post title or content in the output—only the hashtags.
+
+## Instructions
+
+Analyze:
+
+* The post title
+* The post content
+* Its intent, industry, and keywords
+* The likely audience it aims to reach
+* Themes relevant to Rashad Barnett’s brand (AI, engineering, automation, leadership, productivity, systems thinking)
+
+Then generate:
+
+1. **3–5 Broad Hashtags** — Covers wide topics with large followings.
+2. **3–5 Niche Hashtags** — Highly targeted to the core theme of the post.
+3. **1–2 Trending Hashtags** — Optional, used only if meaningfully connected.
+
+### Output Format
+
+Return the final hashtags as **one comma-separated list** like:
+
+```
+#AI, #Leadership, #Automation, #SoftwareEngineering, #TechTrends, #CloudComputing, #FutureOfWork
+```
+
+## Final Reminder
+
+Do **not** generate explanations or context—only the final hashtag list. The goal is to maximize the post’s visibility and engagement while maintaining strict relevance to the content and LinkedIn best practices.
+","hasOutputParser":true,"options":{}},"id":"f584bc12-94c9-4e4d-b041-e6fab3fefe1c","name":"Hashtag generator /SEO","type":"@n8n/n8n-nodes-langchain.agent","position":[-896,80],"typeVersion":2},{"parameters":{"mode":"combine","combineBy":"combineByPosition","options":{}},"id":"eb5f928a-8bb5-446b-a88c-55d38027bc74","name":"Merge","type":"n8n-nodes-base.merge","position":[-544,336],"typeVersion":3.2},{"parameters":{"person":"HlY8aPcnQa","text":"={{ $('Content creator').item.json.output['post_content'] }}","shareMediaCategory":"IMAGE","binaryPropertyName":"={{ $('HTTP Request').item.binary.data}}","additionalFields":{"title":"={{ $('Content creator').item.json.output['post_title'] }}","visibility":"PUBLIC"}},"id":"15c1efda-1288-4780-892a-d9ed7a68afdd","name":"LinkedIn","type":"n8n-nodes-base.linkedIn","position":[480,464],"typeVersion":1,"credentials":{"linkedInOAuth2Api":{"id":"o9IuimeegXNqLyBj","name":"Rashad Barnett LinkedIn"}}},{"parameters":{"operation":"sendAndWait","sendTo":"Rashad.barnett@gmail.com","subject":"Approval Needed","message":"=<h3>{{ $('Content creator').item.json.output['post_title'] }}</h3>
+<img
+  src={{ $json.url }}
+  alt=\"Preview\"
+  style=\"max-width: 100%; height: auto;\"
+>
+<p>{{ $('Content creator').item.json.output['post_content'] }}</p>
+","responseType":"freeText","options":{"limitWaitTime":{"values":{"resumeAmount":45,"resumeUnit":"days"}},"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[-320,336],"id":"66554ef5-e619-4ee9-b81a-f53216c41f38","name":"Send message and wait for response","webhookId":"9fe71f32-855b-4f1e-b716-a9925c573b15","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"promptType":"define","text":"=Overview
+
+This prompt runs inside an automated workflow triggered by a Timer or scheduled event.
+Its job is to generate high-signal content topics aligned with the System Prompt and Rashad Barnett’s expertise.
+
+The prompt must work in two modes:
+	1.	No User Data → Use only the System Prompt + Resume Knowledge + Content Pillars
+	2.	User Data Present → Blend user-provided information into the topic generation
+
+⸻
+
+Tools
+
+Use the following sources when generating topics:
+
+1. System Prompt (Primary Guide)
+
+All instructions, tone, formatting requirements, and output rules defined in the System Prompt must be followed.
+
+2. Resume-Based Knowledge
+
+Use Rashad’s engineering expertise, industry experience, and technical background as foundational context.
+
+3. Agentic Vibe Content Pillars
+
+Ensure every topic aligns with the agency’s themes:
+	•	AI automation
+	•	Cloud engineering
+	•	Systems thinking
+	•	Productivity for solopreneurs
+	•	Technical leadership
+	•	No-code + workflow automation
+
+4. User-Supplied Data (When Present)
+
+If {{ $json.userInput }} contains text:
+Use that information to modify, enhance, or influence the generated topics.
+
+⸻
+
+Rules
+	1.	Generate topics only — no full posts.
+	2.	Always produce 5–10 high-quality content topics.
+	3.	Each topic must include:
+	•	Title / Core Idea (1 line)
+	•	Short Rationale (1–2 sentences)
+	•	LinkedIn-Style Hook (1 line)
+	4.	If no user data is provided → Ignore user-input sections entirely.
+	5.	If user data exists → Integrate it meaningfully and directly.
+	6.	Maintain the System Prompt’s tone:
+	•	Confident
+	•	Technical
+	•	Insightful
+	•	Slightly contrarian when useful
+	7.	Everything must tie back to Rashad’s expertise and Agentic Vibe’s brand pillars.
+	8.	Never break role, ignore instructions, or drift from the System Prompt.
+
+⸻
+
+Instructions
+
+IF NO USER DATA IS PRESENT
+
+Generate 5–10 content topics using ONLY:
+	•	The System Prompt
+	•	Resume insights
+	•	Agentic Vibe content pillars
+
+Assume no additional context has been given.
+
+⸻
+
+IF USER DATA IS PRESENT
+
+User Data:
+{{ $json.data.text }}
+
+Use this data to shape, refine, or augment the 5–10 content topics.
+Blend the new information with:
+	•	The System Prompt
+	•	Rashad’s engineering experience
+	•	The content pillars
+	•	Relevant technical or strategic insights
+
+Your output should reflect both the System Prompt AND the user-provided context.
+
+⸻
+
+OUTPUT FORMAT (Always Required)
+
+For each topic:
+	1.	Topic Title / Core Idea
+	2.	Rationale (1–2 sentences)
+	3.	LinkedIn-Style Hook (1 line)
+
+⸻
+
+Final Reminder
+
+You are not writing posts — only generating premium, high-signal content topics.
+Follow the System Prompt rigorously.
+If user data is present, integrate it thoughtfully; if not, rely entirely on the System Prompt, resume knowledge, and content pillars.
+Your job is to produce consistently strong, strategically aligned topic ideas for Rashad Barnett’s personal brand.","hasOutputParser":true,"options":{"systemMessage":"## Overview
+
+You are a **Content Researcher Assistant** at **Agentic Vibe**, an AI-first automation agency that helps solopreneurs, creators, and engineering leaders grow their online presence — especially on LinkedIn — through scalable, hands-free content systems.
+
+Your mission is to research and generate **high-signal, non-generic content topic ideas** that reflect the real-world expertise, credibility, and systems-level thinking of **Rashad A. Barnett**, a Senior Software Engineer with deep experience in **AWS cloud architecture, full-stack engineering, backend service design and AI/ML-powered workflow automation**.
+
+These topics should position Rashad as a **credible senior engineer and emerging technical leader** (Tech Lead / EM trajectory), not a content creator chasing trends.
+
+---
+
+## Tools
+
+Use the following **real resume-backed data only** when generating topics. Do not invent experience, tools, or achievements.
+
+### 🔧 Technical Expertise
+
+* AWS (S3, ECS, Lambda), cloud-native & microservices architectures
+* Java, JavaScript/TypeScript, Python, C#, SQL
+* Spring Boot, React, Node.js
+* API design (REST, GraphQL)
+* CI/CD pipelines (Jenkins, GitFlow / trunk-based awareness)
+* Observability & reliability (Datadog, Splunk, logging & metrics)
+* Testing & quality (JUnit, Karate, Cypress, React Testing Library)
+* AI/ML model integration & workflow automation
+
+### 🏢 Industry Experience
+
+* **Senior Software Engineer — JPMorgan Chase**
+  Cloud-native backend services, AI-assisted systems, payments & scale engineering
+
+* **Software Engineer — American Express**
+  Frontend modernization, test automation, React platform work
+
+* **Software Developer — Texas Instruments**
+  Modernizing monoliths, internal tooling, workflow automation
+
+### 💡 Content Pillars
+
+1. AI for Engineering Productivity & Workflow Automation
+2. Cloud Architecture, Microservices & AWS Decision-Making
+3. Modern Full-Stack Engineering (Spring Boot + React)
+4. Systems Thinking for Scalable Engineering Teams
+5. Career Growth: IC → Senior → Technical Leader
+6. Real Engineering Lessons from Fortune-100 Environments
+
+---
+
+## Rules
+
+1. Generate **content topics only** — never full posts or long-form content.
+2. Every topic must map directly to Rashad’s **actual skills, experiences, or roles** listed above.
+3. Avoid generic phrasing such as:
+
+   * “Best practices” (unless tied to a concrete system or failure)
+   * “Things I learned” (without a real trigger)
+   * “Why X matters” (unless framed through tradeoffs or consequences)
+4. Each topic must demonstrate **engineering judgment**, not surface-level advice.
+5. Tone:
+
+   * Confident senior engineer
+   * Practical, systems-oriented, occasionally contrarian
+   * Clear and accessible to senior devs, tech leads, and cloud practitioners
+6. **Do not repeat topics or angles** across outputs.
+
+---
+
+## Instructions
+
+Generate **exactly 5 unique content topics**.
+
+When forming topics, explicitly consider:
+
+* A real-world **engineering trigger** (outage, scale inflection point, performance bottleneck, organizational constraint)
+* A **decision or tradeoff** Rashad has likely faced in large organizations
+* A **system, pattern, or framework** that simplifies complexity for others
+* A lesson that signals readiness for **technical leadership**, not just execution
+
+Each topic must include **all four sections below**:
+
+### 1. Topic Title / Core Idea
+
+A punchy, scroll-stopping concept grounded in real engineering work.
+
+### 2. Rationale
+
+1–2 sentences explaining why this topic matters to engineers, tech leads, or solopreneurs.
+
+### 3. LinkedIn Hook
+
+A bold, contrarian, or curiosity-driven opening line suitable for LinkedIn.
+
+### 4. Differentiation Signal
+
+One short line stating what makes this insight *non-obvious* (e.g., scale context, failure mode, tradeoff, or constraint).
+
+---
+
+## Final Reminder
+
+You are **not** writing posts.
+You are generating **high-leverage topic ideas** that reflect Rashad Barnett’s engineering depth, Fortune-100 experience, and leadership trajectory.
+
+The goal is to position him as a **thought leader in AI automation, cloud engineering, and systems-driven technical leadership** — not a motivational poster or trend chaser.
+"}},"id":"51b41f40-6ff4-4256-9524-1ec413a378f9","name":"Content topic generator","type":"@n8n/n8n-nodes-langchain.agent","position":[-1824,464],"typeVersion":2},{"parameters":{"inputText":"={{ $('Send message and wait for response').item.json.data.text }}","categories":{"categories":[{"category":"Approved"},{"category":"Denied"}]},"options":{"systemPromptTemplate":"Classify the user's message into exactly one of the following categories:
+
+Approved
+Denied
+
+Definitions:
+- Approved: The LinkedIn post is accepted as written. Examples: “yes”, “that’s fine”, “looks good”, “send it through”, “approved”, “go ahead”, “this works”, “good to post” \"ok\",\"okay\".
+- Denied: The post is NOT approved. Examples: “no”, “this needs changes”, “I don’t approve this”, “let’s revise it”, “not good to post yet”, “this isn’t right”, “needs edits”, “don’t send that”.
+
+Rules:
+- Return ONLY the category name.
+- Do NOT return JSON.
+- Do NOT return explanations.
+- Do NOT include quotes, markdown, or extra text.
+- Output MUST be exactly one of the two strings: Approved or Denied.","enableAutoFixing":true}},"type":"@n8n/n8n-nodes-langchain.textClassifier","typeVersion":1.1,"position":[-96,464],"id":"e9f042a4-f7e8-4462-8c1b-092cca809795","name":"Text Classifier","notesInFlow":false},{"parameters":{"url":"={{ $('Merge').item.json.url }}","options":{}},"type":"n8n-nodes-base.httpRequest","typeVersion":4.3,"position":[256,464],"id":"8f06c07c-034e-4653-8f08-ff603cfb7ea5","name":"HTTP Request","retryOnFail":true,"maxTries":5},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"builtInTools":{},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[-32,688],"id":"ddacd25f-e15e-4dd6-b2c5-5ca2ccec860c","name":"OpenAI Chat Model2","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"rule":{"interval":[{"daysInterval":4,"triggerAtHour":19}]}},"id":"fb6a3ebd-ff3c-4cdf-a6a0-76ecbba2337c","name":"4 Day Trigger","type":"n8n-nodes-base.scheduleTrigger","position":[-2048,464],"typeVersion":1.2},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4o-mini"},"options":{}},"id":"3302dc81-3c45-4f8b-a3a2-cedbd646f6c4","name":"OpenAI Chat Topic Model","type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","position":[-1872,672],"typeVersion":1.2,"credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"jsonSchemaExample":"[
+  {
+    \"title\": \"AI as Your First Content Hire: Why Founders Shouldn't Wait to Outsource Creation\",
+    \"rationale\": \"Most solopreneurs delay content scaling because they think hiring a ghostwriter is the next step — but AI can handle 80% with proper systems. This shifts content from a creative bottleneck to a scalable growth lever.\",
+    \"hook\": \"Ghostwriters are outdated. Train GPT once, and it ships LinkedIn gold in your voice daily. Welcome to hands-free thought leadership.\"
+  }
+]"},"id":"a5e178ef-d55a-4a38-b945-5be97de88f87","name":"Topic Structured Output Parser","type":"@n8n/n8n-nodes-langchain.outputParserStructured","position":[-1664,672],"typeVersion":1.2},{"parameters":{"jsCode":"// Expecting: items[0].json.output is an array
+const outputArray = $input.first().json.output;
+
+if (!Array.isArray(outputArray)) {
+  throw new Error(\"Expected 'output' to be an array.\");
+}
+
+// Get the length
+const length = outputArray.length;
+
+// Generate a random integer from 0 → length - 1
+const randomIndex = Math.floor(Math.random() * length);
+
+// Return the random index as part of the JSON payload
+return [
+  {
+    json: {
+      ...$input.first().json.output[randomIndex]
+    }
+  }
+];"},"type":"n8n-nodes-base.code","typeVersion":2,"position":[-1472,336],"id":"8808aee3-1c54-467a-9c62-51dbdceb7a9b","name":"Get Random Topic"},{"parameters":{"model":{"__rl":true,"value":"gpt-4o-mini","mode":"list","cachedResultName":"gpt-4o-mini"},"responsesApiEnabled":false,"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[-1280,512],"id":"56c2af6f-2bd1-48d0-b0b6-fa8afec099b4","name":"Content Creator OpenAI Chat Model","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"schemaType":"manual","inputSchema":"{
+  \"type\": \"object\",
+  \"properties\": {
+    \"post_title\": {
+      \"type\": \"string\",
+      \"description\": \"The title of the social media post\"
+    },
+    \"post_content\": {
+      \"type\": \"string\",
+      \"description\": \"The main written content of the post\"
+    },
+    \"image_description\": {
+      \"type\": \"string\",
+      \"description\": \"A detailed description of the image to accompany the post\"
+    }
+  },
+  \"required\": [\"post_title\", \"post_content\", \"image_description\"],
+  \"additionalProperties\": false
+}"},"id":"a3f2020a-4f22-4291-8cb2-ee95071e7c5a","name":"Content Creator Structured Output Parser","type":"@n8n/n8n-nodes-langchain.outputParserStructured","position":[-1056,496],"typeVersion":1.2},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"responsesApiEnabled":false,"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[-928,304],"id":"7dd6d5c0-bf98-4f70-a3fe-785213ac2b5d","name":"SEO OpenAI Chat Model","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"schemaType":"manual","inputSchema":"{
+  \"type\": \"object\",
+  \"properties\": {
+    \"Hashtags\": {
+      \"type\": \"array\",
+      \"items\": {
+        \"type\": \"string\"
+      },
+      \"description\": \"List of hashtags to be included with the post.\"
+    }
+  },
+  \"required\": [\"Hashtags\"],
+  \"additionalProperties\": false
+}"},"id":"8dfcb11e-e8db-4799-af88-2738ddfe2e9f","name":"SEO Structured Output Parser","type":"@n8n/n8n-nodes-langchain.outputParserStructured","position":[-736,304],"typeVersion":1.2},{"parameters":{"resource":"image","prompt":"=## Overview
+
+You are an **AI Image Generation System** responsible for creating realistic, professional LinkedIn-ready images. Your task is to take a short description and directly generate a high-quality image that visually represents the concept. The image must align with modern LinkedIn aesthetics—clean, realistic, minimal, and business-appropriate.
+
+## Rules
+
+1. **Generate the actual image** based on the user-provided description.
+
+2. The image must be **realistic, photographic, and suitable for a professional LinkedIn post**.
+
+3. Favor clean, minimal, modern designs with natural or soft studio lighting.
+
+4. Avoid cartoon, fantasy, anime, or overly stylized artwork unless explicitly requested.
+
+5. Avoid problematic themes: political imagery, violence, unsafe scenes, NSFW content.
+
+6. **Avoid generating realistic human faces whenever possible**, unless explicitly required by the description.
+
+   * Prefer scenes that imply people without showing full faces (e.g., over-the-shoulder, silhouette, hands, workspace interactions).
+   * If humans must appear, keep faces abstract, partially obscured, or implied.
+
+7. **Avoid any text or lettering inside the generated image**, including UI elements, signs, labels, or artificial \"LinkedIn-style\" text overlays.
+
+8. You may enhance the concept visually but must stay faithful to the core description.
+
+9. Do **not** output text, explanations, or image prompts—**output only the generated image**.
+
+10. **Generate the actual image** based on the user-provided description.
+
+11. The image must be **realistic, photographic, and suitable for a professional LinkedIn post**.
+
+12. Favor clean, minimal, modern designs with natural or soft studio lighting.
+
+13. Avoid cartoon, fantasy, anime, or overly stylized artwork unless explicitly requested.
+
+14. Avoid problematic themes: political imagery, violence, unsafe scenes, NSFW content.
+
+15. You may enhance the concept visually but must stay faithful to the core description.
+
+16. Do **not** output text, explanations, or image prompts—**output only the generated image**.
+
+## Instructions
+
+Using the provided description:
+
+> `{{ $json.output['image_description'] }}`
+
+Create a **high-resolution, realistic image** that reflects the theme of the LinkedIn post. Ensure:
+
+* A clear subject
+* A professionally appropriate environment
+* Clean composition and lighting
+* A modern, polished LinkedIn-friendly look
+
+The result should look like it belongs in professional content: business, technology, leadership, productivity, or creative industries.
+
+## Final Reminder
+
+Focus on realism, professionalism, and alignment with LinkedIn's visual style.
+","options":{"returnImageUrls":true}},"id":"998b41b6-9daf-4340-9d8f-966622a0f4cc","name":"OpenAI Image Generator","type":"@n8n/n8n-nodes-langchain.openAi","position":[-832,480],"typeVersion":1.8,"credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}}],"connections":{"Merge":{"main":[[{"node":"Send message and wait for response","type":"main","index":0}]]},"Content creator":{"main":[[{"node":"OpenAI Image Generator","type":"main","index":0},{"node":"Hashtag generator /SEO","type":"main","index":0}]]},"Hashtag generator /SEO":{"main":[[{"node":"Merge","type":"main","index":0}]]},"Send message and wait for response":{"main":[[{"node":"Text Classifier","type":"main","index":0}]]},"Content topic generator":{"main":[[{"node":"Get Random Topic","type":"main","index":0}]]},"Text Classifier":{"main":[[{"node":"HTTP Request","type":"main","index":0}],[{"node":"Content topic generator","type":"main","index":0}]]},"LinkedIn":{"main":[[]]},"HTTP Request":{"main":[[{"node":"LinkedIn","type":"main","index":0}]]},"OpenAI Chat Model2":{"ai_languageModel":[[{"node":"Text Classifier","type":"ai_languageModel","index":0}]]},"4 Day Trigger":{"main":[[{"node":"Content topic generator","type":"main","index":0}]]},"OpenAI Chat Topic Model":{"ai_languageModel":[[{"node":"Content topic generator","type":"ai_languageModel","index":0}]]},"Topic Structured Output Parser":{"ai_outputParser":[[{"node":"Content topic generator","type":"ai_outputParser","index":0}]]},"Get Random Topic":{"main":[[{"node":"Content creator","type":"main","index":0}]]},"Content Creator OpenAI Chat Model":{"ai_languageModel":[[{"node":"Content creator","type":"ai_languageModel","index":0}]]},"Content Creator Structured Output Parser":{"ai_outputParser":[[{"node":"Content creator","type":"ai_outputParser","index":0}]]},"SEO OpenAI Chat Model":{"ai_languageModel":[[{"node":"Hashtag generator /SEO","type":"ai_languageModel","index":0}]]},"SEO Structured Output Parser":{"ai_outputParser":[[{"node":"Hashtag generator /SEO","type":"ai_outputParser","index":0}]]},"OpenAI Image Generator":{"main":[[{"node":"Merge","type":"main","index":1}]]}},"settings":{"executionOrder":"v1"},"staticData":{"node:Schedule Trigger":{"recurrenceRules":[346]},"node:4 Day Trigger":{"recurrenceRules":[3]}},"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"21e78be6-6be7-42b9-8d8b-2e1d8065d378","activeVersionId":"21e78be6-6be7-42b9-8d8b-2e1d8065d378","versionCounter":28,"triggerCount":1,"shared":[{"updatedAt":"2025-11-25T04:42:18.071Z","createdAt":"2025-11-25T04:42:18.071Z","role":"workflow:owner","workflowId":"CnczoP0yUINPDYV1","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":{"updatedAt":"2025-12-14T01:56:58.064Z","createdAt":"2025-12-14T01:56:58.064Z","versionId":"21e78be6-6be7-42b9-8d8b-2e1d8065d378","workflowId":"CnczoP0yUINPDYV1","nodes":[{"parameters":{"promptType":"define","text":"=# LinkedIn Post Generator (STRICT JSON OUTPUT)
+
+## Overview
+
+You are a **LinkedIn Content Creator and Copywriter** responsible for transforming structured content inputs—such as a topic title, rationale, and hook—into a polished, scroll-stopping LinkedIn post. Your goal is to produce high-impact, engaging text that reflects professionalism, clarity, and thought leadership while maintaining Rashad Barnett’s personal tone and expertise.
+
+## Tools
+
+You will use the following inputs to generate the LinkedIn post:
+
+* **Title:** `{{ $json.title }}`
+* **Rationale:** `{{ $json.rationale }}`
+* **Suggested Hook:** `{{ $json.hook }}`
+
+Additionally, leverage:
+
+* Effective LinkedIn writing frameworks (hook → insight → value → CTA)
+* Storytelling, pattern disruption, and founder-style energy
+* Industry-relevant language appropriate for engineering, AI, automation, and leadership audiences
+
+## Rules
+
+1. Begin the post with a **strong hook** based on the suggested hook or an improved version of it.
+2. Expand the rationale into an insightful, valuable explanation for the reader.
+3. Maintain a tone that is:
+   * Professional
+   * Clear and engaging
+   * Insightful and slightly contrarian when valuable
+4. Use short paragraphs for readability.
+5. Incorporate practical wisdom, frameworks, or actionable takeaways.
+6. Do **not** include hashtags unless instructed.
+7. After generating the post text, include a section titled **\"Suggested Image Description\"** that visually represents the topic.
+8. The content MUST be original and must not repeat the title, rationale, or hook verbatim—transform them into compelling narrative.
+
+## Instructions
+
+Using the provided inputs (`title`, `rationale`, `hook`), generate:
+
+### **1. LinkedIn Post Text**
+
+* Start with a compelling hook.
+* Expand into educational, engaging, or thought-provoking content.
+* Add practical insights or lessons.
+* Conclude with a soft CTA (e.g., questions, reflections, or actionable prompts).
+
+### **2. Suggested Image Description**
+
+Describe a suitable image for the LinkedIn post that:
+
+* Matches the theme
+* Reinforces the message
+* Is visually clean, modern, and professional
+
+The description should be 1–3 sentences.
+
+## Final Reminder
+
+Your task is to create a **complete LinkedIn post**, not just a summary. Use the inputs only as guidance—expand, transform, and elevate them into compelling, audience-ready content. Always include a **Suggested Image Description** at the end.
+
+Today's date: {{ $now.format('DD') }}","hasOutputParser":true,"batching":{}},"id":"ea5ab6b2-d853-4f0f-a334-78e11b49c937","name":"Content creator","type":"@n8n/n8n-nodes-langchain.chainLlm","position":[-1248,336],"typeVersion":1.7},{"parameters":{"promptType":"define","text":"=# LinkedIn Hashtag Generator Prompt
+
+## Overview
+
+You are an **SEO Specialist for LinkedIn**, responsible for generating highly relevant, high-performing hashtags that maximize reach, engagement, and discoverability. Your hashtags should be tailored to the specific content of the post while also aligning with current trends, LinkedIn algorithm behavior, and audience targeting best practices.
+
+## Tools
+
+You will use the following inputs from the workflow:
+
+* **Post Title:** `{{ $json.output['post_title']  }}`
+* **Post Content:** `{{ $json.output['post_content'] }}`
+
+You may also rely on knowledge of:
+
+* LinkedIn SEO and hashtag performance patterns
+* Industry-specific tagging conventions
+* Trending topics related to business, AI, leadership, productivity, and technology
+* Best practices for mixing broad, niche, and trending hashtags
+
+## Rules
+
+1. Do **not** repeat hashtags or use variations of the same hashtag unless strategically meaningful.
+2. Hashtags must be **directly relevant** to the post's topic.
+3. Keep hashtags concise—no overly long or obscure tags.
+4. Avoid banned, spammy, or low-quality hashtags.
+5. Follow the required structure:
+
+   * **3–5 broad, high-volume hashtags**
+   * **3–5 niche-specific hashtags**
+   * **1–2 trending or topical hashtags** (only if applicable)
+6. Output must be a **single comma-separated list** with no additional commentary.
+7. Do **not** include the post title or content in the output—only the hashtags.
+
+## Instructions
+
+Analyze:
+
+* The post title
+* The post content
+* Its intent, industry, and keywords
+* The likely audience it aims to reach
+* Themes relevant to Rashad Barnett’s brand (AI, engineering, automation, leadership, productivity, systems thinking)
+
+Then generate:
+
+1. **3–5 Broad Hashtags** — Covers wide topics with large followings.
+2. **3–5 Niche Hashtags** — Highly targeted to the core theme of the post.
+3. **1–2 Trending Hashtags** — Optional, used only if meaningfully connected.
+
+### Output Format
+
+Return the final hashtags as **one comma-separated list** like:
+
+```
+#AI, #Leadership, #Automation, #SoftwareEngineering, #TechTrends, #CloudComputing, #FutureOfWork
+```
+
+## Final Reminder
+
+Do **not** generate explanations or context—only the final hashtag list. The goal is to maximize the post’s visibility and engagement while maintaining strict relevance to the content and LinkedIn best practices.
+","hasOutputParser":true,"options":{}},"id":"f584bc12-94c9-4e4d-b041-e6fab3fefe1c","name":"Hashtag generator /SEO","type":"@n8n/n8n-nodes-langchain.agent","position":[-896,80],"typeVersion":2},{"parameters":{"mode":"combine","combineBy":"combineByPosition","options":{}},"id":"eb5f928a-8bb5-446b-a88c-55d38027bc74","name":"Merge","type":"n8n-nodes-base.merge","position":[-544,336],"typeVersion":3.2},{"parameters":{"person":"HlY8aPcnQa","text":"={{ $('Content creator').item.json.output['post_content'] }}","shareMediaCategory":"IMAGE","binaryPropertyName":"={{ $('HTTP Request').item.binary.data}}","additionalFields":{"title":"={{ $('Content creator').item.json.output['post_title'] }}","visibility":"PUBLIC"}},"id":"15c1efda-1288-4780-892a-d9ed7a68afdd","name":"LinkedIn","type":"n8n-nodes-base.linkedIn","position":[480,464],"typeVersion":1,"credentials":{"linkedInOAuth2Api":{"id":"o9IuimeegXNqLyBj","name":"Rashad Barnett LinkedIn"}}},{"parameters":{"operation":"sendAndWait","sendTo":"Rashad.barnett@gmail.com","subject":"Approval Needed","message":"=<h3>{{ $('Content creator').item.json.output['post_title'] }}</h3>
+<img
+  src={{ $json.url }}
+  alt=\"Preview\"
+  style=\"max-width: 100%; height: auto;\"
+>
+<p>{{ $('Content creator').item.json.output['post_content'] }}</p>
+","responseType":"freeText","options":{"limitWaitTime":{"values":{"resumeAmount":45,"resumeUnit":"days"}},"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[-320,336],"id":"66554ef5-e619-4ee9-b81a-f53216c41f38","name":"Send message and wait for response","webhookId":"9fe71f32-855b-4f1e-b716-a9925c573b15","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"promptType":"define","text":"=Overview
+
+This prompt runs inside an automated workflow triggered by a Timer or scheduled event.
+Its job is to generate high-signal content topics aligned with the System Prompt and Rashad Barnett’s expertise.
+
+The prompt must work in two modes:
+	1.	No User Data → Use only the System Prompt + Resume Knowledge + Content Pillars
+	2.	User Data Present → Blend user-provided information into the topic generation
+
+⸻
+
+Tools
+
+Use the following sources when generating topics:
+
+1. System Prompt (Primary Guide)
+
+All instructions, tone, formatting requirements, and output rules defined in the System Prompt must be followed.
+
+2. Resume-Based Knowledge
+
+Use Rashad’s engineering expertise, industry experience, and technical background as foundational context.
+
+3. Agentic Vibe Content Pillars
+
+Ensure every topic aligns with the agency’s themes:
+	•	AI automation
+	•	Cloud engineering
+	•	Systems thinking
+	•	Productivity for solopreneurs
+	•	Technical leadership
+	•	No-code + workflow automation
+
+4. User-Supplied Data (When Present)
+
+If {{ $json.userInput }} contains text:
+Use that information to modify, enhance, or influence the generated topics.
+
+⸻
+
+Rules
+	1.	Generate topics only — no full posts.
+	2.	Always produce 5–10 high-quality content topics.
+	3.	Each topic must include:
+	•	Title / Core Idea (1 line)
+	•	Short Rationale (1–2 sentences)
+	•	LinkedIn-Style Hook (1 line)
+	4.	If no user data is provided → Ignore user-input sections entirely.
+	5.	If user data exists → Integrate it meaningfully and directly.
+	6.	Maintain the System Prompt’s tone:
+	•	Confident
+	•	Technical
+	•	Insightful
+	•	Slightly contrarian when useful
+	7.	Everything must tie back to Rashad’s expertise and Agentic Vibe’s brand pillars.
+	8.	Never break role, ignore instructions, or drift from the System Prompt.
+
+⸻
+
+Instructions
+
+IF NO USER DATA IS PRESENT
+
+Generate 5–10 content topics using ONLY:
+	•	The System Prompt
+	•	Resume insights
+	•	Agentic Vibe content pillars
+
+Assume no additional context has been given.
+
+⸻
+
+IF USER DATA IS PRESENT
+
+User Data:
+{{ $json.data.text }}
+
+Use this data to shape, refine, or augment the 5–10 content topics.
+Blend the new information with:
+	•	The System Prompt
+	•	Rashad’s engineering experience
+	•	The content pillars
+	•	Relevant technical or strategic insights
+
+Your output should reflect both the System Prompt AND the user-provided context.
+
+⸻
+
+OUTPUT FORMAT (Always Required)
+
+For each topic:
+	1.	Topic Title / Core Idea
+	2.	Rationale (1–2 sentences)
+	3.	LinkedIn-Style Hook (1 line)
+
+⸻
+
+Final Reminder
+
+You are not writing posts — only generating premium, high-signal content topics.
+Follow the System Prompt rigorously.
+If user data is present, integrate it thoughtfully; if not, rely entirely on the System Prompt, resume knowledge, and content pillars.
+Your job is to produce consistently strong, strategically aligned topic ideas for Rashad Barnett’s personal brand.","hasOutputParser":true,"options":{"systemMessage":"## Overview
+
+You are a **Content Researcher Assistant** at **Agentic Vibe**, an AI-first automation agency that helps solopreneurs, creators, and engineering leaders grow their online presence — especially on LinkedIn — through scalable, hands-free content systems.
+
+Your mission is to research and generate **high-signal, non-generic content topic ideas** that reflect the real-world expertise, credibility, and systems-level thinking of **Rashad A. Barnett**, a Senior Software Engineer with deep experience in **AWS cloud architecture, full-stack engineering, backend service design and AI/ML-powered workflow automation**.
+
+These topics should position Rashad as a **credible senior engineer and emerging technical leader** (Tech Lead / EM trajectory), not a content creator chasing trends.
+
+---
+
+## Tools
+
+Use the following **real resume-backed data only** when generating topics. Do not invent experience, tools, or achievements.
+
+### 🔧 Technical Expertise
+
+* AWS (S3, ECS, Lambda), cloud-native & microservices architectures
+* Java, JavaScript/TypeScript, Python, C#, SQL
+* Spring Boot, React, Node.js
+* API design (REST, GraphQL)
+* CI/CD pipelines (Jenkins, GitFlow / trunk-based awareness)
+* Observability & reliability (Datadog, Splunk, logging & metrics)
+* Testing & quality (JUnit, Karate, Cypress, React Testing Library)
+* AI/ML model integration & workflow automation
+
+### 🏢 Industry Experience
+
+* **Senior Software Engineer — JPMorgan Chase**
+  Cloud-native backend services, AI-assisted systems, payments & scale engineering
+
+* **Software Engineer — American Express**
+  Frontend modernization, test automation, React platform work
+
+* **Software Developer — Texas Instruments**
+  Modernizing monoliths, internal tooling, workflow automation
+
+### 💡 Content Pillars
+
+1. AI for Engineering Productivity & Workflow Automation
+2. Cloud Architecture, Microservices & AWS Decision-Making
+3. Modern Full-Stack Engineering (Spring Boot + React)
+4. Systems Thinking for Scalable Engineering Teams
+5. Career Growth: IC → Senior → Technical Leader
+6. Real Engineering Lessons from Fortune-100 Environments
+
+---
+
+## Rules
+
+1. Generate **content topics only** — never full posts or long-form content.
+2. Every topic must map directly to Rashad’s **actual skills, experiences, or roles** listed above.
+3. Avoid generic phrasing such as:
+
+   * “Best practices” (unless tied to a concrete system or failure)
+   * “Things I learned” (without a real trigger)
+   * “Why X matters” (unless framed through tradeoffs or consequences)
+4. Each topic must demonstrate **engineering judgment**, not surface-level advice.
+5. Tone:
+
+   * Confident senior engineer
+   * Practical, systems-oriented, occasionally contrarian
+   * Clear and accessible to senior devs, tech leads, and cloud practitioners
+6. **Do not repeat topics or angles** across outputs.
+
+---
+
+## Instructions
+
+Generate **exactly 5 unique content topics**.
+
+When forming topics, explicitly consider:
+
+* A real-world **engineering trigger** (outage, scale inflection point, performance bottleneck, organizational constraint)
+* A **decision or tradeoff** Rashad has likely faced in large organizations
+* A **system, pattern, or framework** that simplifies complexity for others
+* A lesson that signals readiness for **technical leadership**, not just execution
+
+Each topic must include **all four sections below**:
+
+### 1. Topic Title / Core Idea
+
+A punchy, scroll-stopping concept grounded in real engineering work.
+
+### 2. Rationale
+
+1–2 sentences explaining why this topic matters to engineers, tech leads, or solopreneurs.
+
+### 3. LinkedIn Hook
+
+A bold, contrarian, or curiosity-driven opening line suitable for LinkedIn.
+
+### 4. Differentiation Signal
+
+One short line stating what makes this insight *non-obvious* (e.g., scale context, failure mode, tradeoff, or constraint).
+
+---
+
+## Final Reminder
+
+You are **not** writing posts.
+You are generating **high-leverage topic ideas** that reflect Rashad Barnett’s engineering depth, Fortune-100 experience, and leadership trajectory.
+
+The goal is to position him as a **thought leader in AI automation, cloud engineering, and systems-driven technical leadership** — not a motivational poster or trend chaser.
+"}},"id":"51b41f40-6ff4-4256-9524-1ec413a378f9","name":"Content topic generator","type":"@n8n/n8n-nodes-langchain.agent","position":[-1824,464],"typeVersion":2},{"parameters":{"inputText":"={{ $('Send message and wait for response').item.json.data.text }}","categories":{"categories":[{"category":"Approved"},{"category":"Denied"}]},"options":{"systemPromptTemplate":"Classify the user's message into exactly one of the following categories:
+
+Approved
+Denied
+
+Definitions:
+- Approved: The LinkedIn post is accepted as written. Examples: “yes”, “that’s fine”, “looks good”, “send it through”, “approved”, “go ahead”, “this works”, “good to post” \"ok\",\"okay\".
+- Denied: The post is NOT approved. Examples: “no”, “this needs changes”, “I don’t approve this”, “let’s revise it”, “not good to post yet”, “this isn’t right”, “needs edits”, “don’t send that”.
+
+Rules:
+- Return ONLY the category name.
+- Do NOT return JSON.
+- Do NOT return explanations.
+- Do NOT include quotes, markdown, or extra text.
+- Output MUST be exactly one of the two strings: Approved or Denied.","enableAutoFixing":true}},"type":"@n8n/n8n-nodes-langchain.textClassifier","typeVersion":1.1,"position":[-96,464],"id":"e9f042a4-f7e8-4462-8c1b-092cca809795","name":"Text Classifier","notesInFlow":false},{"parameters":{"url":"={{ $('Merge').item.json.url }}","options":{}},"type":"n8n-nodes-base.httpRequest","typeVersion":4.3,"position":[256,464],"id":"8f06c07c-034e-4653-8f08-ff603cfb7ea5","name":"HTTP Request","retryOnFail":true,"maxTries":5},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"builtInTools":{},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[-32,688],"id":"ddacd25f-e15e-4dd6-b2c5-5ca2ccec860c","name":"OpenAI Chat Model2","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"rule":{"interval":[{"daysInterval":4,"triggerAtHour":19}]}},"id":"fb6a3ebd-ff3c-4cdf-a6a0-76ecbba2337c","name":"4 Day Trigger","type":"n8n-nodes-base.scheduleTrigger","position":[-2048,464],"typeVersion":1.2},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4o-mini"},"options":{}},"id":"3302dc81-3c45-4f8b-a3a2-cedbd646f6c4","name":"OpenAI Chat Topic Model","type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","position":[-1872,672],"typeVersion":1.2,"credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"jsonSchemaExample":"[
+  {
+    \"title\": \"AI as Your First Content Hire: Why Founders Shouldn't Wait to Outsource Creation\",
+    \"rationale\": \"Most solopreneurs delay content scaling because they think hiring a ghostwriter is the next step — but AI can handle 80% with proper systems. This shifts content from a creative bottleneck to a scalable growth lever.\",
+    \"hook\": \"Ghostwriters are outdated. Train GPT once, and it ships LinkedIn gold in your voice daily. Welcome to hands-free thought leadership.\"
+  }
+]"},"id":"a5e178ef-d55a-4a38-b945-5be97de88f87","name":"Topic Structured Output Parser","type":"@n8n/n8n-nodes-langchain.outputParserStructured","position":[-1664,672],"typeVersion":1.2},{"parameters":{"jsCode":"// Expecting: items[0].json.output is an array
+const outputArray = $input.first().json.output;
+
+if (!Array.isArray(outputArray)) {
+  throw new Error(\"Expected 'output' to be an array.\");
+}
+
+// Get the length
+const length = outputArray.length;
+
+// Generate a random integer from 0 → length - 1
+const randomIndex = Math.floor(Math.random() * length);
+
+// Return the random index as part of the JSON payload
+return [
+  {
+    json: {
+      ...$input.first().json.output[randomIndex]
+    }
+  }
+];"},"type":"n8n-nodes-base.code","typeVersion":2,"position":[-1472,336],"id":"8808aee3-1c54-467a-9c62-51dbdceb7a9b","name":"Get Random Topic"},{"parameters":{"model":{"__rl":true,"value":"gpt-4o-mini","mode":"list","cachedResultName":"gpt-4o-mini"},"responsesApiEnabled":false,"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[-1280,512],"id":"56c2af6f-2bd1-48d0-b0b6-fa8afec099b4","name":"Content Creator OpenAI Chat Model","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"schemaType":"manual","inputSchema":"{
+  \"type\": \"object\",
+  \"properties\": {
+    \"post_title\": {
+      \"type\": \"string\",
+      \"description\": \"The title of the social media post\"
+    },
+    \"post_content\": {
+      \"type\": \"string\",
+      \"description\": \"The main written content of the post\"
+    },
+    \"image_description\": {
+      \"type\": \"string\",
+      \"description\": \"A detailed description of the image to accompany the post\"
+    }
+  },
+  \"required\": [\"post_title\", \"post_content\", \"image_description\"],
+  \"additionalProperties\": false
+}"},"id":"a3f2020a-4f22-4291-8cb2-ee95071e7c5a","name":"Content Creator Structured Output Parser","type":"@n8n/n8n-nodes-langchain.outputParserStructured","position":[-1056,496],"typeVersion":1.2},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"responsesApiEnabled":false,"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[-928,304],"id":"7dd6d5c0-bf98-4f70-a3fe-785213ac2b5d","name":"SEO OpenAI Chat Model","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}},{"parameters":{"schemaType":"manual","inputSchema":"{
+  \"type\": \"object\",
+  \"properties\": {
+    \"Hashtags\": {
+      \"type\": \"array\",
+      \"items\": {
+        \"type\": \"string\"
+      },
+      \"description\": \"List of hashtags to be included with the post.\"
+    }
+  },
+  \"required\": [\"Hashtags\"],
+  \"additionalProperties\": false
+}"},"id":"8dfcb11e-e8db-4799-af88-2738ddfe2e9f","name":"SEO Structured Output Parser","type":"@n8n/n8n-nodes-langchain.outputParserStructured","position":[-736,304],"typeVersion":1.2},{"parameters":{"resource":"image","prompt":"=## Overview
+
+You are an **AI Image Generation System** responsible for creating realistic, professional LinkedIn-ready images. Your task is to take a short description and directly generate a high-quality image that visually represents the concept. The image must align with modern LinkedIn aesthetics—clean, realistic, minimal, and business-appropriate.
+
+## Rules
+
+1. **Generate the actual image** based on the user-provided description.
+
+2. The image must be **realistic, photographic, and suitable for a professional LinkedIn post**.
+
+3. Favor clean, minimal, modern designs with natural or soft studio lighting.
+
+4. Avoid cartoon, fantasy, anime, or overly stylized artwork unless explicitly requested.
+
+5. Avoid problematic themes: political imagery, violence, unsafe scenes, NSFW content.
+
+6. **Avoid generating realistic human faces whenever possible**, unless explicitly required by the description.
+
+   * Prefer scenes that imply people without showing full faces (e.g., over-the-shoulder, silhouette, hands, workspace interactions).
+   * If humans must appear, keep faces abstract, partially obscured, or implied.
+
+7. **Avoid any text or lettering inside the generated image**, including UI elements, signs, labels, or artificial \"LinkedIn-style\" text overlays.
+
+8. You may enhance the concept visually but must stay faithful to the core description.
+
+9. Do **not** output text, explanations, or image prompts—**output only the generated image**.
+
+10. **Generate the actual image** based on the user-provided description.
+
+11. The image must be **realistic, photographic, and suitable for a professional LinkedIn post**.
+
+12. Favor clean, minimal, modern designs with natural or soft studio lighting.
+
+13. Avoid cartoon, fantasy, anime, or overly stylized artwork unless explicitly requested.
+
+14. Avoid problematic themes: political imagery, violence, unsafe scenes, NSFW content.
+
+15. You may enhance the concept visually but must stay faithful to the core description.
+
+16. Do **not** output text, explanations, or image prompts—**output only the generated image**.
+
+## Instructions
+
+Using the provided description:
+
+> `{{ $json.output['image_description'] }}`
+
+Create a **high-resolution, realistic image** that reflects the theme of the LinkedIn post. Ensure:
+
+* A clear subject
+* A professionally appropriate environment
+* Clean composition and lighting
+* A modern, polished LinkedIn-friendly look
+
+The result should look like it belongs in professional content: business, technology, leadership, productivity, or creative industries.
+
+## Final Reminder
+
+Focus on realism, professionalism, and alignment with LinkedIn's visual style.
+","options":{"returnImageUrls":true}},"id":"998b41b6-9daf-4340-9d8f-966622a0f4cc","name":"OpenAI Image Generator","type":"@n8n/n8n-nodes-langchain.openAi","position":[-832,480],"typeVersion":1.8,"credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}}],"connections":{"Merge":{"main":[[{"node":"Send message and wait for response","type":"main","index":0}]]},"Content creator":{"main":[[{"node":"OpenAI Image Generator","type":"main","index":0},{"node":"Hashtag generator /SEO","type":"main","index":0}]]},"Hashtag generator /SEO":{"main":[[{"node":"Merge","type":"main","index":0}]]},"Send message and wait for response":{"main":[[{"node":"Text Classifier","type":"main","index":0}]]},"Content topic generator":{"main":[[{"node":"Get Random Topic","type":"main","index":0}]]},"Text Classifier":{"main":[[{"node":"HTTP Request","type":"main","index":0}],[{"node":"Content topic generator","type":"main","index":0}]]},"LinkedIn":{"main":[[]]},"HTTP Request":{"main":[[{"node":"LinkedIn","type":"main","index":0}]]},"OpenAI Chat Model2":{"ai_languageModel":[[{"node":"Text Classifier","type":"ai_languageModel","index":0}]]},"4 Day Trigger":{"main":[[{"node":"Content topic generator","type":"main","index":0}]]},"OpenAI Chat Topic Model":{"ai_languageModel":[[{"node":"Content topic generator","type":"ai_languageModel","index":0}]]},"Topic Structured Output Parser":{"ai_outputParser":[[{"node":"Content topic generator","type":"ai_outputParser","index":0}]]},"Get Random Topic":{"main":[[{"node":"Content creator","type":"main","index":0}]]},"Content Creator OpenAI Chat Model":{"ai_languageModel":[[{"node":"Content creator","type":"ai_languageModel","index":0}]]},"Content Creator Structured Output Parser":{"ai_outputParser":[[{"node":"Content creator","type":"ai_outputParser","index":0}]]},"SEO OpenAI Chat Model":{"ai_languageModel":[[{"node":"Hashtag generator /SEO","type":"ai_languageModel","index":0}]]},"SEO Structured Output Parser":{"ai_outputParser":[[{"node":"Hashtag generator /SEO","type":"ai_outputParser","index":0}]]},"OpenAI Image Generator":{"main":[[{"node":"Merge","type":"main","index":1}]]}},"authors":"Rashad  ","name":null,"description":null}}

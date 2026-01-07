@@ -1,0 +1,115 @@
+{"updatedAt":"2025-12-30T00:33:17.000Z","createdAt":"2025-12-24T22:23:03.199Z","id":"WNASYOYNvb4ACp9t","name":"AutoMagicly - Referrals Workflow","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"referrals","responseMode":"responseNode","options":{}},"id":"294e5cb3-c67a-4d4f-b516-4ae59815ee23","name":"Webhook - Referrals","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[-768,32],"webhookId":"automagicly-referrals"},{"parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"11JXrCSmDGuppB6om9ArC1V1IEVqm7C3Mn4BYu65POOk","mode":"list","cachedResultName":"Refferal Spreadsheet","cachedResultUrl":"https://docs.google.com/spreadsheets/d/11JXrCSmDGuppB6om9ArC1V1IEVqm7C3Mn4BYu65POOk/edit?usp=drivesdk"},"sheetName":{"__rl":true,"value":"gid=0","mode":"list","cachedResultName":"Sheet1","cachedResultUrl":"https://docs.google.com/spreadsheets/d/11JXrCSmDGuppB6om9ArC1V1IEVqm7C3Mn4BYu65POOk/edit#gid=0"},"columns":{"mappingMode":"defineBelow","value":{"yourName":"={{ $json.yourName }}","yourEmail":"={{ $json.yourEmail }}","referralName":"={{ $json.referralName }}","referralCompany":"={{ $json.referralCompany }}","referralEmail":"={{ $json.referralContact }}","whyRefer":"={{ $json.helpNeeded }}","source":"={{ $json.source }}","submitted Date":"={{ $json.submittedAt.toDateTime().format('FFF') }}"},"matchingColumns":["referralEmail"],"schema":[{"id":"yourName","displayName":"yourName","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"yourEmail","displayName":"yourEmail","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"referralName","displayName":"referralName","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"referralCompany","displayName":"referralCompany","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"referralEmail","displayName":"referralEmail","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"whyRefer","displayName":"whyRefer","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"source","displayName":"source","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"submitted Date","displayName":"submitted Date","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false}],"attemptToConvertTypes":false,"convertFieldsToString":false},"options":{}},"id":"c9f2c236-d8da-4f3f-992e-c2b5ac1dc00f","name":"Google Sheets - Save Referral","type":"n8n-nodes-base.googleSheets","typeVersion":4,"position":[-320,32],"credentials":{"googleSheetsOAuth2Api":{"id":"u4p2ZVWImQhY9Hnt","name":"Rashad Google Sheets account"}}},{"parameters":{"resource":"message","subject":"Thank You for Your Referral! 🎁","includeHtml":true,"htmlMessage":"=<h2>Hi {{ $json.yourName }},</h2>
+
+<p>Thank you so much for referring {{ $json.referralName }} from {{ $json.referralCompany }} to AutoMagicly! 🎉</p>
+
+<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">
+  <h3>What Happens Next?</h3>
+  <ol>
+    <li>We'll reach out to {{ $json.referralName }} within 24 hours</li>
+    <li>If they book a consultation, you'll receive a $100 Amazon gift card</li>
+    <li>If they become a client, you'll get an additional $500 bonus!</li>
+  </ol>
+</div>
+
+<h3>Your Referral Details:</h3>
+<ul>
+  <li><strong>Name:</strong> {{ $json.referralName }}</li>
+  <li><strong>Company:</strong> {{ $json.referralCompany }}</li>
+  <li><strong>Email:</strong> {{ $json.referralEmail }}</li>
+</ul>
+
+<p>We'll keep you updated on the progress of your referral.</p>
+
+<p><strong>Know more businesses that could benefit from automation?</strong><br>
+Send more referrals at: https://automagicly.com#referrals</p>
+
+<p>Thanks again for spreading the word!<br>
+The AutoMagicly Team</p>","message":"=","toList":["={{ $json.yourEmail }}"],"additionalFields":{}},"id":"62d1912f-a43d-43ef-b469-141deeb5e28e","name":"Gmail - Thank Referrer","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[-96,-64],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"resource":"message","subject":"={{ $json.yourName }} thought you'd be interested in AutoMagicly","includeHtml":true,"htmlMessage":"=<h2>Hi {{ $json.referralName }},</h2>
+
+<p>{{ $json.yourName }} recently referred you to AutoMagicly.</p>
+
+<p>{{ $json.yourName }} mentioned: <em>\"{{ $json.whyRefer }}\"</em></p>
+
+<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">
+  <h3>What We Do</h3>
+  <p>We help businesses save 10-20 hours per week by automating repetitive tasks like:</p>
+  <ul>
+    <li>Email management and routing</li>
+    <li>Data entry and reporting</li>
+    <li>CRM updates and follow-ups</li>
+    <li>Document processing</li>
+    <li>Scheduling and coordination</li>
+  </ul>
+</div>
+
+<h3>Let's Chat!</h3>
+<p>We'd love to offer you a <strong>free 15-minute AI audit</strong> to identify where automation could save {{ $json.referralCompany }} the most time.</p>
+
+<p>
+  <a href=\"https://automagicly.com#booking\" style=\"display: inline-block; background: #0ea5e9; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin: 10px 0;\">Schedule Your Free Audit</a>
+</p>
+
+<p>No pressure - just a friendly conversation about your workflows and how automation might help.</p>
+
+<p>Looking forward to connecting!<br>
+The AutoMagicly Team</p>
+
+<p style=\"font-size: 12px; color: #666; margin-top: 30px;\">P.S. - You can also check out our website at https://automagicly.com to learn more.</p>","message":"=","toList":["={{ $json.referralEmail }}"],"additionalFields":{}},"id":"2a633782-00c8-4757-8061-3091ca1a2c4c","name":"Gmail - Introduce to Referral","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[-96,128],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"respondWith":"json","responseBody":"={ \"success\": true, \"message\": \"Thank you for your referral! We've sent an introduction to {{ $('Google Sheets - Save Referral').item.json.referralName }}. You'll receive $100 if they book a consultation and $500 if they become a client!\"
+}","options":{}},"id":"db250e72-72fb-48e0-aac5-e34cfef5bfb6","name":"Respond to Webhook","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[128,128]},{"parameters":{"mode":"raw","jsonOutput":"={{ $json.body }}","options":{}},"type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-544,32],"id":"6829c091-309c-4800-a07d-d2b58f1fbd28","name":"Edit Fields"}],"connections":{"Webhook - Referrals":{"main":[[{"node":"Edit Fields","type":"main","index":0}]]},"Google Sheets - Save Referral":{"main":[[{"node":"Gmail - Thank Referrer","type":"main","index":0},{"node":"Gmail - Introduce to Referral","type":"main","index":0}]]},"Gmail - Introduce to Referral":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"Edit Fields":{"main":[[{"node":"Google Sheets - Save Referral","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"3ec890b0-2aea-4035-9c00-7e5383cbe29c","activeVersionId":"3ec890b0-2aea-4035-9c00-7e5383cbe29c","versionCounter":9,"triggerCount":1,"shared":[{"updatedAt":"2025-12-24T22:23:03.204Z","createdAt":"2025-12-24T22:23:03.204Z","role":"workflow:owner","workflowId":"WNASYOYNvb4ACp9t","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":{"updatedAt":"2025-12-29T13:36:46.758Z","createdAt":"2025-12-29T13:36:46.758Z","versionId":"3ec890b0-2aea-4035-9c00-7e5383cbe29c","workflowId":"WNASYOYNvb4ACp9t","nodes":[{"parameters":{"httpMethod":"POST","path":"referrals","responseMode":"responseNode","options":{}},"id":"294e5cb3-c67a-4d4f-b516-4ae59815ee23","name":"Webhook - Referrals","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[-768,32],"webhookId":"automagicly-referrals"},{"parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"11JXrCSmDGuppB6om9ArC1V1IEVqm7C3Mn4BYu65POOk","mode":"list","cachedResultName":"Refferal Spreadsheet","cachedResultUrl":"https://docs.google.com/spreadsheets/d/11JXrCSmDGuppB6om9ArC1V1IEVqm7C3Mn4BYu65POOk/edit?usp=drivesdk"},"sheetName":{"__rl":true,"value":"gid=0","mode":"list","cachedResultName":"Sheet1","cachedResultUrl":"https://docs.google.com/spreadsheets/d/11JXrCSmDGuppB6om9ArC1V1IEVqm7C3Mn4BYu65POOk/edit#gid=0"},"columns":{"mappingMode":"defineBelow","value":{"yourName":"={{ $json.yourName }}","yourEmail":"={{ $json.yourEmail }}","referralName":"={{ $json.referralName }}","referralCompany":"={{ $json.referralCompany }}","referralEmail":"={{ $json.referralContact }}","whyRefer":"={{ $json.helpNeeded }}","source":"={{ $json.source }}","submitted Date":"={{ $json.submittedAt.toDateTime().format('FFF') }}"},"matchingColumns":["referralEmail"],"schema":[{"id":"yourName","displayName":"yourName","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"yourEmail","displayName":"yourEmail","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"referralName","displayName":"referralName","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"referralCompany","displayName":"referralCompany","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"referralEmail","displayName":"referralEmail","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"whyRefer","displayName":"whyRefer","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"source","displayName":"source","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"submitted Date","displayName":"submitted Date","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false}],"attemptToConvertTypes":false,"convertFieldsToString":false},"options":{}},"id":"c9f2c236-d8da-4f3f-992e-c2b5ac1dc00f","name":"Google Sheets - Save Referral","type":"n8n-nodes-base.googleSheets","typeVersion":4,"position":[-320,32],"credentials":{"googleSheetsOAuth2Api":{"id":"u4p2ZVWImQhY9Hnt","name":"Rashad Google Sheets account"}}},{"parameters":{"resource":"message","subject":"Thank You for Your Referral! 🎁","includeHtml":true,"htmlMessage":"=<h2>Hi {{ $json.yourName }},</h2>
+
+<p>Thank you so much for referring {{ $json.referralName }} from {{ $json.referralCompany }} to AutoMagicly! 🎉</p>
+
+<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">
+  <h3>What Happens Next?</h3>
+  <ol>
+    <li>We'll reach out to {{ $json.referralName }} within 24 hours</li>
+    <li>If they book a consultation, you'll receive a $100 Amazon gift card</li>
+    <li>If they become a client, you'll get an additional $500 bonus!</li>
+  </ol>
+</div>
+
+<h3>Your Referral Details:</h3>
+<ul>
+  <li><strong>Name:</strong> {{ $json.referralName }}</li>
+  <li><strong>Company:</strong> {{ $json.referralCompany }}</li>
+  <li><strong>Email:</strong> {{ $json.referralEmail }}</li>
+</ul>
+
+<p>We'll keep you updated on the progress of your referral.</p>
+
+<p><strong>Know more businesses that could benefit from automation?</strong><br>
+Send more referrals at: https://automagicly.com#referrals</p>
+
+<p>Thanks again for spreading the word!<br>
+The AutoMagicly Team</p>","message":"=","toList":["={{ $json.yourEmail }}"],"additionalFields":{}},"id":"62d1912f-a43d-43ef-b469-141deeb5e28e","name":"Gmail - Thank Referrer","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[-96,-64],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"resource":"message","subject":"={{ $json.yourName }} thought you'd be interested in AutoMagicly","includeHtml":true,"htmlMessage":"=<h2>Hi {{ $json.referralName }},</h2>
+
+<p>{{ $json.yourName }} recently referred you to AutoMagicly.</p>
+
+<p>{{ $json.yourName }} mentioned: <em>\"{{ $json.whyRefer }}\"</em></p>
+
+<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">
+  <h3>What We Do</h3>
+  <p>We help businesses save 10-20 hours per week by automating repetitive tasks like:</p>
+  <ul>
+    <li>Email management and routing</li>
+    <li>Data entry and reporting</li>
+    <li>CRM updates and follow-ups</li>
+    <li>Document processing</li>
+    <li>Scheduling and coordination</li>
+  </ul>
+</div>
+
+<h3>Let's Chat!</h3>
+<p>We'd love to offer you a <strong>free 15-minute AI audit</strong> to identify where automation could save {{ $json.referralCompany }} the most time.</p>
+
+<p>
+  <a href=\"https://automagicly.com#booking\" style=\"display: inline-block; background: #0ea5e9; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin: 10px 0;\">Schedule Your Free Audit</a>
+</p>
+
+<p>No pressure - just a friendly conversation about your workflows and how automation might help.</p>
+
+<p>Looking forward to connecting!<br>
+The AutoMagicly Team</p>
+
+<p style=\"font-size: 12px; color: #666; margin-top: 30px;\">P.S. - You can also check out our website at https://automagicly.com to learn more.</p>","message":"=","toList":["={{ $json.referralEmail }}"],"additionalFields":{}},"id":"2a633782-00c8-4757-8061-3091ca1a2c4c","name":"Gmail - Introduce to Referral","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[-96,128],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"respondWith":"json","responseBody":"={ \"success\": true, \"message\": \"Thank you for your referral! We've sent an introduction to {{ $('Google Sheets - Save Referral').item.json.referralName }}. You'll receive $100 if they book a consultation and $500 if they become a client!\"
+}","options":{}},"id":"db250e72-72fb-48e0-aac5-e34cfef5bfb6","name":"Respond to Webhook","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[128,128]},{"parameters":{"mode":"raw","jsonOutput":"={{ $json.body }}","options":{}},"type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-544,32],"id":"6829c091-309c-4800-a07d-d2b58f1fbd28","name":"Edit Fields"}],"connections":{"Webhook - Referrals":{"main":[[{"node":"Edit Fields","type":"main","index":0}]]},"Google Sheets - Save Referral":{"main":[[{"node":"Gmail - Thank Referrer","type":"main","index":0},{"node":"Gmail - Introduce to Referral","type":"main","index":0}]]},"Gmail - Introduce to Referral":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"Edit Fields":{"main":[[{"node":"Google Sheets - Save Referral","type":"main","index":0}]]}},"authors":"Rashad  ","name":null,"description":null}}

@@ -1,0 +1,617 @@
+{"updatedAt":"2025-12-30T00:33:18.000Z","createdAt":"2025-12-24T23:16:55.862Z","id":"qz00MlymWyhVKsle","name":"AutoMagicly - Waitlist Workflow","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"waitlist","responseMode":"responseNode","options":{}},"id":"ae65c6e2-767c-4e22-a9cd-b66823426da9","name":"Webhook - Waitlist","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[-656,-192],"webhookId":"automagicly-waitlist"},{"parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"1GrzV6CMfFn9Tj8kOGaj8YtINNTazsYpdrdB5lOu9D_o","mode":"list","cachedResultName":"Waitlist spreadsheet","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1GrzV6CMfFn9Tj8kOGaj8YtINNTazsYpdrdB5lOu9D_o/edit?usp=drivesdk"},"sheetName":{"__rl":true,"value":"gid=0","mode":"list","cachedResultName":"Sheet1","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1GrzV6CMfFn9Tj8kOGaj8YtINNTazsYpdrdB5lOu9D_o/edit#gid=0"},"columns":{"mappingMode":"defineBelow","value":{"email":"={{ $json.email }}","source":"={{ $json.source }}","submitted at":"={{ $json.submittedAt.toDateTime().format('FFF') }}","interest":"={{ $json.interest }}"},"matchingColumns":["interest"],"schema":[{"id":"interest","displayName":"interest","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"email","displayName":"email","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"source","displayName":"source","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"submitted at","displayName":"submitted at","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false}],"attemptToConvertTypes":false,"convertFieldsToString":false},"options":{}},"id":"2345f83d-5c4b-45bf-891a-54fe5b8628ad","name":"Google Sheets - Add to Waitlist","type":"n8n-nodes-base.googleSheets","typeVersion":4,"position":[-208,-192],"credentials":{"googleSheetsOAuth2Api":{"id":"u4p2ZVWImQhY9Hnt","name":"Rashad Google Sheets account"}}},{"parameters":{"resource":"message","subject":"You're on the Waitlist! 🎉","includeHtml":true,"htmlMessage":"=<!DOCTYPE html>
+  <html>
+  <head>
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  </head>
+  <body style=\"margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f3f4f6;\">
+  {{ (() => {
+    // Helper Functions
+      const getProductName = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return 'Business-in-a-Box Products';
+          case 'automation-packs':
+            return 'Productized Automation Packs';
+          case 'both':
+            return 'Both Products';
+          default:
+            return 'Our Products';
+        }
+      };
+
+  const getProductEmoji = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return '📦';
+          case 'automation-packs':
+            return '⚡';
+          case 'both':
+            return '📦⚡';
+          default:
+            return '✨';
+        }
+      };
+
+      const shouldShowBusinessBox = (interest) => {
+        return interest === 'business-in-a-box' || interest === 'both';
+      };
+
+      const shouldShowAutomationBox = (interest) => {
+        return interest === 'automation-packs' || interest === 'both';
+      };
+
+      const getBusinessBoxHTML = () => {
+        return `<div style=\"background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e0e7ff;\">
+          <h3 style=\"margin: 0 0 15px 0; color: #1e40af; font-size: 20px;\">📦 Business-in-a-Box Products</h3>
+          <p style=\"margin: 0; color: #1e3a8a; line-height: 1.6;\">
+            Prebuilt automation templates for common workflows, ready to deploy in minutes. Industry-specific packs for real estate, accounting, salons, and home services with pre-configured integrations,
+  documentation, and training included. One-time purchase, yours forever.
+          </p>
+        </div>`;
+      };
+
+      const getAutomationBoxHTML = () => {
+        return `<div style=\"background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #fbbf24;\">
+          <h3 style=\"margin: 0 0 15px 0; color: #92400e; font-size: 20px;\">⚡ Productized Automation Packs</h3>
+          <p style=\"margin: 0; color: #78350f; line-height: 1.6;\">
+            Lightweight, quick-start automations for common pain points like lead capture & follow-up, invoice automation, and customer onboarding. Fixed scope, fixed price, fast delivery.
+          </p>
+        </div>`;
+      };
+
+      const interest = $json.interest;
+      const productName = getProductName(interest);
+      const productEmoji = getProductEmoji(interest);
+
+  // Build the email HTML
+      return `
+    <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">
+      <div style=\"background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">
+
+        <!-- Header -->
+        <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; text-align: center;\">
+          <div style=\"font-size: 50px; margin-bottom: 10px;\">🎉</div>
+          <h1 style=\"margin: 0; font-size: 28px; font-weight: 700;\">You're on the List!</h1>
+          <p style=\"margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;\">Thanks for your interest in AutoMagicly</p>
+        </div>
+
+        <!-- Body -->
+        <div style=\"padding: 30px;\">
+
+          <!-- Confirmation Box -->
+          <div style=\"background: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px; margin-bottom: 30px;\">
+            <p style=\"margin: 0; color: #065f46; font-size: 16px;\">
+              ✓ You've been added to the waitlist for <strong>${productName}</strong>
+            </p>
+          </div>
+
+          <!-- Product Details -->
+          ${shouldShowBusinessBox(interest) ? getBusinessBoxHTML() : ''}
+          ${shouldShowAutomationBox(interest) ? getAutomationBoxHTML() : ''}
+
+          <!-- Benefits Section -->
+          <h3 style=\"color: #111827; font-size: 20px; margin: 30px 0 15px 0;\">🎁 You'll Be Among the First to Know!</h3>
+          <p style=\"color: #4b5563; margin: 0 0 20px 0; line-height: 1.6;\">
+            We'll email you when <strong>${productName}</strong> ${interest === 'both' ? 'launch' : 'launches'} with:
+          </p>
+
+          <div style=\"background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 30px;\">
+            <table style=\"width: 100%; border-collapse: collapse;\">
+              <tr>
+                <td style=\"padding: 8px 0; color: #374151;\">
+                  <span style=\"color: #10b981; font-size: 20px; margin-right: 10px;\">✓</span>
+                  <strong>Early Access</strong> - Before public release
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 8px 0; color: #374151;\">
+                  <span style=\"color: #10b981; font-size: 20px; margin-right: 10px;\">✓</span>
+                  <strong>Special Launch Pricing</strong> - Exclusive discount
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 8px 0; color: #374151;\">
+                  <span style=\"color: #10b981; font-size: 20px; margin-right: 10px;\">✓</span>
+                  <strong>Exclusive Onboarding</strong> - Personalized setup support
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- CTA Section -->
+          <div style=\"background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 2px solid #fbbf24;\">
+            <h3 style=\"margin: 0 0 10px 0; color: #92400e; font-size: 18px;\">Want to Start Automating Right Away?</h3>
+            <p style=\"margin: 0 0 20px 0; color: #78350f; font-size: 14px;\">
+              Don't wait! Schedule a free AI audit and start saving time today.
+            </p>
+            <a href=\"https://automagicly.com#booking\" style=\"display: inline-block; background: #2563eb; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; 
+  font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);\">
+              📅 Schedule Free AI Audit
+            </a>
+          </div>
+
+          <!-- Footer -->
+          <div style=\"text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;\">
+            <p style=\"color: #6b7280; margin: 0; line-height: 1.6;\">
+              Talk soon!<br>
+              <strong style=\"color: #111827;\">The AutoMagicly Team</strong>
+            </p>
+            <p style=\"color: #9ca3af; font-size: 12px; margin: 15px 0 0 0;\">
+              P.S. Reply to this email if you have any questions. We read every message! 💬
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Unsubscribe Footer -->
+      <div style=\"text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;\">
+        <p style=\"margin: 0;\">
+          AutoMagicly - AI Automation for Your Business<br>
+          You're receiving this because you joined our waitlist
+        </p>
+      </div>
+    </div>
+  `;
+  })() }}
+  </body>
+  </html>","message":"=","toList":["rashad.barnett@gmail.com"],"additionalFields":{}},"id":"1912f027-a1dd-4b28-b967-01bd9451574d","name":"Gmail - Waitlist Confirmation","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[16,-192],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"respondWith":"json","responseBody":"={ 
+  \"success\": true, 
+  \"message\": \"You're on the waitlist! Check your email for confirmation.\", \"product\": \"{{ $('Google Sheets - Add to Waitlist').item.json.product }}\"
+}","options":{}},"id":"f73549f2-875f-47f1-90cf-83af3db61c00","name":"Respond to Webhook","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[240,-192]},{"parameters":{"mode":"raw","jsonOutput":"={{ $json.body }}","options":{}},"type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-432,-192],"id":"7f83f9eb-06b0-4517-82d0-2033dfb2d49b","name":"Edit Fields"},{"parameters":{"resource":"message","subject":"Waitlist Alert","includeHtml":true,"htmlMessage":"=<!DOCTYPE html>
+  <html>
+  <head>
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  </head>
+  <body style=\"margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f3f4f6;\">{{ (() => {
+  // Helper Functions
+      const getProductName = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return 'Business-in-a-Box Products';
+          case 'automation-packs':
+            return 'Productized Automation Packs';
+          case 'both':
+            return 'Both Products';
+          default:
+            return 'Unknown Product';
+        }
+      };
+
+      const getProductEmoji = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return '📦';
+          case 'automation-packs':
+            return '⚡';
+          case 'both':
+            return '📦⚡';
+          default:
+            return '❓';
+        }
+      };
+
+      const getProductColor = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return '#3b82f6'; // Blue
+          case 'automation-packs':
+            return '#f59e0b'; // Orange
+          case 'both':
+            return '#8b5cf6'; // Purple
+          default:
+            return '#6b7280'; // Gray
+        }
+      };
+
+      const interest = $('Google Sheets - Add to Waitlist').item.json.interest
+      const email = $('Google Sheets - Add to Waitlist').item.json.email
+      const productName = getProductName(interest);
+      const productEmoji = getProductEmoji(interest);
+      const productColor = getProductColor(interest);
+      const timestamp = new Date().toLocaleString('en-US', {
+        timeZone: 'America/Chicago',
+        dateStyle: 'full',
+        timeStyle: 'short'
+      });
+
+      return `
+    <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">
+      <div style=\"background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">
+
+        <!-- Header -->
+        <div style=\"background: ${productColor}; color: white; padding: 30px; text-align: center;\">
+          <div style=\"font-size: 50px; margin-bottom: 10px;\">${productEmoji}</div>
+          <h1 style=\"margin: 0; font-size: 24px; font-weight: 700;\">New Waitlist Signup!</h1>
+          <p style=\"margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;\">Someone just joined the waitlist</p>
+        </div>
+
+        <!-- Body -->
+        <div style=\"padding: 30px;\">
+
+          <!-- Signup Details -->
+          <div style=\"background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 20px;\">
+            <h3 style=\"margin: 0 0 15px 0; color: #111827; font-size: 18px;\">📋 Signup Details</h3>
+            <table style=\"width: 100%; border-collapse: collapse;\">
+              <tr>
+                <td style=\"padding: 10px 0; color: #6b7280; font-size: 14px; width: 120px; vertical-align: top;\">
+                  <strong>Email:</strong>
+                </td>
+                <td style=\"padding: 10px 0; color: #111827; font-size: 14px;\">
+                  <a href=\"mailto:${email}\" style=\"color: #2563eb; text-decoration: none;\">${email}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 10px 0; color: #6b7280; font-size: 14px; vertical-align: top; border-top: 1px solid #e5e7eb;\">
+                  <strong>Interested In:</strong>
+                </td>
+                <td style=\"padding: 10px 0; color: #111827; font-size: 14px; border-top: 1px solid #e5e7eb;\">
+                  <span style=\"background: ${productColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;\">
+                    ${productEmoji} ${productName}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 10px 0; color: #6b7280; font-size: 14px; vertical-align: top; border-top: 1px solid #e5e7eb;\">
+                  <strong>Signed Up:</strong>
+                </td>
+                <td style=\"padding: 10px 0; color: #111827; font-size: 14px; border-top: 1px solid #e5e7eb;\">
+                  ${timestamp}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Product Interest Details -->
+          <div style=\"background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); border-left: 4px solid ${productColor}; padding: 20px; border-radius: 8px; margin-bottom: 20px;\">
+            <h3 style=\"margin: 0 0 10px 0; color: #1e40af; font-size: 16px;\">What They're Interested In:</h3>
+            ${interest === 'business-in-a-box' ? `
+              <p style=\"margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;\">
+                <strong>Business-in-a-Box Products</strong> - Looking for industry-specific automation templates (real estate, accounting, salons, home services)
+              </p>
+            ` : ''}
+            ${interest === 'automation-packs' ? `
+              <p style=\"margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;\">
+                <strong>Productized Automation Packs</strong> - Interested in quick-start automations (lead capture, invoicing, customer onboarding)
+              </p>
+            ` : ''}
+            ${interest === 'both' ? `
+              <p style=\"margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;\">
+                <strong>Both Products</strong> - High intent! Interested in both Business-in-a-Box AND Productized Automation Packs
+              </p>
+            ` : ''}
+          </div>
+
+          <!-- Action Items -->
+          <div style=\"background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-bottom: 20px;\">
+            <h3 style=\"margin: 0 0 10px 0; color: #92400e; font-size: 16px;\">💡 Suggested Actions:</h3>
+            <ul style=\"margin: 10px 0 0 0; padding-left: 20px; color: #78350f; font-size: 14px; line-height: 1.8;\">
+              <li>Add to your email marketing system (waitlist segment)</li>
+              <li>Consider reaching out personally if high-value lead</li>
+              <li>Track in CRM for launch notification</li>
+              ${interest === 'both' ? '<li><strong style=\"color: #92400e;\">High Priority:</strong> This person wants both products - potential early adopter!</li>' : ''}
+            </ul>
+          </div>
+
+          <!-- Quick Stats -->
+          <div style=\"text-align: center; padding: 20px; background: #f9fafb; border-radius: 8px;\">
+            <p style=\"margin: 0; color: #6b7280; font-size: 13px;\">
+              This notification was sent automatically by your waitlist workflow.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `;
+    })() }}
+  </body>
+  </html>","message":"=","toList":["rashad.barnett@gmail.com"],"additionalFields":{}},"id":"ebb8d7ba-82c7-43a4-91c1-2f63d32744be","name":"AutoMagicly Confirmation","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[464,-192],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}}],"connections":{"Webhook - Waitlist":{"main":[[{"node":"Edit Fields","type":"main","index":0}]]},"Google Sheets - Add to Waitlist":{"main":[[{"node":"Gmail - Waitlist Confirmation","type":"main","index":0}]]},"Gmail - Waitlist Confirmation":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"Edit Fields":{"main":[[{"node":"Google Sheets - Add to Waitlist","type":"main","index":0}]]},"Respond to Webhook":{"main":[[{"node":"AutoMagicly Confirmation","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"0143dc68-d2a9-45a9-8daa-cf51841fcf15","activeVersionId":"0143dc68-d2a9-45a9-8daa-cf51841fcf15","versionCounter":8,"triggerCount":1,"shared":[{"updatedAt":"2025-12-24T23:16:55.869Z","createdAt":"2025-12-24T23:16:55.869Z","role":"workflow:owner","workflowId":"qz00MlymWyhVKsle","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":{"updatedAt":"2025-12-29T19:04:08.872Z","createdAt":"2025-12-29T19:04:08.872Z","versionId":"0143dc68-d2a9-45a9-8daa-cf51841fcf15","workflowId":"qz00MlymWyhVKsle","nodes":[{"parameters":{"httpMethod":"POST","path":"waitlist","responseMode":"responseNode","options":{}},"id":"ae65c6e2-767c-4e22-a9cd-b66823426da9","name":"Webhook - Waitlist","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[-656,-192],"webhookId":"automagicly-waitlist"},{"parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"1GrzV6CMfFn9Tj8kOGaj8YtINNTazsYpdrdB5lOu9D_o","mode":"list","cachedResultName":"Waitlist spreadsheet","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1GrzV6CMfFn9Tj8kOGaj8YtINNTazsYpdrdB5lOu9D_o/edit?usp=drivesdk"},"sheetName":{"__rl":true,"value":"gid=0","mode":"list","cachedResultName":"Sheet1","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1GrzV6CMfFn9Tj8kOGaj8YtINNTazsYpdrdB5lOu9D_o/edit#gid=0"},"columns":{"mappingMode":"defineBelow","value":{"email":"={{ $json.email }}","source":"={{ $json.source }}","submitted at":"={{ $json.submittedAt.toDateTime().format('FFF') }}","interest":"={{ $json.interest }}"},"matchingColumns":["interest"],"schema":[{"id":"interest","displayName":"interest","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"email","displayName":"email","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"source","displayName":"source","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"submitted at","displayName":"submitted at","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false}],"attemptToConvertTypes":false,"convertFieldsToString":false},"options":{}},"id":"2345f83d-5c4b-45bf-891a-54fe5b8628ad","name":"Google Sheets - Add to Waitlist","type":"n8n-nodes-base.googleSheets","typeVersion":4,"position":[-208,-192],"credentials":{"googleSheetsOAuth2Api":{"id":"u4p2ZVWImQhY9Hnt","name":"Rashad Google Sheets account"}}},{"parameters":{"resource":"message","subject":"You're on the Waitlist! 🎉","includeHtml":true,"htmlMessage":"=<!DOCTYPE html>
+  <html>
+  <head>
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  </head>
+  <body style=\"margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f3f4f6;\">
+  {{ (() => {
+    // Helper Functions
+      const getProductName = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return 'Business-in-a-Box Products';
+          case 'automation-packs':
+            return 'Productized Automation Packs';
+          case 'both':
+            return 'Both Products';
+          default:
+            return 'Our Products';
+        }
+      };
+
+  const getProductEmoji = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return '📦';
+          case 'automation-packs':
+            return '⚡';
+          case 'both':
+            return '📦⚡';
+          default:
+            return '✨';
+        }
+      };
+
+      const shouldShowBusinessBox = (interest) => {
+        return interest === 'business-in-a-box' || interest === 'both';
+      };
+
+      const shouldShowAutomationBox = (interest) => {
+        return interest === 'automation-packs' || interest === 'both';
+      };
+
+      const getBusinessBoxHTML = () => {
+        return `<div style=\"background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e0e7ff;\">
+          <h3 style=\"margin: 0 0 15px 0; color: #1e40af; font-size: 20px;\">📦 Business-in-a-Box Products</h3>
+          <p style=\"margin: 0; color: #1e3a8a; line-height: 1.6;\">
+            Prebuilt automation templates for common workflows, ready to deploy in minutes. Industry-specific packs for real estate, accounting, salons, and home services with pre-configured integrations,
+  documentation, and training included. One-time purchase, yours forever.
+          </p>
+        </div>`;
+      };
+
+      const getAutomationBoxHTML = () => {
+        return `<div style=\"background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #fbbf24;\">
+          <h3 style=\"margin: 0 0 15px 0; color: #92400e; font-size: 20px;\">⚡ Productized Automation Packs</h3>
+          <p style=\"margin: 0; color: #78350f; line-height: 1.6;\">
+            Lightweight, quick-start automations for common pain points like lead capture & follow-up, invoice automation, and customer onboarding. Fixed scope, fixed price, fast delivery.
+          </p>
+        </div>`;
+      };
+
+      const interest = $json.interest;
+      const productName = getProductName(interest);
+      const productEmoji = getProductEmoji(interest);
+
+  // Build the email HTML
+      return `
+    <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">
+      <div style=\"background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">
+
+        <!-- Header -->
+        <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; text-align: center;\">
+          <div style=\"font-size: 50px; margin-bottom: 10px;\">🎉</div>
+          <h1 style=\"margin: 0; font-size: 28px; font-weight: 700;\">You're on the List!</h1>
+          <p style=\"margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;\">Thanks for your interest in AutoMagicly</p>
+        </div>
+
+        <!-- Body -->
+        <div style=\"padding: 30px;\">
+
+          <!-- Confirmation Box -->
+          <div style=\"background: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px; margin-bottom: 30px;\">
+            <p style=\"margin: 0; color: #065f46; font-size: 16px;\">
+              ✓ You've been added to the waitlist for <strong>${productName}</strong>
+            </p>
+          </div>
+
+          <!-- Product Details -->
+          ${shouldShowBusinessBox(interest) ? getBusinessBoxHTML() : ''}
+          ${shouldShowAutomationBox(interest) ? getAutomationBoxHTML() : ''}
+
+          <!-- Benefits Section -->
+          <h3 style=\"color: #111827; font-size: 20px; margin: 30px 0 15px 0;\">🎁 You'll Be Among the First to Know!</h3>
+          <p style=\"color: #4b5563; margin: 0 0 20px 0; line-height: 1.6;\">
+            We'll email you when <strong>${productName}</strong> ${interest === 'both' ? 'launch' : 'launches'} with:
+          </p>
+
+          <div style=\"background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 30px;\">
+            <table style=\"width: 100%; border-collapse: collapse;\">
+              <tr>
+                <td style=\"padding: 8px 0; color: #374151;\">
+                  <span style=\"color: #10b981; font-size: 20px; margin-right: 10px;\">✓</span>
+                  <strong>Early Access</strong> - Before public release
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 8px 0; color: #374151;\">
+                  <span style=\"color: #10b981; font-size: 20px; margin-right: 10px;\">✓</span>
+                  <strong>Special Launch Pricing</strong> - Exclusive discount
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 8px 0; color: #374151;\">
+                  <span style=\"color: #10b981; font-size: 20px; margin-right: 10px;\">✓</span>
+                  <strong>Exclusive Onboarding</strong> - Personalized setup support
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- CTA Section -->
+          <div style=\"background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 2px solid #fbbf24;\">
+            <h3 style=\"margin: 0 0 10px 0; color: #92400e; font-size: 18px;\">Want to Start Automating Right Away?</h3>
+            <p style=\"margin: 0 0 20px 0; color: #78350f; font-size: 14px;\">
+              Don't wait! Schedule a free AI audit and start saving time today.
+            </p>
+            <a href=\"https://automagicly.com#booking\" style=\"display: inline-block; background: #2563eb; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; 
+  font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);\">
+              📅 Schedule Free AI Audit
+            </a>
+          </div>
+
+          <!-- Footer -->
+          <div style=\"text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;\">
+            <p style=\"color: #6b7280; margin: 0; line-height: 1.6;\">
+              Talk soon!<br>
+              <strong style=\"color: #111827;\">The AutoMagicly Team</strong>
+            </p>
+            <p style=\"color: #9ca3af; font-size: 12px; margin: 15px 0 0 0;\">
+              P.S. Reply to this email if you have any questions. We read every message! 💬
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Unsubscribe Footer -->
+      <div style=\"text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;\">
+        <p style=\"margin: 0;\">
+          AutoMagicly - AI Automation for Your Business<br>
+          You're receiving this because you joined our waitlist
+        </p>
+      </div>
+    </div>
+  `;
+  })() }}
+  </body>
+  </html>","message":"=","toList":["rashad.barnett@gmail.com"],"additionalFields":{}},"id":"1912f027-a1dd-4b28-b967-01bd9451574d","name":"Gmail - Waitlist Confirmation","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[16,-192],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"respondWith":"json","responseBody":"={ 
+  \"success\": true, 
+  \"message\": \"You're on the waitlist! Check your email for confirmation.\", \"product\": \"{{ $('Google Sheets - Add to Waitlist').item.json.product }}\"
+}","options":{}},"id":"f73549f2-875f-47f1-90cf-83af3db61c00","name":"Respond to Webhook","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[240,-192]},{"parameters":{"mode":"raw","jsonOutput":"={{ $json.body }}","options":{}},"type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-432,-192],"id":"7f83f9eb-06b0-4517-82d0-2033dfb2d49b","name":"Edit Fields"},{"parameters":{"resource":"message","subject":"Waitlist Alert","includeHtml":true,"htmlMessage":"=<!DOCTYPE html>
+  <html>
+  <head>
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  </head>
+  <body style=\"margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f3f4f6;\">{{ (() => {
+  // Helper Functions
+      const getProductName = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return 'Business-in-a-Box Products';
+          case 'automation-packs':
+            return 'Productized Automation Packs';
+          case 'both':
+            return 'Both Products';
+          default:
+            return 'Unknown Product';
+        }
+      };
+
+      const getProductEmoji = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return '📦';
+          case 'automation-packs':
+            return '⚡';
+          case 'both':
+            return '📦⚡';
+          default:
+            return '❓';
+        }
+      };
+
+      const getProductColor = (interest) => {
+        switch(interest) {
+          case 'business-in-a-box':
+            return '#3b82f6'; // Blue
+          case 'automation-packs':
+            return '#f59e0b'; // Orange
+          case 'both':
+            return '#8b5cf6'; // Purple
+          default:
+            return '#6b7280'; // Gray
+        }
+      };
+
+      const interest = $('Google Sheets - Add to Waitlist').item.json.interest
+      const email = $('Google Sheets - Add to Waitlist').item.json.email
+      const productName = getProductName(interest);
+      const productEmoji = getProductEmoji(interest);
+      const productColor = getProductColor(interest);
+      const timestamp = new Date().toLocaleString('en-US', {
+        timeZone: 'America/Chicago',
+        dateStyle: 'full',
+        timeStyle: 'short'
+      });
+
+      return `
+    <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">
+      <div style=\"background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">
+
+        <!-- Header -->
+        <div style=\"background: ${productColor}; color: white; padding: 30px; text-align: center;\">
+          <div style=\"font-size: 50px; margin-bottom: 10px;\">${productEmoji}</div>
+          <h1 style=\"margin: 0; font-size: 24px; font-weight: 700;\">New Waitlist Signup!</h1>
+          <p style=\"margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;\">Someone just joined the waitlist</p>
+        </div>
+
+        <!-- Body -->
+        <div style=\"padding: 30px;\">
+
+          <!-- Signup Details -->
+          <div style=\"background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 20px;\">
+            <h3 style=\"margin: 0 0 15px 0; color: #111827; font-size: 18px;\">📋 Signup Details</h3>
+            <table style=\"width: 100%; border-collapse: collapse;\">
+              <tr>
+                <td style=\"padding: 10px 0; color: #6b7280; font-size: 14px; width: 120px; vertical-align: top;\">
+                  <strong>Email:</strong>
+                </td>
+                <td style=\"padding: 10px 0; color: #111827; font-size: 14px;\">
+                  <a href=\"mailto:${email}\" style=\"color: #2563eb; text-decoration: none;\">${email}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 10px 0; color: #6b7280; font-size: 14px; vertical-align: top; border-top: 1px solid #e5e7eb;\">
+                  <strong>Interested In:</strong>
+                </td>
+                <td style=\"padding: 10px 0; color: #111827; font-size: 14px; border-top: 1px solid #e5e7eb;\">
+                  <span style=\"background: ${productColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;\">
+                    ${productEmoji} ${productName}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style=\"padding: 10px 0; color: #6b7280; font-size: 14px; vertical-align: top; border-top: 1px solid #e5e7eb;\">
+                  <strong>Signed Up:</strong>
+                </td>
+                <td style=\"padding: 10px 0; color: #111827; font-size: 14px; border-top: 1px solid #e5e7eb;\">
+                  ${timestamp}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Product Interest Details -->
+          <div style=\"background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); border-left: 4px solid ${productColor}; padding: 20px; border-radius: 8px; margin-bottom: 20px;\">
+            <h3 style=\"margin: 0 0 10px 0; color: #1e40af; font-size: 16px;\">What They're Interested In:</h3>
+            ${interest === 'business-in-a-box' ? `
+              <p style=\"margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;\">
+                <strong>Business-in-a-Box Products</strong> - Looking for industry-specific automation templates (real estate, accounting, salons, home services)
+              </p>
+            ` : ''}
+            ${interest === 'automation-packs' ? `
+              <p style=\"margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;\">
+                <strong>Productized Automation Packs</strong> - Interested in quick-start automations (lead capture, invoicing, customer onboarding)
+              </p>
+            ` : ''}
+            ${interest === 'both' ? `
+              <p style=\"margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;\">
+                <strong>Both Products</strong> - High intent! Interested in both Business-in-a-Box AND Productized Automation Packs
+              </p>
+            ` : ''}
+          </div>
+
+          <!-- Action Items -->
+          <div style=\"background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-bottom: 20px;\">
+            <h3 style=\"margin: 0 0 10px 0; color: #92400e; font-size: 16px;\">💡 Suggested Actions:</h3>
+            <ul style=\"margin: 10px 0 0 0; padding-left: 20px; color: #78350f; font-size: 14px; line-height: 1.8;\">
+              <li>Add to your email marketing system (waitlist segment)</li>
+              <li>Consider reaching out personally if high-value lead</li>
+              <li>Track in CRM for launch notification</li>
+              ${interest === 'both' ? '<li><strong style=\"color: #92400e;\">High Priority:</strong> This person wants both products - potential early adopter!</li>' : ''}
+            </ul>
+          </div>
+
+          <!-- Quick Stats -->
+          <div style=\"text-align: center; padding: 20px; background: #f9fafb; border-radius: 8px;\">
+            <p style=\"margin: 0; color: #6b7280; font-size: 13px;\">
+              This notification was sent automatically by your waitlist workflow.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `;
+    })() }}
+  </body>
+  </html>","message":"=","toList":["rashad.barnett@gmail.com"],"additionalFields":{}},"id":"ebb8d7ba-82c7-43a4-91c1-2f63d32744be","name":"AutoMagicly Confirmation","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[464,-192],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}}],"connections":{"Webhook - Waitlist":{"main":[[{"node":"Edit Fields","type":"main","index":0}]]},"Google Sheets - Add to Waitlist":{"main":[[{"node":"Gmail - Waitlist Confirmation","type":"main","index":0}]]},"Gmail - Waitlist Confirmation":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"Edit Fields":{"main":[[{"node":"Google Sheets - Add to Waitlist","type":"main","index":0}]]},"Respond to Webhook":{"main":[[{"node":"AutoMagicly Confirmation","type":"main","index":0}]]}},"authors":"Rashad  ","name":null,"description":null}}

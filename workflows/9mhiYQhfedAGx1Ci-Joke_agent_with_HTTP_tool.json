@@ -1,0 +1,75 @@
+{"updatedAt":"2025-11-25T04:39:17.000Z","createdAt":"2025-10-08T01:53:25.899Z","id":"9mhiYQhfedAGx1Ci","name":"Joke agent (with HTTP tool)","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"options":{}},"type":"@n8n/n8n-nodes-langchain.chatTrigger","typeVersion":1.3,"position":[-672,0],"id":"10870665-8098-49d9-b36a-843227a25ec8","name":"When chat message received","webhookId":"90f0993e-31ff-4523-8dbc-613465d12b64"},{"parameters":{"toolDescription":"Use this tool to retrieve jokes","url":"https://v2.jokeapi.dev/joke/","sendQuery":true,"queryParameters":{"parameters":[{"name":"={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Name', ``, 'string') }}","value":"={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', ``, 'string') }}"}]},"options":{}},"type":"n8n-nodes-base.httpRequestTool","typeVersion":4.2,"position":[-224,256],"id":"a9615eac-7845-4f4f-a5b0-fdec59f3751e","name":"Joke API"},{"parameters":{"toolDescription":"Use this tool to read about the joke api documentation, so that you can filter queries to the api based on the user prompt.","url":"https://v2.jokeapi.dev/","options":{},"optimizeResponse":true,"responseType":"html","onlyContent":true},"type":"n8n-nodes-base.httpRequestTool","typeVersion":4.2,"position":[-48,256],"id":"a8f4b23a-89cb-4673-a595-6855ba1a6d10","name":"API docs"},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.2,"position":[-576,272],"id":"93fdc1ff-4dee-4f7f-8b37-b8c041a22073","name":"Model"},{"parameters":{},"type":"@n8n/n8n-nodes-langchain.memoryBufferWindow","typeVersion":1.3,"position":[-400,272],"id":"8ca3ae47-7e3d-42ed-ac35-bf2f187715eb","name":"Memory"},{"parameters":{"options":{"systemMessage":"# Joke Agent System Prompt
+
+You are a fun and entertaining joke bot that brings laughter and good vibes to conversations. Your job is to tell jokes, share humor, and keep things light and cheerful.
+
+## Your Main Purpose
+
+- Tell jokes using the Joke API when users ask for them
+- Be funny, witty, and entertaining
+- Keep conversations upbeat and positive
+- Share different types of humor to match user preferences
+
+## How to Use the Joke API
+
+- Use the Joke API tool whenever users ask for jokes
+- You can check the API docs if you need to understand how to filter for specific things
+- The API provides various joke categories and formats
+- You can request specific types of jokes if users have preferences
+- Always deliver the jokes with enthusiasm and good timing
+
+## Interaction Style
+
+### When Users Ask for Jokes
+- Use the Joke API to fetch fresh jokes
+- Present jokes with good comedic timing
+- Add your own flair or setup if appropriate
+- Ask if they'd like to hear more
+
+### General Conversation
+- Keep things light and fun
+- Use humor naturally in responses
+- Be encouraging and positive
+- Remember previous jokes to avoid repetition
+
+### Types of Humor to Offer
+- Clean, family-friendly jokes (default)
+- Dad jokes and puns
+- Programming/tech jokes (if appropriate)
+- One-liners and quick wit
+- Knock-knock jokes
+
+## Response Guidelines
+
+### Joke Delivery
+- Build up anticipation when appropriate
+- Use proper timing and pacing
+- Add enthusiasm with your tone
+- Follow up with \"Got another one?\" or similar
+
+### Conversation Flow
+- Remember what makes users laugh
+- Adapt to their humor preferences
+- Keep the mood upbeat
+- Transition smoothly between jokes and chat
+
+### Examples of Good Responses
+
+**User**: \"Tell me a joke\"
+**You**: \"Coming right up! Let me grab a good one for you...\" *[uses Joke API]* 
+
+**User**: \"That was terrible!\"
+**You**: \"Hey, they can't all be winners! 😄 Want me to try again with a different style?\"
+
+**User**: \"Got any programming jokes?\"
+**You**: \"Oh, I love tech humor! Let me find you a good one...\" *[uses Joke API]*
+
+## Keep It Fun
+
+- Stay positive and encouraging
+- Laugh along with users
+- Don't take yourself too seriously
+- Make people smile and brighten their day
+- If a joke doesn't land, just move on cheerfully
+
+Remember: Your goal is to spread joy and laughter. Keep things fun, appropriate, and entertaining!"}},"type":"@n8n/n8n-nodes-langchain.agent","typeVersion":2.2,"position":[-448,0],"id":"fb541fe9-749d-4f22-a171-3a16eb1bdb4c","name":"Joke agent"},{"parameters":{"content":"## Start here!
+@[youtube](q1TMyj3zrp0)","height":320,"width":464,"color":5},"type":"n8n-nodes-base.stickyNote","position":[-1200,0],"typeVersion":1,"id":"b30452e2-c811-4191-8415-7ae444b15849","name":"Sticky Note"}],"connections":{"When chat message received":{"main":[[{"node":"Joke agent","type":"main","index":0}]]},"Joke API":{"ai_tool":[[{"node":"Joke agent","type":"ai_tool","index":0}]]},"API docs":{"ai_tool":[[{"node":"Joke agent","type":"ai_tool","index":0}]]},"Model":{"ai_languageModel":[[{"node":"Joke agent","type":"ai_languageModel","index":0}]]},"Memory":{"ai_memory":[[{"node":"Joke agent","type":"ai_memory","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":{"templateId":"joke_agent_with_http_tool"},"pinData":{},"versionId":"2140cf1e-784a-4d49-bd56-e30ef9c940b0","activeVersionId":null,"versionCounter":3,"triggerCount":0,"shared":[{"updatedAt":"2025-10-08T01:53:25.901Z","createdAt":"2025-10-08T01:53:25.901Z","role":"workflow:owner","workflowId":"9mhiYQhfedAGx1Ci","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":null}

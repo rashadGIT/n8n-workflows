@@ -1,0 +1,121 @@
+{"updatedAt":"2025-12-31T01:34:46.000Z","createdAt":"2025-12-23T04:13:11.760Z","id":"L7UaexzsnsyFFM7e","name":"AutoMagicly - Booking Workflow","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"booking","responseMode":"responseNode","options":{}},"id":"1a69fb45-ccce-4dc1-a79f-10743ce53cdc","name":"Webhook - Booking","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[-752,48],"webhookId":"automagicly-booking"},{"parameters":{"calendar":{"__rl":true,"value":"43b775854c475d11df8d6850be20324ab6d73d82eb7c43b4fc6277a6ebeeb6d1@group.calendar.google.com","mode":"list","cachedResultName":"Automagicly"},"start":"={{ $('Edit Fields').item.json.dateTimeISO }}","end":"={{ (() => {
+  const d = new Date($('Edit Fields').item.json.dateTimeISO);
+  d.setMinutes(d.getMinutes() + 15);
+  return d.toISOString();
+})() }}","additionalFields":{"attendees":["={{ $('Edit Fields').item.json.email }}"],"color":"10","description":"bjbohnonoin","location":"=<a href=\"{{ $json.join_url }}\">Zoom meeting</a>","sendUpdates":"all","showMeAs":"opaque","summary":"={{ $('Edit Fields').item.json.type }}","visibility":"public"}},"id":"996deeaa-bb92-408f-94ee-e24c957a3275","name":"Google Calendar - Create Event","type":"n8n-nodes-base.googleCalendar","typeVersion":1,"position":[144,48],"credentials":{"googleCalendarOAuth2Api":{"id":"nSLcuApw76V9uekP","name":"Google Calendar account"}}},{"parameters":{"resource":"message","subject":"Your AI Audit is Confirmed! 🎉","includeHtml":true,"htmlMessage":"=<h2>Hi {{ $('Edit Fields').item.json.name }},</h2>
+
+<p>Your AI Audit has been confirmed! 🎉</p>
+
+<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">
+  <h3>Booking Details:</h3>
+  <p><strong>Date:</strong> {{ $('Edit Fields').item.json.date.toDateTime().format('DDD') }}</p>
+  <p><strong>Time:</strong> {{ $('Edit Fields').item.json.time.toDateTime().format('t') }} ({{ $('Edit Fields').item.json.timezone }})</p>
+  <p><strong>Duration:</strong> 15 minutes</p>
+</div>
+
+<!-- CTA Button -->
+<p style=\"margin: 30px 0;\">
+  <a href=\"{{ $('Create a Zoom Link').item.json.join_url }}\"
+     target=\"_blank\"
+     rel=\"noopener noreferrer\"
+     style=\"
+       background-color:#2563eb;
+       color:#ffffff;
+       padding:12px 20px;
+       text-decoration:none;
+       border-radius:8px;
+       font-weight:bold;
+       display:inline-block;
+     \">
+    Join Zoom Meeting
+  </a>
+</p>
+
+<h3>What to Expect:</h3>
+<ul>
+  <li>We'll review your current workflows</li>
+  <li>Identify automation opportunities</li>
+  <li>Discuss estimated time savings</li>
+  <li>Answer all your questions</li>
+</ul>
+
+<h3>Before the Call:</h3>
+<p>Think about:</p>
+<ul>
+  <li>Which tasks take the most time</li>
+  <li>What tools you currently use</li>
+  <li>Your biggest pain points</li>
+</ul>
+
+<p><strong>Add to Calendar:</strong> A calendar invite has been sent to you separately.</p>
+
+<hr>
+
+<p>Questions? Reply to this email or visit our FAQ: https://automagicly.com#faq</p>
+
+<p>See you soon!<br>
+The AutoMagicly Team</p>","message":"=","toList":["={{ $('Edit Fields').item.json.email }}"],"additionalFields":{}},"id":"bca17e39-7608-49dd-a251-fdf7bc5d56d5","name":"Gmail - Send Confirmation","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[368,48],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"respondWith":"json","responseBody":"={{ { \"success\": true, \"message\": \"Booking confirmed! Check your email for details.\", \"bookingId\": $node[\"Google Calendar - Create Event\"].json.id } }}","options":{}},"id":"a748474a-8af5-4579-a208-a76dd76c6df1","name":"Respond to Webhook","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[592,48]},{"parameters":{"mode":"raw","jsonOutput":"={{ $json.body }}","options":{}},"type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-528,48],"id":"c04ce61c-5244-4388-bfa6-60405494986c","name":"Edit Fields"},{"parameters":{"authentication":"oAuth2","topic":"={{ $('Edit Fields').item.json.type }}","additionalFields":{"duration":15,"settings":{"autoRecording":"cloud","joinBeforeHost":false,"watermark":true},"startTime":"={{
+  DateTime.fromISO($json.DatetimeISO, { zone: 'utc' })
+    .setZone($json.timezone)
+    .toFormat(\"yyyy-LL-dd'T'HH:mm:ss\")
+}}"}},"type":"n8n-nodes-base.zoom","typeVersion":1,"position":[-80,48],"id":"6b930c9e-2f13-466a-8e1c-2dc27b094331","name":"Create a Zoom Link","credentials":{"zoomOAuth2Api":{"id":"Qc45xLwPAPy1RLlK","name":"Rashad Zoom account"}}},{"parameters":{"operation":"append","documentId":{"__rl":true,"value":"1MpexbDG_HJwYUyyjukBtVC1mMC01HfxqWskNZVHuS8A","mode":"list","cachedResultName":"Audit spreadsheet","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1MpexbDG_HJwYUyyjukBtVC1mMC01HfxqWskNZVHuS8A/edit?usp=drivesdk"},"sheetName":{"__rl":true,"value":"gid=0","mode":"list","cachedResultName":"Sheet1","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1MpexbDG_HJwYUyyjukBtVC1mMC01HfxqWskNZVHuS8A/edit#gid=0"},"columns":{"mappingMode":"defineBelow","value":{"Name":"={{ $json.name }}","Email":"={{ $json.email }}","Company Name":"={{ $json.company }}","DatetimeISO":"={{ $json.dateTimeISO }}","Notes":"={{ $json.notes }}","Date Requested":"={{ $json.date.toDateTime().format('DD') }}","Time Requested":"={{ $json.time.toDateTime().format('t') }}","Timezone Requested":"={{ $json.timezone }}","Submitted At":"={{ $json.submittedAt.toDateTime().format('FFF') }}","Meeting Type":"={{ $json.type }}"},"matchingColumns":[],"schema":[{"id":"Name","displayName":"Name","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Email","displayName":"Email","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Company Name","displayName":"Company Name","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Date Requested","displayName":"Date Requested","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Time Requested","displayName":"Time Requested","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Timezone Requested","displayName":"Timezone Requested","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"DatetimeISO","displayName":"DatetimeISO","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Notes","displayName":"Notes","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Meeting Type","displayName":"Meeting Type","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Submitted At","displayName":"Submitted At","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false}],"attemptToConvertTypes":false,"convertFieldsToString":false},"options":{}},"type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[-304,48],"id":"63d789c5-4a4f-4196-85cc-2491c1ed8dd7","name":"Append row in sheet","credentials":{"googleSheetsOAuth2Api":{"id":"u4p2ZVWImQhY9Hnt","name":"Rashad Google Sheets account"}}}],"connections":{"Webhook - Booking":{"main":[[{"node":"Edit Fields","type":"main","index":0}]]},"Google Calendar - Create Event":{"main":[[{"node":"Gmail - Send Confirmation","type":"main","index":0}]]},"Gmail - Send Confirmation":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"Edit Fields":{"main":[[{"node":"Append row in sheet","type":"main","index":0}]]},"Create a Zoom Link":{"main":[[{"node":"Google Calendar - Create Event","type":"main","index":0}]]},"Append row in sheet":{"main":[[{"node":"Create a Zoom Link","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"20cf3d78-d045-44c2-9da6-011e6a98e272","activeVersionId":"20cf3d78-d045-44c2-9da6-011e6a98e272","versionCounter":17,"triggerCount":1,"shared":[{"updatedAt":"2025-12-23T04:13:11.765Z","createdAt":"2025-12-23T04:13:11.765Z","role":"workflow:owner","workflowId":"L7UaexzsnsyFFM7e","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":{"updatedAt":"2025-12-31T01:34:46.022Z","createdAt":"2025-12-31T01:34:46.022Z","versionId":"20cf3d78-d045-44c2-9da6-011e6a98e272","workflowId":"L7UaexzsnsyFFM7e","nodes":[{"parameters":{"httpMethod":"POST","path":"booking","responseMode":"responseNode","options":{}},"id":"1a69fb45-ccce-4dc1-a79f-10743ce53cdc","name":"Webhook - Booking","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[-752,48],"webhookId":"automagicly-booking"},{"parameters":{"calendar":{"__rl":true,"value":"43b775854c475d11df8d6850be20324ab6d73d82eb7c43b4fc6277a6ebeeb6d1@group.calendar.google.com","mode":"list","cachedResultName":"Automagicly"},"start":"={{ $('Edit Fields').item.json.dateTimeISO }}","end":"={{ (() => {
+  const d = new Date($('Edit Fields').item.json.dateTimeISO);
+  d.setMinutes(d.getMinutes() + 15);
+  return d.toISOString();
+})() }}","additionalFields":{"attendees":["={{ $('Edit Fields').item.json.email }}"],"color":"10","description":"bjbohnonoin","location":"=<a href=\"{{ $json.join_url }}\">Zoom meeting</a>","sendUpdates":"all","showMeAs":"opaque","summary":"={{ $('Edit Fields').item.json.type }}","visibility":"public"}},"id":"996deeaa-bb92-408f-94ee-e24c957a3275","name":"Google Calendar - Create Event","type":"n8n-nodes-base.googleCalendar","typeVersion":1,"position":[144,48],"credentials":{"googleCalendarOAuth2Api":{"id":"nSLcuApw76V9uekP","name":"Google Calendar account"}}},{"parameters":{"resource":"message","subject":"Your AI Audit is Confirmed! 🎉","includeHtml":true,"htmlMessage":"=<h2>Hi {{ $('Edit Fields').item.json.name }},</h2>
+
+<p>Your AI Audit has been confirmed! 🎉</p>
+
+<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">
+  <h3>Booking Details:</h3>
+  <p><strong>Date:</strong> {{ $('Edit Fields').item.json.date.toDateTime().format('DDD') }}</p>
+  <p><strong>Time:</strong> {{ $('Edit Fields').item.json.time.toDateTime().format('t') }} ({{ $('Edit Fields').item.json.timezone }})</p>
+  <p><strong>Duration:</strong> 15 minutes</p>
+</div>
+
+<!-- CTA Button -->
+<p style=\"margin: 30px 0;\">
+  <a href=\"{{ $('Create a Zoom Link').item.json.join_url }}\"
+     target=\"_blank\"
+     rel=\"noopener noreferrer\"
+     style=\"
+       background-color:#2563eb;
+       color:#ffffff;
+       padding:12px 20px;
+       text-decoration:none;
+       border-radius:8px;
+       font-weight:bold;
+       display:inline-block;
+     \">
+    Join Zoom Meeting
+  </a>
+</p>
+
+<h3>What to Expect:</h3>
+<ul>
+  <li>We'll review your current workflows</li>
+  <li>Identify automation opportunities</li>
+  <li>Discuss estimated time savings</li>
+  <li>Answer all your questions</li>
+</ul>
+
+<h3>Before the Call:</h3>
+<p>Think about:</p>
+<ul>
+  <li>Which tasks take the most time</li>
+  <li>What tools you currently use</li>
+  <li>Your biggest pain points</li>
+</ul>
+
+<p><strong>Add to Calendar:</strong> A calendar invite has been sent to you separately.</p>
+
+<hr>
+
+<p>Questions? Reply to this email or visit our FAQ: https://automagicly.com#faq</p>
+
+<p>See you soon!<br>
+The AutoMagicly Team</p>","message":"=","toList":["={{ $('Edit Fields').item.json.email }}"],"additionalFields":{}},"id":"bca17e39-7608-49dd-a251-fdf7bc5d56d5","name":"Gmail - Send Confirmation","type":"n8n-nodes-base.gmail","typeVersion":1,"position":[368,48],"credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"respondWith":"json","responseBody":"={{ { \"success\": true, \"message\": \"Booking confirmed! Check your email for details.\", \"bookingId\": $node[\"Google Calendar - Create Event\"].json.id } }}","options":{}},"id":"a748474a-8af5-4579-a208-a76dd76c6df1","name":"Respond to Webhook","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[592,48]},{"parameters":{"mode":"raw","jsonOutput":"={{ $json.body }}","options":{}},"type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-528,48],"id":"c04ce61c-5244-4388-bfa6-60405494986c","name":"Edit Fields"},{"parameters":{"authentication":"oAuth2","topic":"={{ $('Edit Fields').item.json.type }}","additionalFields":{"duration":15,"settings":{"autoRecording":"cloud","joinBeforeHost":false,"watermark":true},"startTime":"={{
+  DateTime.fromISO($json.DatetimeISO, { zone: 'utc' })
+    .setZone($json.timezone)
+    .toFormat(\"yyyy-LL-dd'T'HH:mm:ss\")
+}}"}},"type":"n8n-nodes-base.zoom","typeVersion":1,"position":[-80,48],"id":"6b930c9e-2f13-466a-8e1c-2dc27b094331","name":"Create a Zoom Link","credentials":{"zoomOAuth2Api":{"id":"Qc45xLwPAPy1RLlK","name":"Rashad Zoom account"}}},{"parameters":{"operation":"append","documentId":{"__rl":true,"value":"1MpexbDG_HJwYUyyjukBtVC1mMC01HfxqWskNZVHuS8A","mode":"list","cachedResultName":"Audit spreadsheet","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1MpexbDG_HJwYUyyjukBtVC1mMC01HfxqWskNZVHuS8A/edit?usp=drivesdk"},"sheetName":{"__rl":true,"value":"gid=0","mode":"list","cachedResultName":"Sheet1","cachedResultUrl":"https://docs.google.com/spreadsheets/d/1MpexbDG_HJwYUyyjukBtVC1mMC01HfxqWskNZVHuS8A/edit#gid=0"},"columns":{"mappingMode":"defineBelow","value":{"Name":"={{ $json.name }}","Email":"={{ $json.email }}","Company Name":"={{ $json.company }}","DatetimeISO":"={{ $json.dateTimeISO }}","Notes":"={{ $json.notes }}","Date Requested":"={{ $json.date.toDateTime().format('DD') }}","Time Requested":"={{ $json.time.toDateTime().format('t') }}","Timezone Requested":"={{ $json.timezone }}","Submitted At":"={{ $json.submittedAt.toDateTime().format('FFF') }}","Meeting Type":"={{ $json.type }}"},"matchingColumns":[],"schema":[{"id":"Name","displayName":"Name","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Email","displayName":"Email","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Company Name","displayName":"Company Name","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Date Requested","displayName":"Date Requested","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Time Requested","displayName":"Time Requested","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Timezone Requested","displayName":"Timezone Requested","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"DatetimeISO","displayName":"DatetimeISO","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Notes","displayName":"Notes","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Meeting Type","displayName":"Meeting Type","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false},{"id":"Submitted At","displayName":"Submitted At","required":false,"defaultMatch":false,"display":true,"type":"string","canBeUsedToMatch":true,"removed":false}],"attemptToConvertTypes":false,"convertFieldsToString":false},"options":{}},"type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[-304,48],"id":"63d789c5-4a4f-4196-85cc-2491c1ed8dd7","name":"Append row in sheet","credentials":{"googleSheetsOAuth2Api":{"id":"u4p2ZVWImQhY9Hnt","name":"Rashad Google Sheets account"}}}],"connections":{"Webhook - Booking":{"main":[[{"node":"Edit Fields","type":"main","index":0}]]},"Google Calendar - Create Event":{"main":[[{"node":"Gmail - Send Confirmation","type":"main","index":0}]]},"Gmail - Send Confirmation":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"Edit Fields":{"main":[[{"node":"Append row in sheet","type":"main","index":0}]]},"Create a Zoom Link":{"main":[[{"node":"Google Calendar - Create Event","type":"main","index":0}]]},"Append row in sheet":{"main":[[{"node":"Create a Zoom Link","type":"main","index":0}]]}},"authors":"Rashad  ","name":null,"description":null}}

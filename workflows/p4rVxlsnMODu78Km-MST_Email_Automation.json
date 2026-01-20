@@ -1,3271 +1,507 @@
-{"updatedAt":"2025-12-18T22:59:34.000Z","createdAt":"2025-11-25T00:48:02.299Z","id":"p4rVxlsnMODu78Km","name":"MST Email Automation","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"2570b966-3b9d-4dd6-981d-53cf2a79e2aa","responseMode":"responseNode","options":{}},"type":"n8n-nodes-base.webhook","typeVersion":2.1,"position":[0,0],"id":"9ea7d45c-7d28-4f44-934b-d04ea7612a00","name":"Webhook","webhookId":"2570b966-3b9d-4dd6-981d-53cf2a79e2aa"},{"parameters":{"respondWith":"json","responseBody":"={
-  \"sent\": {{ $json.success }}
-}","options":{"responseCode":200,"responseHeaders":{"entries":[{"name":"Content-Type","value":"application/json"}]}}},"type":"n8n-nodes-base.respondToWebhook","typeVersion":1.4,"position":[928,0],"id":"6eb900bf-34d4-4985-85cb-bb5b63d9bab6","name":"Respond to Webhook"},{"parameters":{"keepOnlySet":true,"values":{"string":[{"name":"body","value":"={{ $json.body}}"}]},"options":{"dotNotation":true}},"name":"Get Customer Data","type":"n8n-nodes-base.set","typeVersion":2,"position":[224,0],"id":"c49b9d18-4e02-4b9e-8d30-90e37d799f5b"},{"parameters":{"promptType":"define","text":"=## Overview
-You are a seasoned industry research analyst with extensive expertise in interpreting customer data, identifying industry classifications, and producing advanced market and competitive intelligence. Your task is to analyze the provided JSON input and deliver a fully structured industry report aligned with the required output schema.
-
-Your analysis should emphasize accuracy, clarity, depth, and business relevance. Ensure your reasoning is data-driven and your insights reflect real market conditions.
-
-## Tools
-You have access to:
-- Your internal knowledge base of industry classifications, market structures, competitor landscapes, regulatory environments, and global trends.
-- Advanced analytical reasoning to parse customer data and infer the most appropriate industry sector and sub-sector.
-
-## Rules
-Follow these rules without exception:
-
-1. **Industry Identification**
-   - Parse and interpret the provided input JSON.
-   - Extract any relevant descriptors that indicate the customer's industry.
-   - Identify the exact sector and, if possible, sub-sector.
-   - Provide a confidence score (0 to 1) and a short rationale.
-
-2. **Industry Deep Dive**
-   - Describe the current state of the identified industry.
-   - Highlight market size, key segments, leading players, growth drivers, obstacles, and opportunities.
-
-3. **Competitive Landscape**
-   - Identify major competitors.
-   - Explain each competitor’s position, strengths, weaknesses, and any notable strategic initiatives.
-
-4. **Trend Analysis**
-   - Outline major technological, regulatory, economic, and consumer-behavior trends impacting the industry.
-   - Include expected impacts and time horizons when applicable.
-
-5. **Strategic Insights**
-   - Provide actionable, high-value recommendations the customer can use.
-   - Assign each recommendation a priority and explain the rationale and expected impact.
-
-6. **Output Requirements**
-   - Your final answer must strictly match the JSON schema provided.
-   - Do not include commentary, explanations, or markdown.
-
-## Instructions
-Analyze the customer’s input data and complete the full industry analysis using the structure defined in the schema.
-
-Here is the provided input JSON to analyze:  
-**{{ $('Get Customer Data').item.json.body.toJsonString() }}**
-
-Base all insights solely on the industry inferred from this data.
-
-Ensure every field in the JSON output is:
-- Fact-based  
-- Thorough  
-- Professionally written  
-- Useful for decision-making  
-
-## Final Reminder
-- The current date is: **{{ $now.format(\"DD\") }}**","hasOutputParser":true,"needsFallback":true,"options":{}},"type":"@n8n/n8n-nodes-langchain.agent","typeVersion":3,"position":[1200,0],"id":"d64bfca8-3863-40a8-9352-898d0a5846b6","name":"AI Agent"},{"parameters":{"model":{"__rl":true,"value":"gpt-5.1-2025-11-13","mode":"list","cachedResultName":"gpt-5.1-2025-11-13"},"builtInTools":{},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[1088,192],"id":"0b92337d-ff63-4aa0-b01f-15e615a1b075","name":"OpenAI Chat Model","credentials":{"openAiApi":{"id":"da8hD2Yc3TlZwFUC","name":"MST Open AI"}}},{"parameters":{"schemaType":"manual","inputSchema":"{
-  \"title\": \"IndustryAnalysisOutput\",
-  \"type\": \"object\",
-  \"description\": \"Structured response for industry and competitive analysis based on customer data.\",
-  \"properties\": {
-    \"identifiedIndustry\": {
-      \"type\": \"string\",
-      \"description\": \"The primary industry sector identified for the customer.\"
+{
+  "id": "p4rVxlsnMODu78Km",
+  "name": "MST Email Automation",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "2570b966-3b9d-4dd6-981d-53cf2a79e2aa",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9ea7d45c-7d28-4f44-934b-d04ea7612a00",
+      "name": "Webhook",
+      "webhookId": "2570b966-3b9d-4dd6-981d-53cf2a79e2aa"
     },
-    \"industryIdentification\": {
-      \"type\": \"object\",
-      \"description\": \"Details on how the industry was identified from the customer data.\",
-      \"properties\": {
-        \"sector\": { \"type\": \"string\" },
-        \"subSector\": { \"type\": \"string\" },
-        \"confidenceLevel\": {
-          \"type\": \"number\",
-          \"description\": \"Confidence score between 0 and 1.\",
-          \"minimum\": 0,
-          \"maximum\": 1
-        },
-        \"rationale\": {
-          \"type\": \"string\",
-          \"description\": \"Explanation of how the industry classification was derived from the input data.\"
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"sent\": {{ $json.success }}\n}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
         }
       },
-      \"required\": [\"sector\", \"confidenceLevel\", \"rationale\"]
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        928,
+        0
+      ],
+      "id": "6eb900bf-34d4-4985-85cb-bb5b63d9bab6",
+      "name": "Respond to Webhook"
     },
-    \"industryDeepDive\": {
-      \"type\": \"object\",
-      \"description\": \"Comprehensive overview of the identified industry.\",
-      \"properties\": {
-        \"overview\": { \"type\": \"string\" },
-        \"marketSizeAndGrowth\": { \"type\": \"string\" },
-        \"keySegments\": { \"type\": \"string\" },
-        \"keyPlayers\": { \"type\": \"string\" },
-        \"growthDrivers\": { \"type\": \"string\" },
-        \"challengesAndRisks\": { \"type\": \"string\" },
-        \"opportunities\": { \"type\": \"string\" }
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "body",
+              "value": "={{ $json.body}}"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
       },
-      \"required\": [\"overview\"]
+      "name": "Get Customer Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "c49b9d18-4e02-4b9e-8d30-90e37d799f5b"
     },
-    \"competitiveLandscape\": {
-      \"type\": \"array\",
-      \"description\": \"List of key competitors in the identified industry.\",
-      \"items\": {
-        \"type\": \"object\",
-        \"properties\": {
-          \"name\": { \"type\": \"string\" },
-          \"description\": { \"type\": \"string\" },
-          \"marketPositioning\": { \"type\": \"string\" },
-          \"strengths\": { \"type\": \"string\" },
-          \"weaknesses\": { \"type\": \"string\" },
-          \"strategicInitiatives\": {
-            \"type\": \"string\",
-            \"description\": \"Notable strategies, moves or investments (e.g., M&A, new products, geographic expansion).\"
-          }
-        },
-        \"required\": [\"name\", \"marketPositioning\"]
-      }
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=## Overview\nYou are a seasoned industry research analyst with extensive expertise in interpreting customer data, identifying industry classifications, and producing advanced market and competitive intelligence. Your task is to analyze the provided JSON input and deliver a fully structured industry report aligned with the required output schema.\n\nYour analysis should emphasize accuracy, clarity, depth, and business relevance. Ensure your reasoning is data-driven and your insights reflect real market conditions.\n\n## Tools\nYou have access to:\n- Your internal knowledge base of industry classifications, market structures, competitor landscapes, regulatory environments, and global trends.\n- Advanced analytical reasoning to parse customer data and infer the most appropriate industry sector and sub-sector.\n\n## Rules\nFollow these rules without exception:\n\n1. **Industry Identification**\n   - Parse and interpret the provided input JSON.\n   - Extract any relevant descriptors that indicate the customer's industry.\n   - Identify the exact sector and, if possible, sub-sector.\n   - Provide a confidence score (0 to 1) and a short rationale.\n\n2. **Industry Deep Dive**\n   - Describe the current state of the identified industry.\n   - Highlight market size, key segments, leading players, growth drivers, obstacles, and opportunities.\n\n3. **Competitive Landscape**\n   - Identify major competitors.\n   - Explain each competitor\u2019s position, strengths, weaknesses, and any notable strategic initiatives.\n\n4. **Trend Analysis**\n   - Outline major technological, regulatory, economic, and consumer-behavior trends impacting the industry.\n   - Include expected impacts and time horizons when applicable.\n\n5. **Strategic Insights**\n   - Provide actionable, high-value recommendations the customer can use.\n   - Assign each recommendation a priority and explain the rationale and expected impact.\n\n6. **Output Requirements**\n   - Your final answer must strictly match the JSON schema provided.\n   - Do not include commentary, explanations, or markdown.\n\n## Instructions\nAnalyze the customer\u2019s input data and complete the full industry analysis using the structure defined in the schema.\n\nHere is the provided input JSON to analyze:  \n**{{ $('Get Customer Data').item.json.body.toJsonString() }}**\n\nBase all insights solely on the industry inferred from this data.\n\nEnsure every field in the JSON output is:\n- Fact-based  \n- Thorough  \n- Professionally written  \n- Useful for decision-making  \n\n## Final Reminder\n- The current date is: **{{ $now.format(\"DD\") }}**",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "d64bfca8-3863-40a8-9352-898d0a5846b6",
+      "name": "AI Agent"
     },
-    \"trendAnalysis\": {
-      \"type\": \"object\",
-      \"description\": \"Key trends impacting the industry.\",
-      \"properties\": {
-        \"technological\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" },
-              \"timeHorizon\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.1-2025-11-13",
+          "mode": "list",
+          "cachedResultName": "gpt-5.1-2025-11-13"
         },
-        \"regulatory\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
-        },
-        \"economic\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
-        },
-        \"consumerBehavior\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        192
+      ],
+      "id": "0b92337d-ff63-4aa0-b01f-15e615a1b075",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "da8hD2Yc3TlZwFUC",
+          "name": "MST Open AI"
         }
       }
     },
-    \"strategicInsights\": {
-      \"type\": \"array\",
-      \"description\": \"Actionable recommendations for the customer.\",
-      \"items\": {
-        \"type\": \"object\",
-        \"properties\": {
-          \"recommendation\": {
-            \"type\": \"string\",
-            \"description\": \"What the customer should do.\"
-          },
-          \"rationale\": {
-            \"type\": \"string\",
-            \"description\": \"Why this recommendation matters in the current industry context.\"
-          },
-          \"expectedImpact\": {
-            \"type\": \"string\",
-            \"description\": \"Expected business impact (e.g., revenue, risk mitigation, market share).\"
-          },
-          \"priority\": {
-            \"type\": \"string\",
-            \"enum\": [\"low\", \"medium\", \"high\", \"critical\"],
-            \"description\": \"Priority level for execution.\"
-          },
-          \"timeHorizon\": {
-            \"type\": \"string\",
-            \"description\": \"Suggested time horizon, e.g., short-term, mid-term, long-term.\"
-          }
-        },
-        \"required\": [\"recommendation\", \"rationale\", \"priority\"]
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"title\": \"IndustryAnalysisOutput\",\n  \"type\": \"object\",\n  \"description\": \"Structured response for industry and competitive analysis based on customer data.\",\n  \"properties\": {\n    \"identifiedIndustry\": {\n      \"type\": \"string\",\n      \"description\": \"The primary industry sector identified for the customer.\"\n    },\n    \"industryIdentification\": {\n      \"type\": \"object\",\n      \"description\": \"Details on how the industry was identified from the customer data.\",\n      \"properties\": {\n        \"sector\": { \"type\": \"string\" },\n        \"subSector\": { \"type\": \"string\" },\n        \"confidenceLevel\": {\n          \"type\": \"number\",\n          \"description\": \"Confidence score between 0 and 1.\",\n          \"minimum\": 0,\n          \"maximum\": 1\n        },\n        \"rationale\": {\n          \"type\": \"string\",\n          \"description\": \"Explanation of how the industry classification was derived from the input data.\"\n        }\n      },\n      \"required\": [\"sector\", \"confidenceLevel\", \"rationale\"]\n    },\n    \"industryDeepDive\": {\n      \"type\": \"object\",\n      \"description\": \"Comprehensive overview of the identified industry.\",\n      \"properties\": {\n        \"overview\": { \"type\": \"string\" },\n        \"marketSizeAndGrowth\": { \"type\": \"string\" },\n        \"keySegments\": { \"type\": \"string\" },\n        \"keyPlayers\": { \"type\": \"string\" },\n        \"growthDrivers\": { \"type\": \"string\" },\n        \"challengesAndRisks\": { \"type\": \"string\" },\n        \"opportunities\": { \"type\": \"string\" }\n      },\n      \"required\": [\"overview\"]\n    },\n    \"competitiveLandscape\": {\n      \"type\": \"array\",\n      \"description\": \"List of key competitors in the identified industry.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": { \"type\": \"string\" },\n          \"description\": { \"type\": \"string\" },\n          \"marketPositioning\": { \"type\": \"string\" },\n          \"strengths\": { \"type\": \"string\" },\n          \"weaknesses\": { \"type\": \"string\" },\n          \"strategicInitiatives\": {\n            \"type\": \"string\",\n            \"description\": \"Notable strategies, moves or investments (e.g., M&A, new products, geographic expansion).\"\n          }\n        },\n        \"required\": [\"name\", \"marketPositioning\"]\n      }\n    },\n    \"trendAnalysis\": {\n      \"type\": \"object\",\n      \"description\": \"Key trends impacting the industry.\",\n      \"properties\": {\n        \"technological\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"trend\": { \"type\": \"string\" },\n              \"impact\": { \"type\": \"string\" },\n              \"timeHorizon\": { \"type\": \"string\" }\n            },\n            \"required\": [\"trend\", \"impact\"]\n          }\n        },\n        \"regulatory\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"trend\": { \"type\": \"string\" },\n              \"impact\": { \"type\": \"string\" }\n            },\n            \"required\": [\"trend\", \"impact\"]\n          }\n        },\n        \"economic\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"trend\": { \"type\": \"string\" },\n              \"impact\": { \"type\": \"string\" }\n            },\n            \"required\": [\"trend\", \"impact\"]\n          }\n        },\n        \"consumerBehavior\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"trend\": { \"type\": \"string\" },\n              \"impact\": { \"type\": \"string\" }\n            },\n            \"required\": [\"trend\", \"impact\"]\n          }\n        }\n      }\n    },\n    \"strategicInsights\": {\n      \"type\": \"array\",\n      \"description\": \"Actionable recommendations for the customer.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"recommendation\": {\n            \"type\": \"string\",\n            \"description\": \"What the customer should do.\"\n          },\n          \"rationale\": {\n            \"type\": \"string\",\n            \"description\": \"Why this recommendation matters in the current industry context.\"\n          },\n          \"expectedImpact\": {\n            \"type\": \"string\",\n            \"description\": \"Expected business impact (e.g., revenue, risk mitigation, market share).\"\n          },\n          \"priority\": {\n            \"type\": \"string\",\n            \"enum\": [\"low\", \"medium\", \"high\", \"critical\"],\n            \"description\": \"Priority level for execution.\"\n          },\n          \"timeHorizon\": {\n            \"type\": \"string\",\n            \"description\": \"Suggested time horizon, e.g., short-term, mid-term, long-term.\"\n          }\n        },\n        \"required\": [\"recommendation\", \"rationale\", \"priority\"]\n      }\n    }\n  },\n  \"required\": [\"identifiedIndustry\", \"industryIdentification\", \"industryDeepDive\", \"strategicInsights\"],\n  \"additionalProperties\": false\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1408,
+        208
+      ],
+      "id": "55b174e5-43e2-4f22-a9b8-b70b7c7179c3",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get Customer Data').item.json.body.primary_email }}",
+        "subject": "Thank You for Completing Your Client Information Form",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>MST \u2013 Thank You</title>\n  <style>\n    body {\n      margin: 0;\n      padding: 0;\n      background: #f3f4ff;\n      font-family: Arial, Helvetica, sans-serif;\n      color: #333333;\n    }\n    .email-wrapper {\n      width: 100%;\n      padding: 20px 0;\n    }\n    .email-container {\n      max-width: 640px;\n      margin: 0 auto;\n      background: #ffffff;\n      border-radius: 12px;\n      padding: 24px 28px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.08);\n      border-top: 6px solid #4f46e5;\n    }\n    .email-header {\n      text-align: center;\n      margin-bottom: 18px;\n    }\n    .email-header h1 {\n      margin: 0;\n      font-size: 24px;\n      color: #4f46e5;\n    }\n    .email-badge {\n      display: inline-block;\n      margin-top: 8px;\n      padding: 4px 10px;\n      border-radius: 999px;\n      background: #eef2ff;\n      color: #4338ca;\n      font-size: 12px;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n      font-weight: 600;\n    }\n    .email-body p {\n      line-height: 1.6;\n      font-size: 15px;\n      margin: 10px 0;\n    }\n    .email-body strong {\n      color: #1d4ed8;\n    }\n    .highlight-box {\n      margin: 18px 0;\n      padding: 14px 16px;\n      border-radius: 10px;\n      background: #ecfeff;\n      border: 1px solid #a5f3fc;\n      font-size: 14px;\n      color: #0f172a;\n    }\n    .cta-button {\n      display: inline-block;\n      margin-top: 18px;\n      padding: 10px 20px;\n      border-radius: 999px;\n      background: #4f46e5;\n      color: #ffffff !important;\n      text-decoration: none;\n      font-size: 14px;\n      font-weight: 600;\n    }\n    .cta-button:hover {\n      background: #4338ca;\n    }\n    .email-footer {\n      text-align: center;\n      margin-top: 22px;\n      font-size: 12px;\n      color: #6b7280;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"email-wrapper\">\n    <div class=\"email-container\">\n      <div class=\"email-header\">\n        <h1>Welcome to MST</h1>\n        <div class=\"email-badge\">New Client</div>\n      </div>\n\n      <div class=\"email-body\">\n        <p>Dear {{ $('Get Customer Data').item.json.body.client_name }},</p>\n\n        <p>\n          Thank you for taking the time to complete the\n          <strong>MST Client Information Document</strong>.\n          We truly appreciate you providing these important details.\n        </p>\n\n        <div class=\"highlight-box\">\n          Our team is now reviewing your information. Once the review is complete,\n          we\u2019ll reach out with any follow-up questions and to walk you through the next steps.\n        </div>\n\n        <p>\n          We\u2019re excited to welcome you to <strong>MST</strong> and look forward to supporting your needs.\n          Our goal is to make things as smooth and stress-free as possible for you.\n        </p>\n\n        <p>\n          If you have any questions in the meantime, please feel free to contact us.\n          We\u2019re here to ensure a seamless experience every step of the way.\n        </p>\n\n        <p>\n          Thank you again for choosing MST \u2014 we look forward to working with you.\n        </p>\n\n        <p>\n          Warm regards,<br />\n          <strong>MST Team</strong>\n        </p>\n\n        <!-- Optional CTA (you can remove this if you don\u2019t want a button) -->\n        <!--\n        <a href=\"#\" class=\"cta-button\">Visit Our Website</a>\n        -->\n      </div>\n\n      <div class=\"email-footer\">\n        \u00a9 {{ new Date().getFullYear() }} MST. All rights reserved.\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        736,
+        -256
+      ],
+      "id": "1dd8301d-93e7-452a-8254-ef99a2d76b8f",
+      "name": "Send Email to Customer",
+      "webhookId": "79ea3ea2-f50a-4caa-bb06-403d9940d63f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BTKh5C4ujrbOxvPI",
+          "name": "Rashad.barnett@gmail.com"
+        }
       }
+    },
+    {
+      "parameters": {
+        "sendTo": "rashadbarnett@gmail.com, michelle.turner@mstcpatx.com",
+        "subject": "=MST | Client Intake Summary \u2013 {{ $json.body.client_name }}",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Client Information Summary</title>\n  <style>\n    body {\n      font-family: Arial, sans-serif;\n      background-color: #f5f5f7;\n      margin: 0;\n      padding: 20px;\n      color: #333;\n    }\n    .container {\n      max-width: 900px;\n      margin: 0 auto;\n      background: #ffffff;\n      padding: 20px 30px;\n      border-radius: 8px;\n      box-shadow: 0 2px 6px rgba(0,0,0,0.08);\n    }\n    h1, h2 {\n      margin-top: 0;\n      color: #222;\n    }\n    h1 {\n      font-size: 22px;\n      border-bottom: 2px solid #eee;\n      padding-bottom: 10px;\n      margin-bottom: 20px;\n    }\n    h2 {\n      font-size: 18px;\n      margin-top: 25px;\n      border-left: 4px solid #4a90e2;\n      padding-left: 8px;\n    }\n    .grid {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 10px 30px;\n    }\n    .field {\n      margin-bottom: 6px;\n    }\n    .label {\n      font-weight: bold;\n      display: inline-block;\n      min-width: 160px;\n    }\n    .value {\n      display: inline-block;\n    }\n    .full-width {\n      grid-column: 1 / -1;\n    }\n    .tag-list {\n      margin: 4px 0 0 0;\n      padding-left: 18px;\n    }\n    .tag-list li {\n      margin-bottom: 4px;\n    }\n    .note {\n      font-size: 12px;\n      color: #777;\n      margin-top: 10px;\n    }\n    @media (max-width: 600px) {\n      .grid {\n        grid-template-columns: 1fr;\n      }\n      .label {\n        min-width: 120px;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Client Information Summary</h1>\n\n    <!-- Client Overview -->\n    <h2>Client Overview</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Client Name:</span>\n        <span class=\"value\">{{ $json.body.client_name || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Client Short Name:</span>\n        <span class=\"value\">{{ $json.body.client_short_name || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Address:</span>\n        <span class=\"value\">{{ $json.body.client_address || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Industry:</span>\n        <span class=\"value\">{{ $json.body.industry || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Softwares Used:</span>\n        <span class=\"value\">{{ $json.body.softwares_used || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Business Operations Summary:</span>\n        <span class=\"value\">{{ $json.body.business_ops_summary || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Contacts -->\n    <h2>Primary Contact</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Name &amp; Title:</span>\n        <span class=\"value\">{{ $json.body.primary_name_title || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Phone:</span>\n        <span class=\"value\">{{ $json.body.primary_phone || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Email:</span>\n        <span class=\"value\">{{ $json.body.primary_email || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Contact For:</span>\n        <span class=\"value\">\n          {{ $json.body.primary_contact_for || \"N/A\" }}\n          {{ $json.body.primary_contact_other ? \" (\" + $json.primary_contact_other + \")\" : \"\" }}\n        </span>\n      </div>\n    </div>\n\n    <h2>Other Contact</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Name:</span>\n        <span class=\"value\">{{ $json.body.other_name || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Phone:</span>\n        <span class=\"value\">{{ $json.body.other_phone || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Email:</span>\n        <span class=\"value\">{{ $json.body.other_email || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Contact For:</span>\n        <span class=\"value\">{{ $json.body.other_contact_for || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Associated Entities -->\n    <h2>Associated Entities</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Entity 1:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_1 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Entity 2:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_2 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Entity 3:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_3 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Entity 4:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_4 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Entity 5:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_5 || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Services & Needs -->\n    <h2>Services &amp; Needs</h2>\n    <div class=\"grid\">\n      <div class=\"field full-width\">\n        <span class=\"label\">Client Services (Notes):</span>\n        <span class=\"value\">\n          {{\n            [\n              $json.body.client_services_1,\n              $json.body.client_services_2,\n              $json.body.client_services_3,\n              $json.body.client_services_4,\n              $json.body.client_services_5,\n              $json.body.client_services_6\n            ].filter(s => s).join(\"; \")\n            || \"N/A\"\n          }}\n        </span>\n      </div>\n\n      <div class=\"field full-width\">\n        <span class=\"label\">Service Needs:</span>\n        <ul class=\"tag-list\">\n          <li>Accounting: {{ $json.body.needs_accounting ? \"Yes\" : \"No\" }}</li>\n          <li>Payroll: {{ $json.body.needs_payroll ? \"Yes\" : \"No\" }} \n            {{ $json.body.needs_payroll_states ? \"(States: \" + $json.needs_payroll_states + \")\" : \"\" }}\n          </li>\n          <li>Sales Tax: {{ $json.body.needs_sales_tax ? \"Yes\" : \"No\" }} \n            {{ $json.body.needs_sales_tax_states ? \"(States: \" + $json.body.needs_sales_tax_states + \")\" : \"\" }}\n          </li>\n          <li>Federal Income Tax Prep: {{ $json.body.needs_federal_income_tax_prep ? \"Yes\" : \"No\" }} \n            {{ $json.body.federal_tax_type ? \"(Type: \" + $json.body.federal_tax_type + \")\" : \"\" }}\n          </li>\n          <li>State Income Tax Prep: {{ $json.body.needs_state_income_tax_prep ? \"Yes\" : \"No\" }} \n            {{ $json.body.needs_state_tax_states ? \"(States: \" + $json.needs_state_tax_states + \")\" : \"\" }}\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"field\">\n        <span class=\"label\">Financial Statements Method:</span>\n        <span class=\"value\">{{ $json.body.financial_statements_method || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Income Tax Return Method:</span>\n        <span class=\"value\">{{ $json.body.income_tax_return_method || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Franchise Tax Method:</span>\n        <span class=\"value\">{{ $json.body.franchise_tax_method || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Property Tax Exemptions:</span>\n        <span class=\"value\">{{ $json.body.property_tax_exemptions ? \"Yes\" : \"No\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Reporting Frequency:</span>\n        <span class=\"value\">{{ $json.body.reporting_frequency || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Report Due Date:</span>\n        <span class=\"value\">{{ $json.body.report_due_date || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Sales Tax Deadlines:</span>\n        <span class=\"value\">{{ $json.body.sales_tax_deadlines || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Payroll Processing Period:</span>\n        <span class=\"value\">{{ $json.body.payroll_processing_period || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Other Deadlines:</span>\n        <span class=\"value\">{{ $json.body.other_deadlines || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Additional Details -->\n    <h2>Additional Details</h2>\n    <div class=\"grid\">\n      <div class=\"field full-width\">\n        <span class=\"label\">Additional Requests:</span>\n        <span class=\"value\">{{ $json.body.additional_requests || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Unique GL Accounts:</span>\n        <span class=\"value\">{{ $json.body.unique_gl_accounts || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Payroll Procedures:</span>\n        <span class=\"value\">{{ $json.body.client_payroll_procedures || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Expectations:</span>\n        <span class=\"value\">{{ $json.body.expectations || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Personal & Relationship Info -->\n    <h2>Personal & Relationship Info</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Birthday:</span>\n        <span class=\"value\">{{ $json.body.birthday || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Company Anniversary:</span>\n        <span class=\"value\">{{ $json.body.company_anniversary || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Favorite Dessert:</span>\n        <span class=\"value\">{{ $json.body.favorite_dessert || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Hobbies:</span>\n        <span class=\"value\">{{ $json.body.hobbies || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <p class=\"note\">\n      *This summary is based on the latest client information provided in the MST Client Information Document.\n    </p>\n  </div>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        -256
+      ],
+      "id": "857b1d83-3dab-4bf5-b196-d79f8ad0d3d9",
+      "name": "Send Email to MST Team",
+      "webhookId": "79ea3ea2-f50a-4caa-bb06-403d9940d63f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BTKh5C4ujrbOxvPI",
+          "name": "Rashad.barnett@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=rashadbarnett@gmail.com, michelle.turner@mstcpatx.com",
+        "subject": "=MST Industry Analysis Report \u2013 {{ $('Get Customer Data').item.json.body.client_name }} from ",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Industry Analysis Summary</title>\n  <style>\n    body {\n      margin: 0;\n      padding: 0;\n      background: #f3f4f6;\n      font-family: Arial, Helvetica, sans-serif;\n      color: #111827;\n    }\n    .wrapper {\n      width: 100%;\n      padding: 20px 0;\n    }\n    .container {\n      max-width: 900px;\n      margin: 0 auto;\n      background: #ffffff;\n      border-radius: 10px;\n      padding: 24px 30px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.06);\n      border-top: 6px solid #2563eb;\n    }\n    h1, h2, h3 {\n      margin-top: 0;\n      color: #111827;\n    }\n    h1 {\n      font-size: 22px;\n      margin-bottom: 12px;\n    }\n    h2 {\n      font-size: 18px;\n      margin-top: 24px;\n      margin-bottom: 8px;\n      border-left: 4px solid #2563eb;\n      padding-left: 8px;\n    }\n    h3 {\n      font-size: 15px;\n      margin-top: 16px;\n      margin-bottom: 6px;\n      color: #1f2937;\n    }\n    p {\n      font-size: 14px;\n      line-height: 1.6;\n      margin: 6px 0 10px 0;\n    }\n    .pill {\n      display: inline-block;\n      background: #eff6ff;\n      color: #1d4ed8;\n      padding: 4px 10px;\n      border-radius: 999px;\n      font-size: 11px;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n      margin-bottom: 10px;\n    }\n    .grid-2 {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 8px 20px;\n    }\n    .field-label {\n      font-size: 12px;\n      font-weight: bold;\n      text-transform: uppercase;\n      letter-spacing: 0.06em;\n      color: #6b7280;\n    }\n    .field-value {\n      font-size: 14px;\n      margin-bottom: 6px;\n    }\n    .box {\n      background: #f9fafb;\n      border-radius: 8px;\n      padding: 10px 12px;\n      border: 1px solid #e5e7eb;\n      margin-top: 6px;\n    }\n    ul {\n      padding-left: 18px;\n      margin: 6px 0 10px 0;\n    }\n    li {\n      font-size: 14px;\n      margin-bottom: 4px;\n    }\n    .small {\n      font-size: 12px;\n      color: #6b7280;\n    }\n    @media (max-width: 640px) {\n      .container {\n        padding: 18px 16px;\n      }\n      .grid-2 {\n        grid-template-columns: 1fr;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <div class=\"container\">\n      <span class=\"pill\">Industry Analysis Report</span>\n      <h1>{{ $json.output.identifiedIndustry || \"Industry Analysis\" }}</h1>\n\n      <!-- Top summary -->\n      <div class=\"grid-2\">\n        <div>\n          <div class=\"field-label\">Sector</div>\n          <div class=\"field-value\">\n            {{ $json.output.industryIdentification.sector || \"N/A\" }}\n          </div>\n        </div>\n        <div>\n          <div class=\"field-label\">Sub-Sector</div>\n          <div class=\"field-value\">\n            {{ $json.output.industryIdentification.subSector || \"N/A\" }}\n          </div>\n        </div>\n        <div>\n          <div class=\"field-label\">Confidence Level</div>\n          <div class=\"field-value\">\n            {{ (Math.round(($json.output.industryIdentification.confidenceLevel || 0) * 100)) + \"%\" }}\n          </div>\n        </div>\n        <div>\n          <div class=\"field-label\">Classification Rationale</div>\n          <div class=\"field-value\">\n            {{ $json.output.industryIdentification.rationale || \"N/A\" }}\n          </div>\n        </div>\n      </div>\n\n      <!-- Industry Deep Dive -->\n      <h2>Industry Deep Dive</h2>\n      <h3>Overview</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.overview || \"N/A\" }}</p>\n      </div>\n\n      <h3>Market Size &amp; Growth</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.marketSizeAndGrowth || \"N/A\" }}</p>\n      </div>\n\n      <h3>Key Segments</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.keySegments || \"N/A\" }}</p>\n      </div>\n\n      <h3>Key Players (Summary)</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.keyPlayers || \"N/A\" }}</p>\n      </div>\n\n      <h3>Growth Drivers</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.growthDrivers || \"N/A\" }}</p>\n      </div>\n\n      <h3>Challenges &amp; Risks</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.challengesAndRisks || \"N/A\" }}</p>\n      </div>\n\n      <h3>Opportunities</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.opportunities || \"N/A\" }}</p>\n      </div>\n\n      <!-- Competitive Landscape -->\n      <h2>Competitive Landscape</h2>\n      <div class=\"box\">\n        <ul>\n          {{\n            ($json.output.competitiveLandscape || []).map(c =>\n              `<li>\n                <strong>${c.name || \"Unnamed Competitor\"}</strong><br/>\n                <span class=\"small\">${c.marketPositioning || \"\"}</span><br/>\n                ${c.description ? c.description + \"<br/>\" : \"\"}\n                ${c.strengths ? \"<strong>Strengths:</strong> \" + c.strengths + \"<br/>\" : \"\"}\n                ${c.weaknesses ? \"<strong>Weaknesses:</strong> \" + c.weaknesses + \"<br/>\" : \"\"}\n                ${c.strategicInitiatives ? \"<strong>Initiatives:</strong> \" + c.strategicInitiatives : \"\"}\n              </li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <!-- Trend Analysis -->\n      <h2>Trend Analysis</h2>\n\n      <h3>Technological Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.technological) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}${t.timeHorizon ? \" <span class='small'>(Time horizon: \" + t.timeHorizon + \")</span>\" : \"\"}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <h3>Regulatory Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.regulatory) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <h3>Economic Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.economic) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <h3>Consumer Behavior Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.consumerBehavior) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <!-- Strategic Insights -->\n      <h2>Strategic Insights &amp; Recommendations</h2>\n      <div class=\"box\">\n        <ul>\n          {{\n            ($json.output.strategicInsights || []).map(s =>\n              `<li>\n                <strong>${s.recommendation}</strong><br/>\n                ${s.rationale ? \"<strong>Rationale:</strong> \" + s.rationale + \"<br/>\" : \"\"}\n                ${s.expectedImpact ? \"<strong>Expected Impact:</strong> \" + s.expectedImpact + \"<br/>\" : \"\"}\n                ${s.priority ? \"<strong>Priority:</strong> \" + s.priority : \"\" }\n                ${s.timeHorizon ? \" <span class='small'>(Time horizon: \" + s.timeHorizon + \")</span>\" : \"\"}\n              </li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <p class=\"small\">\n        This report is based on the latest AI-generated analysis of the customer's industry and market context.\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1552,
+        -240
+      ],
+      "id": "10af86a8-6713-416a-b4ea-8419d5ff9475",
+      "name": "Send AI Outlook Email to MST Team",
+      "webhookId": "79ea3ea2-f50a-4caa-bb06-403d9940d63f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BTKh5C4ujrbOxvPI",
+          "name": "Rashad.barnett@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "team": "45036767",
+        "space": "90113958311",
+        "folder": "90117171427",
+        "list": "901112199521",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        224
+      ],
+      "id": "afb1e7db-3ac2-4804-9e52-8463debd75a4",
+      "name": "Get many tasks",
+      "credentials": {
+        "clickUpApi": {
+          "id": "c2MfrYBgHU3wIuVM",
+          "name": "MST ClickUp Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const tasks = $input.all();\nconst isEmpty = (obj) => Object.keys(obj).length === 0;\nconst watchers = tasks.map((task) => { \n  if(task.json.assignees.length === 0) return {};\n  return {\n  \"assignees\": task?.json?.assignees\n  }\n}).filter(x => !isEmpty(x));\nreturn watchers;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        224
+      ],
+      "id": "97badf40-2f29-4757-8d98-fc7e4b65de2d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        176,
+        240
+      ],
+      "id": "dd0e3b70-bc28-478d-877d-bc52397ae9e3",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('Get Customer Data').item.json.body.primary_email }}",
+        "subject": "=Thank You for Completing Your Client Information Form",
+        "bodyContent": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>MST \u2013 Thank You</title>\n  <style>\n    body {\n      margin: 0;\n      padding: 0;\n      background: #f3f4ff;\n      font-family: Arial, Helvetica, sans-serif;\n      color: #333333;\n    }\n    .email-wrapper {\n      width: 100%;\n      padding: 20px 0;\n    }\n    .email-container {\n      max-width: 640px;\n      margin: 0 auto;\n      background: #ffffff;\n      border-radius: 12px;\n      padding: 24px 28px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.08);\n      border-top: 6px solid #4f46e5;\n    }\n    .email-header {\n      text-align: center;\n      margin-bottom: 18px;\n    }\n    .email-header h1 {\n      margin: 0;\n      font-size: 24px;\n      color: #4f46e5;\n    }\n    .email-badge {\n      display: inline-block;\n      margin-top: 8px;\n      padding: 4px 10px;\n      border-radius: 999px;\n      background: #eef2ff;\n      color: #4338ca;\n      font-size: 12px;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n      font-weight: 600;\n    }\n    .email-body p {\n      line-height: 1.6;\n      font-size: 15px;\n      margin: 10px 0;\n    }\n    .email-body strong {\n      color: #1d4ed8;\n    }\n    .highlight-box {\n      margin: 18px 0;\n      padding: 14px 16px;\n      border-radius: 10px;\n      background: #ecfeff;\n      border: 1px solid #a5f3fc;\n      font-size: 14px;\n      color: #0f172a;\n    }\n    .cta-button {\n      display: inline-block;\n      margin-top: 18px;\n      padding: 10px 20px;\n      border-radius: 999px;\n      background: #4f46e5;\n      color: #ffffff !important;\n      text-decoration: none;\n      font-size: 14px;\n      font-weight: 600;\n    }\n    .cta-button:hover {\n      background: #4338ca;\n    }\n    .email-footer {\n      text-align: center;\n      margin-top: 22px;\n      font-size: 12px;\n      color: #6b7280;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"email-wrapper\">\n    <div class=\"email-container\">\n      <div class=\"email-header\">\n        <h1>Welcome to MST</h1>\n        <div class=\"email-badge\">New Client</div>\n      </div>\n\n      <div class=\"email-body\">\n        <p>Dear {{ $('Get Customer Data').item.json.body.client_name }},</p>\n\n        <p>\n          Thank you for taking the time to complete the\n          <strong>MST Client Information Document</strong>.\n          We truly appreciate you providing these important details.\n        </p>\n\n        <div class=\"highlight-box\">\n          Our team is now reviewing your information. Once the review is complete,\n          we\u2019ll reach out with any follow-up questions and to walk you through the next steps.\n        </div>\n\n        <p>\n          We\u2019re excited to welcome you to <strong>MST</strong> and look forward to supporting your needs.\n          Our goal is to make things as smooth and stress-free as possible for you.\n        </p>\n\n        <p>\n          If you have any questions in the meantime, please feel free to contact us.\n          We\u2019re here to ensure a seamless experience every step of the way.\n        </p>\n\n        <p>\n          Thank you again for choosing MST \u2014 we look forward to working with you.\n        </p>\n\n        <p>\n          Warm regards,<br />\n          <strong>MST Team</strong>\n        </p>\n\n        <!-- Optional CTA (you can remove this if you don\u2019t want a button) -->\n        <!--\n        <a href=\"#\" class=\"cta-button\">Visit Our Website</a>\n        -->\n      </div>\n\n      <div class=\"email-footer\">\n        \u00a9 {{ new Date().getFullYear() }} MST. All rights reserved.\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "additionalFields": {
+          "bodyContentType": "html"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        704,
+        0
+      ],
+      "id": "21484e2d-8001-461f-9004-1701423422b0",
+      "name": "Send Email Confirmation to Customer",
+      "webhookId": "789ddd20-355c-4406-9128-8685bb8d70d0",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "RS6O6ncyKxJLSof7",
+          "name": "MST Microsoft No-reply"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "rashadbarnett@gmail.com, michelle.turner@mstcpatx.com, Mstteam@NETORGFT5539831.onmicrosoft.com",
+        "subject": "=MST | Client Intake Summary \u2013 {{ $json.body.client_name }}",
+        "bodyContent": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Client Information Summary</title>\n  <style>\n    body {\n      font-family: Arial, sans-serif;\n      background-color: #f5f5f7;\n      margin: 0;\n      padding: 20px;\n      color: #333;\n    }\n    .container {\n      max-width: 900px;\n      margin: 0 auto;\n      background: #ffffff;\n      padding: 20px 30px;\n      border-radius: 8px;\n      box-shadow: 0 2px 6px rgba(0,0,0,0.08);\n    }\n    h1, h2 {\n      margin-top: 0;\n      color: #222;\n    }\n    h1 {\n      font-size: 22px;\n      border-bottom: 2px solid #eee;\n      padding-bottom: 10px;\n      margin-bottom: 20px;\n    }\n    h2 {\n      font-size: 18px;\n      margin-top: 25px;\n      border-left: 4px solid #4a90e2;\n      padding-left: 8px;\n    }\n    .grid {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 10px 30px;\n    }\n    .field {\n      margin-bottom: 6px;\n    }\n    .label {\n      font-weight: bold;\n      display: inline-block;\n      min-width: 160px;\n    }\n    .value {\n      display: inline-block;\n    }\n    .full-width {\n      grid-column: 1 / -1;\n    }\n    .tag-list {\n      margin: 4px 0 0 0;\n      padding-left: 18px;\n    }\n    .tag-list li {\n      margin-bottom: 4px;\n    }\n    .note {\n      font-size: 12px;\n      color: #777;\n      margin-top: 10px;\n    }\n    @media (max-width: 600px) {\n      .grid {\n        grid-template-columns: 1fr;\n      }\n      .label {\n        min-width: 120px;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Client Information Summary</h1>\n\n    <!-- Client Overview -->\n    <h2>Client Overview</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Client Name:</span>\n        <span class=\"value\">{{ $json.body.client_name || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Client Short Name:</span>\n        <span class=\"value\">{{ $json.body.client_short_name || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Address:</span>\n        <span class=\"value\">{{ $json.body.client_address || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Industry:</span>\n        <span class=\"value\">{{ $json.body.industry || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Softwares Used:</span>\n        <span class=\"value\">{{ $json.body.softwares_used || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Business Operations Summary:</span>\n        <span class=\"value\">{{ $json.body.business_ops_summary || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Contacts -->\n    <h2>Primary Contact</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Name &amp; Title:</span>\n        <span class=\"value\">{{ $json.body.primary_name_title || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Phone:</span>\n        <span class=\"value\">{{ $json.body.primary_phone || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Email:</span>\n        <span class=\"value\">{{ $json.body.primary_email || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Contact For:</span>\n        <span class=\"value\">\n          {{ $json.body.primary_contact_for || \"N/A\" }}\n          {{ $json.body.primary_contact_other ? \" (\" + $json.primary_contact_other + \")\" : \"\" }}\n        </span>\n      </div>\n    </div>\n\n    <h2>Other Contact</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Name:</span>\n        <span class=\"value\">{{ $json.body.other_name || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Phone:</span>\n        <span class=\"value\">{{ $json.body.other_phone || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Email:</span>\n        <span class=\"value\">{{ $json.body.other_email || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Contact For:</span>\n        <span class=\"value\">{{ $json.body.other_contact_for || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Associated Entities -->\n    <h2>Associated Entities</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Entity 1:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_1 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Entity 2:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_2 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Entity 3:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_3 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Entity 4:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_4 || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Entity 5:</span>\n        <span class=\"value\">{{ $json.body.associated_entity_5 || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Services & Needs -->\n    <h2>Services &amp; Needs</h2>\n    <div class=\"grid\">\n      <div class=\"field full-width\">\n        <span class=\"label\">Client Services (Notes):</span>\n        <span class=\"value\">\n          {{\n            [\n              $json.body.client_services_1,\n              $json.body.client_services_2,\n              $json.body.client_services_3,\n              $json.body.client_services_4,\n              $json.body.client_services_5,\n              $json.body.client_services_6\n            ].filter(s => s).join(\"; \")\n            || \"N/A\"\n          }}\n        </span>\n      </div>\n\n      <div class=\"field full-width\">\n        <span class=\"label\">Service Needs:</span>\n        <ul class=\"tag-list\">\n          <li>Accounting: {{ $json.body.needs_accounting ? \"Yes\" : \"No\" }}</li>\n          <li>Payroll: {{ $json.body.needs_payroll ? \"Yes\" : \"No\" }} \n            {{ $json.body.needs_payroll_states ? \"(States: \" + $json.needs_payroll_states + \")\" : \"\" }}\n          </li>\n          <li>Sales Tax: {{ $json.body.needs_sales_tax ? \"Yes\" : \"No\" }} \n            {{ $json.body.needs_sales_tax_states ? \"(States: \" + $json.body.needs_sales_tax_states + \")\" : \"\" }}\n          </li>\n          <li>Federal Income Tax Prep: {{ $json.body.needs_federal_income_tax_prep ? \"Yes\" : \"No\" }} \n            {{ $json.body.federal_tax_type ? \"(Type: \" + $json.body.federal_tax_type + \")\" : \"\" }}\n          </li>\n          <li>State Income Tax Prep: {{ $json.body.needs_state_income_tax_prep ? \"Yes\" : \"No\" }} \n            {{ $json.body.needs_state_tax_states ? \"(States: \" + $json.needs_state_tax_states + \")\" : \"\" }}\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"field\">\n        <span class=\"label\">Financial Statements Method:</span>\n        <span class=\"value\">{{ $json.body.financial_statements_method || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Income Tax Return Method:</span>\n        <span class=\"value\">{{ $json.body.income_tax_return_method || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Franchise Tax Method:</span>\n        <span class=\"value\">{{ $json.body.franchise_tax_method || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Property Tax Exemptions:</span>\n        <span class=\"value\">{{ $json.body.property_tax_exemptions ? \"Yes\" : \"No\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Reporting Frequency:</span>\n        <span class=\"value\">{{ $json.body.reporting_frequency || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Report Due Date:</span>\n        <span class=\"value\">{{ $json.body.report_due_date || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Sales Tax Deadlines:</span>\n        <span class=\"value\">{{ $json.body.sales_tax_deadlines || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Payroll Processing Period:</span>\n        <span class=\"value\">{{ $json.body.payroll_processing_period || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Other Deadlines:</span>\n        <span class=\"value\">{{ $json.body.other_deadlines || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Additional Details -->\n    <h2>Additional Details</h2>\n    <div class=\"grid\">\n      <div class=\"field full-width\">\n        <span class=\"label\">Additional Requests:</span>\n        <span class=\"value\">{{ $json.body.additional_requests || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Unique GL Accounts:</span>\n        <span class=\"value\">{{ $json.body.unique_gl_accounts || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Payroll Procedures:</span>\n        <span class=\"value\">{{ $json.body.client_payroll_procedures || \"N/A\" }}</span>\n      </div>\n      <div class=\"field full-width\">\n        <span class=\"label\">Expectations:</span>\n        <span class=\"value\">{{ $json.body.expectations || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <!-- Personal & Relationship Info -->\n    <h2>Personal & Relationship Info</h2>\n    <div class=\"grid\">\n      <div class=\"field\">\n        <span class=\"label\">Birthday:</span>\n        <span class=\"value\">{{ $json.body.birthday || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Company Anniversary:</span>\n        <span class=\"value\">{{ $json.body.company_anniversary || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Favorite Dessert:</span>\n        <span class=\"value\">{{ $json.body.favorite_dessert || \"N/A\" }}</span>\n      </div>\n      <div class=\"field\">\n        <span class=\"label\">Hobbies:</span>\n        <span class=\"value\">{{ $json.body.hobbies || \"N/A\" }}</span>\n      </div>\n    </div>\n\n    <p class=\"note\">\n      *This summary is based on the latest client information provided in the MST Client Information Document.\n    </p>\n  </div>\n</body>\n</html>",
+        "additionalFields": {
+          "from": "MST Confirmation",
+          "bodyContentType": "html"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "1101fd7f-74e4-42be-8984-f47645e1a920",
+      "name": "Send Backup Email to MST Team",
+      "webhookId": "789ddd20-355c-4406-9128-8685bb8d70d0",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "RS6O6ncyKxJLSof7",
+          "name": "MST Microsoft No-reply"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "rashadbarnett@gmail.com, michelle.turner@mstcpatx.com, Mstteam@NETORGFT5539831.onmicrosoft.com",
+        "subject": "=MST Industry Analysis Report \u2013 {{ $('Get Customer Data').item.json.body.client_name }}",
+        "bodyContent": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Industry Analysis Summary</title>\n  <style>\n    body {\n      margin: 0;\n      padding: 0;\n      background: #f3f4f6;\n      font-family: Arial, Helvetica, sans-serif;\n      color: #111827;\n    }\n    .wrapper {\n      width: 100%;\n      padding: 20px 0;\n    }\n    .container {\n      max-width: 900px;\n      margin: 0 auto;\n      background: #ffffff;\n      border-radius: 10px;\n      padding: 24px 30px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.06);\n      border-top: 6px solid #2563eb;\n    }\n    h1, h2, h3 {\n      margin-top: 0;\n      color: #111827;\n    }\n    h1 {\n      font-size: 22px;\n      margin-bottom: 12px;\n    }\n    h2 {\n      font-size: 18px;\n      margin-top: 24px;\n      margin-bottom: 8px;\n      border-left: 4px solid #2563eb;\n      padding-left: 8px;\n    }\n    h3 {\n      font-size: 15px;\n      margin-top: 16px;\n      margin-bottom: 6px;\n      color: #1f2937;\n    }\n    p {\n      font-size: 14px;\n      line-height: 1.6;\n      margin: 6px 0 10px 0;\n    }\n    .pill {\n      display: inline-block;\n      background: #eff6ff;\n      color: #1d4ed8;\n      padding: 4px 10px;\n      border-radius: 999px;\n      font-size: 11px;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n      margin-bottom: 10px;\n    }\n    .grid-2 {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 8px 20px;\n    }\n    .field-label {\n      font-size: 12px;\n      font-weight: bold;\n      text-transform: uppercase;\n      letter-spacing: 0.06em;\n      color: #6b7280;\n    }\n    .field-value {\n      font-size: 14px;\n      margin-bottom: 6px;\n    }\n    .box {\n      background: #f9fafb;\n      border-radius: 8px;\n      padding: 10px 12px;\n      border: 1px solid #e5e7eb;\n      margin-top: 6px;\n    }\n    ul {\n      padding-left: 18px;\n      margin: 6px 0 10px 0;\n    }\n    li {\n      font-size: 14px;\n      margin-bottom: 4px;\n    }\n    .small {\n      font-size: 12px;\n      color: #6b7280;\n    }\n    @media (max-width: 640px) {\n      .container {\n        padding: 18px 16px;\n      }\n      .grid-2 {\n        grid-template-columns: 1fr;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"wrapper\">\n    <div class=\"container\">\n      <span class=\"pill\">Industry Analysis Report</span>\n      <h1>{{ $json.output.identifiedIndustry || \"Industry Analysis\" }}</h1>\n\n      <!-- Top summary -->\n      <div class=\"grid-2\">\n        <div>\n          <div class=\"field-label\">Sector</div>\n          <div class=\"field-value\">\n            {{ $json.output.industryIdentification.sector || \"N/A\" }}\n          </div>\n        </div>\n        <div>\n          <div class=\"field-label\">Sub-Sector</div>\n          <div class=\"field-value\">\n            {{ $json.output.industryIdentification.subSector || \"N/A\" }}\n          </div>\n        </div>\n        <div>\n          <div class=\"field-label\">Confidence Level</div>\n          <div class=\"field-value\">\n            {{ (Math.round(($json.output.industryIdentification.confidenceLevel || 0) * 100)) + \"%\" }}\n          </div>\n        </div>\n        <div>\n          <div class=\"field-label\">Classification Rationale</div>\n          <div class=\"field-value\">\n            {{ $json.output.industryIdentification.rationale || \"N/A\" }}\n          </div>\n        </div>\n      </div>\n\n      <!-- Industry Deep Dive -->\n      <h2>Industry Deep Dive</h2>\n      <h3>Overview</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.overview || \"N/A\" }}</p>\n      </div>\n\n      <h3>Market Size &amp; Growth</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.marketSizeAndGrowth || \"N/A\" }}</p>\n      </div>\n\n      <h3>Key Segments</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.keySegments || \"N/A\" }}</p>\n      </div>\n\n      <h3>Key Players (Summary)</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.keyPlayers || \"N/A\" }}</p>\n      </div>\n\n      <h3>Growth Drivers</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.growthDrivers || \"N/A\" }}</p>\n      </div>\n\n      <h3>Challenges &amp; Risks</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.challengesAndRisks || \"N/A\" }}</p>\n      </div>\n\n      <h3>Opportunities</h3>\n      <div class=\"box\">\n        <p>{{ $json.output.industryDeepDive.opportunities || \"N/A\" }}</p>\n      </div>\n\n      <!-- Competitive Landscape -->\n      <h2>Competitive Landscape</h2>\n      <div class=\"box\">\n        <ul>\n          {{\n            ($json.output.competitiveLandscape || []).map(c =>\n              `<li>\n                <strong>${c.name || \"Unnamed Competitor\"}</strong><br/>\n                <span class=\"small\">${c.marketPositioning || \"\"}</span><br/>\n                ${c.description ? c.description + \"<br/>\" : \"\"}\n                ${c.strengths ? \"<strong>Strengths:</strong> \" + c.strengths + \"<br/>\" : \"\"}\n                ${c.weaknesses ? \"<strong>Weaknesses:</strong> \" + c.weaknesses + \"<br/>\" : \"\"}\n                ${c.strategicInitiatives ? \"<strong>Initiatives:</strong> \" + c.strategicInitiatives : \"\"}\n              </li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <!-- Trend Analysis -->\n      <h2>Trend Analysis</h2>\n\n      <h3>Technological Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.technological) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}${t.timeHorizon ? \" <span class='small'>(Time horizon: \" + t.timeHorizon + \")</span>\" : \"\"}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <h3>Regulatory Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.regulatory) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <h3>Economic Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.economic) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <h3>Consumer Behavior Trends</h3>\n      <div class=\"box\">\n        <ul>\n          {{\n            (($json.output.trendAnalysis && $json.output.trendAnalysis.consumerBehavior) || []).map(t =>\n              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <!-- Strategic Insights -->\n      <h2>Strategic Insights &amp; Recommendations</h2>\n      <div class=\"box\">\n        <ul>\n          {{\n            ($json.output.strategicInsights || []).map(s =>\n              `<li>\n                <strong>${s.recommendation}</strong><br/>\n                ${s.rationale ? \"<strong>Rationale:</strong> \" + s.rationale + \"<br/>\" : \"\"}\n                ${s.expectedImpact ? \"<strong>Expected Impact:</strong> \" + s.expectedImpact + \"<br/>\" : \"\"}\n                ${s.priority ? \"<strong>Priority:</strong> \" + s.priority : \"\" }\n                ${s.timeHorizon ? \" <span class='small'>(Time horizon: \" + s.timeHorizon + \")</span>\" : \"\"}\n              </li>`\n            ).join(\"\")\n          }}\n        </ul>\n      </div>\n\n      <p class=\"small\">\n        This report is based on the latest AI-generated analysis of the customer's industry and market context.\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "additionalFields": {
+          "bodyContentType": "html"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        0
+      ],
+      "id": "58e38dcd-2b3a-4f1a-a80f-7c7e49af67ae",
+      "name": "Send Analysis Email to MST Team",
+      "webhookId": "789ddd20-355c-4406-9128-8685bb8d70d0",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "RS6O6ncyKxJLSof7",
+          "name": "MST Microsoft No-reply"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1232,
+        288
+      ],
+      "id": "c85ae3ea-65d2-4ad0-9ce5-8c6e5a31b758",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "51hIFZmWsjzQuJAg",
+          "name": "Rashad's OpenAi Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Customer Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Customer Data": {
+      "main": [
+        [
+          {
+            "node": "Send Backup Email to MST Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Analysis Email to MST Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email to Customer": {
+      "main": [
+        []
+      ]
+    },
+    "Send Email to MST Team": {
+      "main": [
+        [
+          {
+            "node": "Send Email to Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many tasks": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        []
+      ]
+    },
+    "Send Backup Email to MST Team": {
+      "main": [
+        [
+          {
+            "node": "Send Email Confirmation to Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Confirmation to Customer": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
     }
   },
-  \"required\": [\"identifiedIndustry\", \"industryIdentification\", \"industryDeepDive\", \"strategicInsights\"],
-  \"additionalProperties\": false
-}"},"type":"@n8n/n8n-nodes-langchain.outputParserStructured","typeVersion":1.3,"position":[1408,208],"id":"55b174e5-43e2-4f22-a9b8-b70b7c7179c3","name":"Structured Output Parser"},{"parameters":{"sendTo":"={{ $('Get Customer Data').item.json.body.primary_email }}","subject":"Thank You for Completing Your Client Information Form","message":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>MST – Thank You</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4ff;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #333333;
-    }
-    .email-wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .email-container {
-      max-width: 640px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-top: 6px solid #4f46e5;
-    }
-    .email-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-    .email-header h1 {
-      margin: 0;
-      font-size: 24px;
-      color: #4f46e5;
-    }
-    .email-badge {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #4338ca;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-    .email-body p {
-      line-height: 1.6;
-      font-size: 15px;
-      margin: 10px 0;
-    }
-    .email-body strong {
-      color: #1d4ed8;
-    }
-    .highlight-box {
-      margin: 18px 0;
-      padding: 14px 16px;
-      border-radius: 10px;
-      background: #ecfeff;
-      border: 1px solid #a5f3fc;
-      font-size: 14px;
-      color: #0f172a;
-    }
-    .cta-button {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: #4f46e5;
-      color: #ffffff !important;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .cta-button:hover {
-      background: #4338ca;
-    }
-    .email-footer {
-      text-align: center;
-      margin-top: 22px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <div class=\"email-wrapper\">
-    <div class=\"email-container\">
-      <div class=\"email-header\">
-        <h1>Welcome to MST</h1>
-        <div class=\"email-badge\">New Client</div>
-      </div>
-
-      <div class=\"email-body\">
-        <p>Dear {{ $('Get Customer Data').item.json.body.client_name }},</p>
-
-        <p>
-          Thank you for taking the time to complete the
-          <strong>MST Client Information Document</strong>.
-          We truly appreciate you providing these important details.
-        </p>
-
-        <div class=\"highlight-box\">
-          Our team is now reviewing your information. Once the review is complete,
-          we’ll reach out with any follow-up questions and to walk you through the next steps.
-        </div>
-
-        <p>
-          We’re excited to welcome you to <strong>MST</strong> and look forward to supporting your needs.
-          Our goal is to make things as smooth and stress-free as possible for you.
-        </p>
-
-        <p>
-          If you have any questions in the meantime, please feel free to contact us.
-          We’re here to ensure a seamless experience every step of the way.
-        </p>
-
-        <p>
-          Thank you again for choosing MST — we look forward to working with you.
-        </p>
-
-        <p>
-          Warm regards,<br />
-          <strong>MST Team</strong>
-        </p>
-
-        <!-- Optional CTA (you can remove this if you don’t want a button) -->
-        <!--
-        <a href=\"#\" class=\"cta-button\">Visit Our Website</a>
-        -->
-      </div>
-
-      <div class=\"email-footer\">
-        © {{ new Date().getFullYear() }} MST. All rights reserved.
-      </div>
-    </div>
-  </div>
-</body>
-</html>","options":{"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[736,-256],"id":"1dd8301d-93e7-452a-8254-ef99a2d76b8f","name":"Send Email to Customer","webhookId":"79ea3ea2-f50a-4caa-bb06-403d9940d63f","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"sendTo":"rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST | Client Intake Summary – {{ $json.body.client_name }}","message":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Client Information Summary</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f7;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 20px 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    h1, h2 {
-      margin-top: 0;
-      color: #222;
-    }
-    h1 {
-      font-size: 22px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 25px;
-      border-left: 4px solid #4a90e2;
-      padding-left: 8px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 30px;
-    }
-    .field {
-      margin-bottom: 6px;
-    }
-    .label {
-      font-weight: bold;
-      display: inline-block;
-      min-width: 160px;
-    }
-    .value {
-      display: inline-block;
-    }
-    .full-width {
-      grid-column: 1 / -1;
-    }
-    .tag-list {
-      margin: 4px 0 0 0;
-      padding-left: 18px;
-    }
-    .tag-list li {
-      margin-bottom: 4px;
-    }
-    .note {
-      font-size: 12px;
-      color: #777;
-      margin-top: 10px;
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .label {
-        min-width: 120px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"container\">
-    <h1>Client Information Summary</h1>
-
-    <!-- Client Overview -->
-    <h2>Client Overview</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Client Name:</span>
-        <span class=\"value\">{{ $json.body.client_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Client Short Name:</span>
-        <span class=\"value\">{{ $json.body.client_short_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Address:</span>
-        <span class=\"value\">{{ $json.body.client_address || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Industry:</span>
-        <span class=\"value\">{{ $json.body.industry || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Softwares Used:</span>
-        <span class=\"value\">{{ $json.body.softwares_used || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Business Operations Summary:</span>
-        <span class=\"value\">{{ $json.body.business_ops_summary || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Contacts -->
-    <h2>Primary Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name &amp; Title:</span>
-        <span class=\"value\">{{ $json.body.primary_name_title || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.primary_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.primary_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">
-          {{ $json.body.primary_contact_for || \"N/A\" }}
-          {{ $json.body.primary_contact_other ? \" (\" + $json.primary_contact_other + \")\" : \"\" }}
-        </span>
-      </div>
-    </div>
-
-    <h2>Other Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name:</span>
-        <span class=\"value\">{{ $json.body.other_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.other_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.other_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">{{ $json.body.other_contact_for || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Associated Entities -->
-    <h2>Associated Entities</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Entity 1:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_1 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 2:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_2 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 3:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_3 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 4:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_4 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Entity 5:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_5 || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Services & Needs -->
-    <h2>Services &amp; Needs</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Client Services (Notes):</span>
-        <span class=\"value\">
-          {{
-            [
-              $json.body.client_services_1,
-              $json.body.client_services_2,
-              $json.body.client_services_3,
-              $json.body.client_services_4,
-              $json.body.client_services_5,
-              $json.body.client_services_6
-            ].filter(s => s).join(\"; \")
-            || \"N/A\"
-          }}
-        </span>
-      </div>
-
-      <div class=\"field full-width\">
-        <span class=\"label\">Service Needs:</span>
-        <ul class=\"tag-list\">
-          <li>Accounting: {{ $json.body.needs_accounting ? \"Yes\" : \"No\" }}</li>
-          <li>Payroll: {{ $json.body.needs_payroll ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_payroll_states ? \"(States: \" + $json.needs_payroll_states + \")\" : \"\" }}
-          </li>
-          <li>Sales Tax: {{ $json.body.needs_sales_tax ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_sales_tax_states ? \"(States: \" + $json.body.needs_sales_tax_states + \")\" : \"\" }}
-          </li>
-          <li>Federal Income Tax Prep: {{ $json.body.needs_federal_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.federal_tax_type ? \"(Type: \" + $json.body.federal_tax_type + \")\" : \"\" }}
-          </li>
-          <li>State Income Tax Prep: {{ $json.body.needs_state_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_state_tax_states ? \"(States: \" + $json.needs_state_tax_states + \")\" : \"\" }}
-          </li>
-        </ul>
-      </div>
-
-      <div class=\"field\">
-        <span class=\"label\">Financial Statements Method:</span>
-        <span class=\"value\">{{ $json.body.financial_statements_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Income Tax Return Method:</span>
-        <span class=\"value\">{{ $json.body.income_tax_return_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Franchise Tax Method:</span>
-        <span class=\"value\">{{ $json.body.franchise_tax_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Property Tax Exemptions:</span>
-        <span class=\"value\">{{ $json.body.property_tax_exemptions ? \"Yes\" : \"No\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Reporting Frequency:</span>
-        <span class=\"value\">{{ $json.body.reporting_frequency || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Report Due Date:</span>
-        <span class=\"value\">{{ $json.body.report_due_date || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Sales Tax Deadlines:</span>
-        <span class=\"value\">{{ $json.body.sales_tax_deadlines || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Payroll Processing Period:</span>
-        <span class=\"value\">{{ $json.body.payroll_processing_period || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Other Deadlines:</span>
-        <span class=\"value\">{{ $json.body.other_deadlines || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Additional Details -->
-    <h2>Additional Details</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Additional Requests:</span>
-        <span class=\"value\">{{ $json.body.additional_requests || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Unique GL Accounts:</span>
-        <span class=\"value\">{{ $json.body.unique_gl_accounts || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Payroll Procedures:</span>
-        <span class=\"value\">{{ $json.body.client_payroll_procedures || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Expectations:</span>
-        <span class=\"value\">{{ $json.body.expectations || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Personal & Relationship Info -->
-    <h2>Personal & Relationship Info</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Birthday:</span>
-        <span class=\"value\">{{ $json.body.birthday || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Company Anniversary:</span>
-        <span class=\"value\">{{ $json.body.company_anniversary || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Favorite Dessert:</span>
-        <span class=\"value\">{{ $json.body.favorite_dessert || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Hobbies:</span>
-        <span class=\"value\">{{ $json.body.hobbies || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <p class=\"note\">
-      *This summary is based on the latest client information provided in the MST Client Information Document.
-    </p>
-  </div>
-</body>
-</html>","options":{"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[448,-256],"id":"857b1d83-3dab-4bf5-b196-d79f8ad0d3d9","name":"Send Email to MST Team","webhookId":"79ea3ea2-f50a-4caa-bb06-403d9940d63f","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"sendTo":"=rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST Industry Analysis Report – {{ $('Get Customer Data').item.json.body.client_name }} from ","message":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Industry Analysis Summary</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4f6;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #111827;
-    }
-    .wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 24px 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      border-top: 6px solid #2563eb;
-    }
-    h1, h2, h3 {
-      margin-top: 0;
-      color: #111827;
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 12px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 24px;
-      margin-bottom: 8px;
-      border-left: 4px solid #2563eb;
-      padding-left: 8px;
-    }
-    h3 {
-      font-size: 15px;
-      margin-top: 16px;
-      margin-bottom: 6px;
-      color: #1f2937;
-    }
-    p {
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 6px 0 10px 0;
-    }
-    .pill {
-      display: inline-block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 20px;
-    }
-    .field-label {
-      font-size: 12px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #6b7280;
-    }
-    .field-value {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .box {
-      background: #f9fafb;
-      border-radius: 8px;
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      margin-top: 6px;
-    }
-    ul {
-      padding-left: 18px;
-      margin: 6px 0 10px 0;
-    }
-    li {
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .small {
-      font-size: 12px;
-      color: #6b7280;
-    }
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px 16px;
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"wrapper\">
-    <div class=\"container\">
-      <span class=\"pill\">Industry Analysis Report</span>
-      <h1>{{ $json.output.identifiedIndustry || \"Industry Analysis\" }}</h1>
-
-      <!-- Top summary -->
-      <div class=\"grid-2\">
-        <div>
-          <div class=\"field-label\">Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.sector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Sub-Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.subSector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Confidence Level</div>
-          <div class=\"field-value\">
-            {{ (Math.round(($json.output.industryIdentification.confidenceLevel || 0) * 100)) + \"%\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Classification Rationale</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.rationale || \"N/A\" }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Industry Deep Dive -->
-      <h2>Industry Deep Dive</h2>
-      <h3>Overview</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.overview || \"N/A\" }}</p>
-      </div>
-
-      <h3>Market Size &amp; Growth</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.marketSizeAndGrowth || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Segments</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keySegments || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Players (Summary)</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keyPlayers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Growth Drivers</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.growthDrivers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Challenges &amp; Risks</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.challengesAndRisks || \"N/A\" }}</p>
-      </div>
-
-      <h3>Opportunities</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.opportunities || \"N/A\" }}</p>
-      </div>
-
-      <!-- Competitive Landscape -->
-      <h2>Competitive Landscape</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.competitiveLandscape || []).map(c =>
-              `<li>
-                <strong>${c.name || \"Unnamed Competitor\"}</strong><br/>
-                <span class=\"small\">${c.marketPositioning || \"\"}</span><br/>
-                ${c.description ? c.description + \"<br/>\" : \"\"}
-                ${c.strengths ? \"<strong>Strengths:</strong> \" + c.strengths + \"<br/>\" : \"\"}
-                ${c.weaknesses ? \"<strong>Weaknesses:</strong> \" + c.weaknesses + \"<br/>\" : \"\"}
-                ${c.strategicInitiatives ? \"<strong>Initiatives:</strong> \" + c.strategicInitiatives : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Trend Analysis -->
-      <h2>Trend Analysis</h2>
-
-      <h3>Technological Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.technological) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}${t.timeHorizon ? \" <span class='small'>(Time horizon: \" + t.timeHorizon + \")</span>\" : \"\"}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Regulatory Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.regulatory) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Economic Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.economic) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Consumer Behavior Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.consumerBehavior) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Strategic Insights -->
-      <h2>Strategic Insights &amp; Recommendations</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.strategicInsights || []).map(s =>
-              `<li>
-                <strong>${s.recommendation}</strong><br/>
-                ${s.rationale ? \"<strong>Rationale:</strong> \" + s.rationale + \"<br/>\" : \"\"}
-                ${s.expectedImpact ? \"<strong>Expected Impact:</strong> \" + s.expectedImpact + \"<br/>\" : \"\"}
-                ${s.priority ? \"<strong>Priority:</strong> \" + s.priority : \"\" }
-                ${s.timeHorizon ? \" <span class='small'>(Time horizon: \" + s.timeHorizon + \")</span>\" : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <p class=\"small\">
-        This report is based on the latest AI-generated analysis of the customer's industry and market context.
-      </p>
-    </div>
-  </div>
-</body>
-</html>","options":{"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[1552,-240],"id":"10af86a8-6713-416a-b4ea-8419d5ff9475","name":"Send AI Outlook Email to MST Team","webhookId":"79ea3ea2-f50a-4caa-bb06-403d9940d63f","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"operation":"getAll","team":"45036767","space":"90113958311","folder":"90117171427","list":"901112199521","filters":{}},"type":"n8n-nodes-base.clickUp","typeVersion":1,"position":[-208,224],"id":"afb1e7db-3ac2-4804-9e52-8463debd75a4","name":"Get many tasks","credentials":{"clickUpApi":{"id":"c2MfrYBgHU3wIuVM","name":"MST ClickUp Credentials"}}},{"parameters":{"jsCode":"const tasks = $input.all();
-const isEmpty = (obj) => Object.keys(obj).length === 0;
-const watchers = tasks.map((task) => { 
-  if(task.json.assignees.length === 0) return {};
-  return {
-  \"assignees\": task?.json?.assignees
-  }
-}).filter(x => !isEmpty(x));
-return watchers;
-"},"type":"n8n-nodes-base.code","typeVersion":2,"position":[-16,224],"id":"97badf40-2f29-4757-8d98-fc7e4b65de2d","name":"Code in JavaScript"},{"parameters":{},"type":"n8n-nodes-base.merge","typeVersion":3.2,"position":[176,240],"id":"dd0e3b70-bc28-478d-877d-bc52397ae9e3","name":"Merge"},{"parameters":{"toRecipients":"={{ $('Get Customer Data').item.json.body.primary_email }}","subject":"=Thank You for Completing Your Client Information Form","bodyContent":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>MST – Thank You</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4ff;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #333333;
-    }
-    .email-wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .email-container {
-      max-width: 640px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-top: 6px solid #4f46e5;
-    }
-    .email-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-    .email-header h1 {
-      margin: 0;
-      font-size: 24px;
-      color: #4f46e5;
-    }
-    .email-badge {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #4338ca;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-    .email-body p {
-      line-height: 1.6;
-      font-size: 15px;
-      margin: 10px 0;
-    }
-    .email-body strong {
-      color: #1d4ed8;
-    }
-    .highlight-box {
-      margin: 18px 0;
-      padding: 14px 16px;
-      border-radius: 10px;
-      background: #ecfeff;
-      border: 1px solid #a5f3fc;
-      font-size: 14px;
-      color: #0f172a;
-    }
-    .cta-button {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: #4f46e5;
-      color: #ffffff !important;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .cta-button:hover {
-      background: #4338ca;
-    }
-    .email-footer {
-      text-align: center;
-      margin-top: 22px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <div class=\"email-wrapper\">
-    <div class=\"email-container\">
-      <div class=\"email-header\">
-        <h1>Welcome to MST</h1>
-        <div class=\"email-badge\">New Client</div>
-      </div>
-
-      <div class=\"email-body\">
-        <p>Dear {{ $('Get Customer Data').item.json.body.client_name }},</p>
-
-        <p>
-          Thank you for taking the time to complete the
-          <strong>MST Client Information Document</strong>.
-          We truly appreciate you providing these important details.
-        </p>
-
-        <div class=\"highlight-box\">
-          Our team is now reviewing your information. Once the review is complete,
-          we’ll reach out with any follow-up questions and to walk you through the next steps.
-        </div>
-
-        <p>
-          We’re excited to welcome you to <strong>MST</strong> and look forward to supporting your needs.
-          Our goal is to make things as smooth and stress-free as possible for you.
-        </p>
-
-        <p>
-          If you have any questions in the meantime, please feel free to contact us.
-          We’re here to ensure a seamless experience every step of the way.
-        </p>
-
-        <p>
-          Thank you again for choosing MST — we look forward to working with you.
-        </p>
-
-        <p>
-          Warm regards,<br />
-          <strong>MST Team</strong>
-        </p>
-
-        <!-- Optional CTA (you can remove this if you don’t want a button) -->
-        <!--
-        <a href=\"#\" class=\"cta-button\">Visit Our Website</a>
-        -->
-      </div>
-
-      <div class=\"email-footer\">
-        © {{ new Date().getFullYear() }} MST. All rights reserved.
-      </div>
-    </div>
-  </div>
-</body>
-</html>","additionalFields":{"bodyContentType":"html"}},"type":"n8n-nodes-base.microsoftOutlook","typeVersion":2,"position":[704,0],"id":"21484e2d-8001-461f-9004-1701423422b0","name":"Send Email Confirmation to Customer","webhookId":"789ddd20-355c-4406-9128-8685bb8d70d0","credentials":{"microsoftOutlookOAuth2Api":{"id":"RS6O6ncyKxJLSof7","name":"MST Microsoft No-reply"}}},{"parameters":{"toRecipients":"rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST | Client Intake Summary – {{ $json.body.client_name }}","bodyContent":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Client Information Summary</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f7;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 20px 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    h1, h2 {
-      margin-top: 0;
-      color: #222;
-    }
-    h1 {
-      font-size: 22px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 25px;
-      border-left: 4px solid #4a90e2;
-      padding-left: 8px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 30px;
-    }
-    .field {
-      margin-bottom: 6px;
-    }
-    .label {
-      font-weight: bold;
-      display: inline-block;
-      min-width: 160px;
-    }
-    .value {
-      display: inline-block;
-    }
-    .full-width {
-      grid-column: 1 / -1;
-    }
-    .tag-list {
-      margin: 4px 0 0 0;
-      padding-left: 18px;
-    }
-    .tag-list li {
-      margin-bottom: 4px;
-    }
-    .note {
-      font-size: 12px;
-      color: #777;
-      margin-top: 10px;
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .label {
-        min-width: 120px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"container\">
-    <h1>Client Information Summary</h1>
-
-    <!-- Client Overview -->
-    <h2>Client Overview</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Client Name:</span>
-        <span class=\"value\">{{ $json.body.client_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Client Short Name:</span>
-        <span class=\"value\">{{ $json.body.client_short_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Address:</span>
-        <span class=\"value\">{{ $json.body.client_address || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Industry:</span>
-        <span class=\"value\">{{ $json.body.industry || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Softwares Used:</span>
-        <span class=\"value\">{{ $json.body.softwares_used || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Business Operations Summary:</span>
-        <span class=\"value\">{{ $json.body.business_ops_summary || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Contacts -->
-    <h2>Primary Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name &amp; Title:</span>
-        <span class=\"value\">{{ $json.body.primary_name_title || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.primary_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.primary_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">
-          {{ $json.body.primary_contact_for || \"N/A\" }}
-          {{ $json.body.primary_contact_other ? \" (\" + $json.primary_contact_other + \")\" : \"\" }}
-        </span>
-      </div>
-    </div>
-
-    <h2>Other Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name:</span>
-        <span class=\"value\">{{ $json.body.other_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.other_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.other_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">{{ $json.body.other_contact_for || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Associated Entities -->
-    <h2>Associated Entities</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Entity 1:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_1 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 2:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_2 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 3:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_3 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 4:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_4 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Entity 5:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_5 || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Services & Needs -->
-    <h2>Services &amp; Needs</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Client Services (Notes):</span>
-        <span class=\"value\">
-          {{
-            [
-              $json.body.client_services_1,
-              $json.body.client_services_2,
-              $json.body.client_services_3,
-              $json.body.client_services_4,
-              $json.body.client_services_5,
-              $json.body.client_services_6
-            ].filter(s => s).join(\"; \")
-            || \"N/A\"
-          }}
-        </span>
-      </div>
-
-      <div class=\"field full-width\">
-        <span class=\"label\">Service Needs:</span>
-        <ul class=\"tag-list\">
-          <li>Accounting: {{ $json.body.needs_accounting ? \"Yes\" : \"No\" }}</li>
-          <li>Payroll: {{ $json.body.needs_payroll ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_payroll_states ? \"(States: \" + $json.needs_payroll_states + \")\" : \"\" }}
-          </li>
-          <li>Sales Tax: {{ $json.body.needs_sales_tax ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_sales_tax_states ? \"(States: \" + $json.body.needs_sales_tax_states + \")\" : \"\" }}
-          </li>
-          <li>Federal Income Tax Prep: {{ $json.body.needs_federal_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.federal_tax_type ? \"(Type: \" + $json.body.federal_tax_type + \")\" : \"\" }}
-          </li>
-          <li>State Income Tax Prep: {{ $json.body.needs_state_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_state_tax_states ? \"(States: \" + $json.needs_state_tax_states + \")\" : \"\" }}
-          </li>
-        </ul>
-      </div>
-
-      <div class=\"field\">
-        <span class=\"label\">Financial Statements Method:</span>
-        <span class=\"value\">{{ $json.body.financial_statements_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Income Tax Return Method:</span>
-        <span class=\"value\">{{ $json.body.income_tax_return_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Franchise Tax Method:</span>
-        <span class=\"value\">{{ $json.body.franchise_tax_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Property Tax Exemptions:</span>
-        <span class=\"value\">{{ $json.body.property_tax_exemptions ? \"Yes\" : \"No\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Reporting Frequency:</span>
-        <span class=\"value\">{{ $json.body.reporting_frequency || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Report Due Date:</span>
-        <span class=\"value\">{{ $json.body.report_due_date || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Sales Tax Deadlines:</span>
-        <span class=\"value\">{{ $json.body.sales_tax_deadlines || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Payroll Processing Period:</span>
-        <span class=\"value\">{{ $json.body.payroll_processing_period || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Other Deadlines:</span>
-        <span class=\"value\">{{ $json.body.other_deadlines || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Additional Details -->
-    <h2>Additional Details</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Additional Requests:</span>
-        <span class=\"value\">{{ $json.body.additional_requests || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Unique GL Accounts:</span>
-        <span class=\"value\">{{ $json.body.unique_gl_accounts || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Payroll Procedures:</span>
-        <span class=\"value\">{{ $json.body.client_payroll_procedures || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Expectations:</span>
-        <span class=\"value\">{{ $json.body.expectations || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Personal & Relationship Info -->
-    <h2>Personal & Relationship Info</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Birthday:</span>
-        <span class=\"value\">{{ $json.body.birthday || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Company Anniversary:</span>
-        <span class=\"value\">{{ $json.body.company_anniversary || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Favorite Dessert:</span>
-        <span class=\"value\">{{ $json.body.favorite_dessert || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Hobbies:</span>
-        <span class=\"value\">{{ $json.body.hobbies || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <p class=\"note\">
-      *This summary is based on the latest client information provided in the MST Client Information Document.
-    </p>
-  </div>
-</body>
-</html>","additionalFields":{"from":"MST Confirmation","bodyContentType":"html"}},"type":"n8n-nodes-base.microsoftOutlook","typeVersion":2,"position":[464,0],"id":"1101fd7f-74e4-42be-8984-f47645e1a920","name":"Send Backup Email to MST Team","webhookId":"789ddd20-355c-4406-9128-8685bb8d70d0","credentials":{"microsoftOutlookOAuth2Api":{"id":"RS6O6ncyKxJLSof7","name":"MST Microsoft No-reply"}}},{"parameters":{"toRecipients":"rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST Industry Analysis Report – {{ $('Get Customer Data').item.json.body.client_name }}","bodyContent":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Industry Analysis Summary</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4f6;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #111827;
-    }
-    .wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 24px 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      border-top: 6px solid #2563eb;
-    }
-    h1, h2, h3 {
-      margin-top: 0;
-      color: #111827;
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 12px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 24px;
-      margin-bottom: 8px;
-      border-left: 4px solid #2563eb;
-      padding-left: 8px;
-    }
-    h3 {
-      font-size: 15px;
-      margin-top: 16px;
-      margin-bottom: 6px;
-      color: #1f2937;
-    }
-    p {
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 6px 0 10px 0;
-    }
-    .pill {
-      display: inline-block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 20px;
-    }
-    .field-label {
-      font-size: 12px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #6b7280;
-    }
-    .field-value {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .box {
-      background: #f9fafb;
-      border-radius: 8px;
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      margin-top: 6px;
-    }
-    ul {
-      padding-left: 18px;
-      margin: 6px 0 10px 0;
-    }
-    li {
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .small {
-      font-size: 12px;
-      color: #6b7280;
-    }
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px 16px;
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"wrapper\">
-    <div class=\"container\">
-      <span class=\"pill\">Industry Analysis Report</span>
-      <h1>{{ $json.output.identifiedIndustry || \"Industry Analysis\" }}</h1>
-
-      <!-- Top summary -->
-      <div class=\"grid-2\">
-        <div>
-          <div class=\"field-label\">Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.sector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Sub-Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.subSector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Confidence Level</div>
-          <div class=\"field-value\">
-            {{ (Math.round(($json.output.industryIdentification.confidenceLevel || 0) * 100)) + \"%\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Classification Rationale</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.rationale || \"N/A\" }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Industry Deep Dive -->
-      <h2>Industry Deep Dive</h2>
-      <h3>Overview</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.overview || \"N/A\" }}</p>
-      </div>
-
-      <h3>Market Size &amp; Growth</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.marketSizeAndGrowth || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Segments</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keySegments || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Players (Summary)</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keyPlayers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Growth Drivers</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.growthDrivers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Challenges &amp; Risks</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.challengesAndRisks || \"N/A\" }}</p>
-      </div>
-
-      <h3>Opportunities</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.opportunities || \"N/A\" }}</p>
-      </div>
-
-      <!-- Competitive Landscape -->
-      <h2>Competitive Landscape</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.competitiveLandscape || []).map(c =>
-              `<li>
-                <strong>${c.name || \"Unnamed Competitor\"}</strong><br/>
-                <span class=\"small\">${c.marketPositioning || \"\"}</span><br/>
-                ${c.description ? c.description + \"<br/>\" : \"\"}
-                ${c.strengths ? \"<strong>Strengths:</strong> \" + c.strengths + \"<br/>\" : \"\"}
-                ${c.weaknesses ? \"<strong>Weaknesses:</strong> \" + c.weaknesses + \"<br/>\" : \"\"}
-                ${c.strategicInitiatives ? \"<strong>Initiatives:</strong> \" + c.strategicInitiatives : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Trend Analysis -->
-      <h2>Trend Analysis</h2>
-
-      <h3>Technological Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.technological) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}${t.timeHorizon ? \" <span class='small'>(Time horizon: \" + t.timeHorizon + \")</span>\" : \"\"}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Regulatory Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.regulatory) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Economic Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.economic) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Consumer Behavior Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.consumerBehavior) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Strategic Insights -->
-      <h2>Strategic Insights &amp; Recommendations</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.strategicInsights || []).map(s =>
-              `<li>
-                <strong>${s.recommendation}</strong><br/>
-                ${s.rationale ? \"<strong>Rationale:</strong> \" + s.rationale + \"<br/>\" : \"\"}
-                ${s.expectedImpact ? \"<strong>Expected Impact:</strong> \" + s.expectedImpact + \"<br/>\" : \"\"}
-                ${s.priority ? \"<strong>Priority:</strong> \" + s.priority : \"\" }
-                ${s.timeHorizon ? \" <span class='small'>(Time horizon: \" + s.timeHorizon + \")</span>\" : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <p class=\"small\">
-        This report is based on the latest AI-generated analysis of the customer's industry and market context.
-      </p>
-    </div>
-  </div>
-</body>
-</html>","additionalFields":{"bodyContentType":"html"}},"type":"n8n-nodes-base.microsoftOutlook","typeVersion":2,"position":[1568,0],"id":"58e38dcd-2b3a-4f1a-a80f-7c7e49af67ae","name":"Send Analysis Email to MST Team","webhookId":"789ddd20-355c-4406-9128-8685bb8d70d0","credentials":{"microsoftOutlookOAuth2Api":{"id":"RS6O6ncyKxJLSof7","name":"MST Microsoft No-reply"}}},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"builtInTools":{},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[1232,288],"id":"c85ae3ea-65d2-4ad0-9ce5-8c6e5a31b758","name":"OpenAI Chat Model1","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}}],"connections":{"Webhook":{"main":[[{"node":"Get Customer Data","type":"main","index":0}]]},"Respond to Webhook":{"main":[[{"node":"AI Agent","type":"main","index":0}]]},"Get Customer Data":{"main":[[{"node":"Send Backup Email to MST Team","type":"main","index":0}]]},"OpenAI Chat Model":{"ai_languageModel":[[{"node":"AI Agent","type":"ai_languageModel","index":0}]]},"AI Agent":{"main":[[{"node":"Send Analysis Email to MST Team","type":"main","index":0}]]},"Structured Output Parser":{"ai_outputParser":[[{"node":"AI Agent","type":"ai_outputParser","index":0}]]},"Send Email to Customer":{"main":[[]]},"Send Email to MST Team":{"main":[[{"node":"Send Email to Customer","type":"main","index":0}]]},"Get many tasks":{"main":[[{"node":"Code in JavaScript","type":"main","index":0}]]},"Code in JavaScript":{"main":[[{"node":"Merge","type":"main","index":0}]]},"Merge":{"main":[[]]},"Send Backup Email to MST Team":{"main":[[{"node":"Send Email Confirmation to Customer","type":"main","index":0}]]},"Send Email Confirmation to Customer":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"OpenAI Chat Model1":{"ai_languageModel":[[{"node":"AI Agent","type":"ai_languageModel","index":1}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"768a9835-8797-4ab2-86f8-d38b8acd4598","activeVersionId":"768a9835-8797-4ab2-86f8-d38b8acd4598","versionCounter":29,"triggerCount":1,"shared":[{"updatedAt":"2025-11-25T00:48:02.304Z","createdAt":"2025-11-25T00:48:02.304Z","role":"workflow:owner","workflowId":"p4rVxlsnMODu78Km","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":{"updatedAt":"2025-12-18T22:59:34.854Z","createdAt":"2025-12-18T22:59:34.854Z","versionId":"768a9835-8797-4ab2-86f8-d38b8acd4598","workflowId":"p4rVxlsnMODu78Km","nodes":[{"parameters":{"httpMethod":"POST","path":"2570b966-3b9d-4dd6-981d-53cf2a79e2aa","responseMode":"responseNode","options":{}},"type":"n8n-nodes-base.webhook","typeVersion":2.1,"position":[0,0],"id":"9ea7d45c-7d28-4f44-934b-d04ea7612a00","name":"Webhook","webhookId":"2570b966-3b9d-4dd6-981d-53cf2a79e2aa"},{"parameters":{"respondWith":"json","responseBody":"={
-  \"sent\": {{ $json.success }}
-}","options":{"responseCode":200,"responseHeaders":{"entries":[{"name":"Content-Type","value":"application/json"}]}}},"type":"n8n-nodes-base.respondToWebhook","typeVersion":1.4,"position":[928,0],"id":"6eb900bf-34d4-4985-85cb-bb5b63d9bab6","name":"Respond to Webhook"},{"parameters":{"keepOnlySet":true,"values":{"string":[{"name":"body","value":"={{ $json.body}}"}]},"options":{"dotNotation":true}},"name":"Get Customer Data","type":"n8n-nodes-base.set","typeVersion":2,"position":[224,0],"id":"c49b9d18-4e02-4b9e-8d30-90e37d799f5b"},{"parameters":{"promptType":"define","text":"=## Overview
-You are a seasoned industry research analyst with extensive expertise in interpreting customer data, identifying industry classifications, and producing advanced market and competitive intelligence. Your task is to analyze the provided JSON input and deliver a fully structured industry report aligned with the required output schema.
-
-Your analysis should emphasize accuracy, clarity, depth, and business relevance. Ensure your reasoning is data-driven and your insights reflect real market conditions.
-
-## Tools
-You have access to:
-- Your internal knowledge base of industry classifications, market structures, competitor landscapes, regulatory environments, and global trends.
-- Advanced analytical reasoning to parse customer data and infer the most appropriate industry sector and sub-sector.
-
-## Rules
-Follow these rules without exception:
-
-1. **Industry Identification**
-   - Parse and interpret the provided input JSON.
-   - Extract any relevant descriptors that indicate the customer's industry.
-   - Identify the exact sector and, if possible, sub-sector.
-   - Provide a confidence score (0 to 1) and a short rationale.
-
-2. **Industry Deep Dive**
-   - Describe the current state of the identified industry.
-   - Highlight market size, key segments, leading players, growth drivers, obstacles, and opportunities.
-
-3. **Competitive Landscape**
-   - Identify major competitors.
-   - Explain each competitor’s position, strengths, weaknesses, and any notable strategic initiatives.
-
-4. **Trend Analysis**
-   - Outline major technological, regulatory, economic, and consumer-behavior trends impacting the industry.
-   - Include expected impacts and time horizons when applicable.
-
-5. **Strategic Insights**
-   - Provide actionable, high-value recommendations the customer can use.
-   - Assign each recommendation a priority and explain the rationale and expected impact.
-
-6. **Output Requirements**
-   - Your final answer must strictly match the JSON schema provided.
-   - Do not include commentary, explanations, or markdown.
-
-## Instructions
-Analyze the customer’s input data and complete the full industry analysis using the structure defined in the schema.
-
-Here is the provided input JSON to analyze:  
-**{{ $('Get Customer Data').item.json.body.toJsonString() }}**
-
-Base all insights solely on the industry inferred from this data.
-
-Ensure every field in the JSON output is:
-- Fact-based  
-- Thorough  
-- Professionally written  
-- Useful for decision-making  
-
-## Final Reminder
-- The current date is: **{{ $now.format(\"DD\") }}**","hasOutputParser":true,"needsFallback":true,"options":{}},"type":"@n8n/n8n-nodes-langchain.agent","typeVersion":3,"position":[1200,0],"id":"d64bfca8-3863-40a8-9352-898d0a5846b6","name":"AI Agent"},{"parameters":{"model":{"__rl":true,"value":"gpt-5.1-2025-11-13","mode":"list","cachedResultName":"gpt-5.1-2025-11-13"},"builtInTools":{},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[1088,192],"id":"0b92337d-ff63-4aa0-b01f-15e615a1b075","name":"OpenAI Chat Model","credentials":{"openAiApi":{"id":"da8hD2Yc3TlZwFUC","name":"MST Open AI"}}},{"parameters":{"schemaType":"manual","inputSchema":"{
-  \"title\": \"IndustryAnalysisOutput\",
-  \"type\": \"object\",
-  \"description\": \"Structured response for industry and competitive analysis based on customer data.\",
-  \"properties\": {
-    \"identifiedIndustry\": {
-      \"type\": \"string\",
-      \"description\": \"The primary industry sector identified for the customer.\"
-    },
-    \"industryIdentification\": {
-      \"type\": \"object\",
-      \"description\": \"Details on how the industry was identified from the customer data.\",
-      \"properties\": {
-        \"sector\": { \"type\": \"string\" },
-        \"subSector\": { \"type\": \"string\" },
-        \"confidenceLevel\": {
-          \"type\": \"number\",
-          \"description\": \"Confidence score between 0 and 1.\",
-          \"minimum\": 0,
-          \"maximum\": 1
-        },
-        \"rationale\": {
-          \"type\": \"string\",
-          \"description\": \"Explanation of how the industry classification was derived from the input data.\"
-        }
-      },
-      \"required\": [\"sector\", \"confidenceLevel\", \"rationale\"]
-    },
-    \"industryDeepDive\": {
-      \"type\": \"object\",
-      \"description\": \"Comprehensive overview of the identified industry.\",
-      \"properties\": {
-        \"overview\": { \"type\": \"string\" },
-        \"marketSizeAndGrowth\": { \"type\": \"string\" },
-        \"keySegments\": { \"type\": \"string\" },
-        \"keyPlayers\": { \"type\": \"string\" },
-        \"growthDrivers\": { \"type\": \"string\" },
-        \"challengesAndRisks\": { \"type\": \"string\" },
-        \"opportunities\": { \"type\": \"string\" }
-      },
-      \"required\": [\"overview\"]
-    },
-    \"competitiveLandscape\": {
-      \"type\": \"array\",
-      \"description\": \"List of key competitors in the identified industry.\",
-      \"items\": {
-        \"type\": \"object\",
-        \"properties\": {
-          \"name\": { \"type\": \"string\" },
-          \"description\": { \"type\": \"string\" },
-          \"marketPositioning\": { \"type\": \"string\" },
-          \"strengths\": { \"type\": \"string\" },
-          \"weaknesses\": { \"type\": \"string\" },
-          \"strategicInitiatives\": {
-            \"type\": \"string\",
-            \"description\": \"Notable strategies, moves or investments (e.g., M&A, new products, geographic expansion).\"
-          }
-        },
-        \"required\": [\"name\", \"marketPositioning\"]
-      }
-    },
-    \"trendAnalysis\": {
-      \"type\": \"object\",
-      \"description\": \"Key trends impacting the industry.\",
-      \"properties\": {
-        \"technological\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" },
-              \"timeHorizon\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
-        },
-        \"regulatory\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
-        },
-        \"economic\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
-        },
-        \"consumerBehavior\": {
-          \"type\": \"array\",
-          \"items\": {
-            \"type\": \"object\",
-            \"properties\": {
-              \"trend\": { \"type\": \"string\" },
-              \"impact\": { \"type\": \"string\" }
-            },
-            \"required\": [\"trend\", \"impact\"]
-          }
-        }
-      }
-    },
-    \"strategicInsights\": {
-      \"type\": \"array\",
-      \"description\": \"Actionable recommendations for the customer.\",
-      \"items\": {
-        \"type\": \"object\",
-        \"properties\": {
-          \"recommendation\": {
-            \"type\": \"string\",
-            \"description\": \"What the customer should do.\"
-          },
-          \"rationale\": {
-            \"type\": \"string\",
-            \"description\": \"Why this recommendation matters in the current industry context.\"
-          },
-          \"expectedImpact\": {
-            \"type\": \"string\",
-            \"description\": \"Expected business impact (e.g., revenue, risk mitigation, market share).\"
-          },
-          \"priority\": {
-            \"type\": \"string\",
-            \"enum\": [\"low\", \"medium\", \"high\", \"critical\"],
-            \"description\": \"Priority level for execution.\"
-          },
-          \"timeHorizon\": {
-            \"type\": \"string\",
-            \"description\": \"Suggested time horizon, e.g., short-term, mid-term, long-term.\"
-          }
-        },
-        \"required\": [\"recommendation\", \"rationale\", \"priority\"]
-      }
-    }
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  \"required\": [\"identifiedIndustry\", \"industryIdentification\", \"industryDeepDive\", \"strategicInsights\"],
-  \"additionalProperties\": false
-}"},"type":"@n8n/n8n-nodes-langchain.outputParserStructured","typeVersion":1.3,"position":[1408,208],"id":"55b174e5-43e2-4f22-a9b8-b70b7c7179c3","name":"Structured Output Parser"},{"parameters":{"sendTo":"={{ $('Get Customer Data').item.json.body.primary_email }}","subject":"Thank You for Completing Your Client Information Form","message":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>MST – Thank You</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4ff;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #333333;
-    }
-    .email-wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .email-container {
-      max-width: 640px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-top: 6px solid #4f46e5;
-    }
-    .email-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-    .email-header h1 {
-      margin: 0;
-      font-size: 24px;
-      color: #4f46e5;
-    }
-    .email-badge {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #4338ca;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-    .email-body p {
-      line-height: 1.6;
-      font-size: 15px;
-      margin: 10px 0;
-    }
-    .email-body strong {
-      color: #1d4ed8;
-    }
-    .highlight-box {
-      margin: 18px 0;
-      padding: 14px 16px;
-      border-radius: 10px;
-      background: #ecfeff;
-      border: 1px solid #a5f3fc;
-      font-size: 14px;
-      color: #0f172a;
-    }
-    .cta-button {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: #4f46e5;
-      color: #ffffff !important;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .cta-button:hover {
-      background: #4338ca;
-    }
-    .email-footer {
-      text-align: center;
-      margin-top: 22px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <div class=\"email-wrapper\">
-    <div class=\"email-container\">
-      <div class=\"email-header\">
-        <h1>Welcome to MST</h1>
-        <div class=\"email-badge\">New Client</div>
-      </div>
-
-      <div class=\"email-body\">
-        <p>Dear {{ $('Get Customer Data').item.json.body.client_name }},</p>
-
-        <p>
-          Thank you for taking the time to complete the
-          <strong>MST Client Information Document</strong>.
-          We truly appreciate you providing these important details.
-        </p>
-
-        <div class=\"highlight-box\">
-          Our team is now reviewing your information. Once the review is complete,
-          we’ll reach out with any follow-up questions and to walk you through the next steps.
-        </div>
-
-        <p>
-          We’re excited to welcome you to <strong>MST</strong> and look forward to supporting your needs.
-          Our goal is to make things as smooth and stress-free as possible for you.
-        </p>
-
-        <p>
-          If you have any questions in the meantime, please feel free to contact us.
-          We’re here to ensure a seamless experience every step of the way.
-        </p>
-
-        <p>
-          Thank you again for choosing MST — we look forward to working with you.
-        </p>
-
-        <p>
-          Warm regards,<br />
-          <strong>MST Team</strong>
-        </p>
-
-        <!-- Optional CTA (you can remove this if you don’t want a button) -->
-        <!--
-        <a href=\"#\" class=\"cta-button\">Visit Our Website</a>
-        -->
-      </div>
-
-      <div class=\"email-footer\">
-        © {{ new Date().getFullYear() }} MST. All rights reserved.
-      </div>
-    </div>
-  </div>
-</body>
-</html>","options":{"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[736,-256],"id":"1dd8301d-93e7-452a-8254-ef99a2d76b8f","name":"Send Email to Customer","webhookId":"79ea3ea2-f50a-4caa-bb06-403d9940d63f","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"sendTo":"rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST | Client Intake Summary – {{ $json.body.client_name }}","message":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Client Information Summary</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f7;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 20px 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    h1, h2 {
-      margin-top: 0;
-      color: #222;
-    }
-    h1 {
-      font-size: 22px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 25px;
-      border-left: 4px solid #4a90e2;
-      padding-left: 8px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 30px;
-    }
-    .field {
-      margin-bottom: 6px;
-    }
-    .label {
-      font-weight: bold;
-      display: inline-block;
-      min-width: 160px;
-    }
-    .value {
-      display: inline-block;
-    }
-    .full-width {
-      grid-column: 1 / -1;
-    }
-    .tag-list {
-      margin: 4px 0 0 0;
-      padding-left: 18px;
-    }
-    .tag-list li {
-      margin-bottom: 4px;
-    }
-    .note {
-      font-size: 12px;
-      color: #777;
-      margin-top: 10px;
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .label {
-        min-width: 120px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"container\">
-    <h1>Client Information Summary</h1>
-
-    <!-- Client Overview -->
-    <h2>Client Overview</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Client Name:</span>
-        <span class=\"value\">{{ $json.body.client_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Client Short Name:</span>
-        <span class=\"value\">{{ $json.body.client_short_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Address:</span>
-        <span class=\"value\">{{ $json.body.client_address || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Industry:</span>
-        <span class=\"value\">{{ $json.body.industry || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Softwares Used:</span>
-        <span class=\"value\">{{ $json.body.softwares_used || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Business Operations Summary:</span>
-        <span class=\"value\">{{ $json.body.business_ops_summary || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Contacts -->
-    <h2>Primary Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name &amp; Title:</span>
-        <span class=\"value\">{{ $json.body.primary_name_title || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.primary_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.primary_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">
-          {{ $json.body.primary_contact_for || \"N/A\" }}
-          {{ $json.body.primary_contact_other ? \" (\" + $json.primary_contact_other + \")\" : \"\" }}
-        </span>
-      </div>
-    </div>
-
-    <h2>Other Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name:</span>
-        <span class=\"value\">{{ $json.body.other_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.other_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.other_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">{{ $json.body.other_contact_for || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Associated Entities -->
-    <h2>Associated Entities</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Entity 1:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_1 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 2:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_2 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 3:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_3 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 4:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_4 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Entity 5:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_5 || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Services & Needs -->
-    <h2>Services &amp; Needs</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Client Services (Notes):</span>
-        <span class=\"value\">
-          {{
-            [
-              $json.body.client_services_1,
-              $json.body.client_services_2,
-              $json.body.client_services_3,
-              $json.body.client_services_4,
-              $json.body.client_services_5,
-              $json.body.client_services_6
-            ].filter(s => s).join(\"; \")
-            || \"N/A\"
-          }}
-        </span>
-      </div>
-
-      <div class=\"field full-width\">
-        <span class=\"label\">Service Needs:</span>
-        <ul class=\"tag-list\">
-          <li>Accounting: {{ $json.body.needs_accounting ? \"Yes\" : \"No\" }}</li>
-          <li>Payroll: {{ $json.body.needs_payroll ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_payroll_states ? \"(States: \" + $json.needs_payroll_states + \")\" : \"\" }}
-          </li>
-          <li>Sales Tax: {{ $json.body.needs_sales_tax ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_sales_tax_states ? \"(States: \" + $json.body.needs_sales_tax_states + \")\" : \"\" }}
-          </li>
-          <li>Federal Income Tax Prep: {{ $json.body.needs_federal_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.federal_tax_type ? \"(Type: \" + $json.body.federal_tax_type + \")\" : \"\" }}
-          </li>
-          <li>State Income Tax Prep: {{ $json.body.needs_state_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_state_tax_states ? \"(States: \" + $json.needs_state_tax_states + \")\" : \"\" }}
-          </li>
-        </ul>
-      </div>
-
-      <div class=\"field\">
-        <span class=\"label\">Financial Statements Method:</span>
-        <span class=\"value\">{{ $json.body.financial_statements_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Income Tax Return Method:</span>
-        <span class=\"value\">{{ $json.body.income_tax_return_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Franchise Tax Method:</span>
-        <span class=\"value\">{{ $json.body.franchise_tax_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Property Tax Exemptions:</span>
-        <span class=\"value\">{{ $json.body.property_tax_exemptions ? \"Yes\" : \"No\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Reporting Frequency:</span>
-        <span class=\"value\">{{ $json.body.reporting_frequency || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Report Due Date:</span>
-        <span class=\"value\">{{ $json.body.report_due_date || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Sales Tax Deadlines:</span>
-        <span class=\"value\">{{ $json.body.sales_tax_deadlines || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Payroll Processing Period:</span>
-        <span class=\"value\">{{ $json.body.payroll_processing_period || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Other Deadlines:</span>
-        <span class=\"value\">{{ $json.body.other_deadlines || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Additional Details -->
-    <h2>Additional Details</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Additional Requests:</span>
-        <span class=\"value\">{{ $json.body.additional_requests || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Unique GL Accounts:</span>
-        <span class=\"value\">{{ $json.body.unique_gl_accounts || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Payroll Procedures:</span>
-        <span class=\"value\">{{ $json.body.client_payroll_procedures || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Expectations:</span>
-        <span class=\"value\">{{ $json.body.expectations || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Personal & Relationship Info -->
-    <h2>Personal & Relationship Info</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Birthday:</span>
-        <span class=\"value\">{{ $json.body.birthday || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Company Anniversary:</span>
-        <span class=\"value\">{{ $json.body.company_anniversary || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Favorite Dessert:</span>
-        <span class=\"value\">{{ $json.body.favorite_dessert || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Hobbies:</span>
-        <span class=\"value\">{{ $json.body.hobbies || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <p class=\"note\">
-      *This summary is based on the latest client information provided in the MST Client Information Document.
-    </p>
-  </div>
-</body>
-</html>","options":{"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[448,-256],"id":"857b1d83-3dab-4bf5-b196-d79f8ad0d3d9","name":"Send Email to MST Team","webhookId":"79ea3ea2-f50a-4caa-bb06-403d9940d63f","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"sendTo":"=rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST Industry Analysis Report – {{ $('Get Customer Data').item.json.body.client_name }} from ","message":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Industry Analysis Summary</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4f6;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #111827;
-    }
-    .wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 24px 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      border-top: 6px solid #2563eb;
-    }
-    h1, h2, h3 {
-      margin-top: 0;
-      color: #111827;
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 12px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 24px;
-      margin-bottom: 8px;
-      border-left: 4px solid #2563eb;
-      padding-left: 8px;
-    }
-    h3 {
-      font-size: 15px;
-      margin-top: 16px;
-      margin-bottom: 6px;
-      color: #1f2937;
-    }
-    p {
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 6px 0 10px 0;
-    }
-    .pill {
-      display: inline-block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 20px;
-    }
-    .field-label {
-      font-size: 12px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #6b7280;
-    }
-    .field-value {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .box {
-      background: #f9fafb;
-      border-radius: 8px;
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      margin-top: 6px;
-    }
-    ul {
-      padding-left: 18px;
-      margin: 6px 0 10px 0;
-    }
-    li {
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .small {
-      font-size: 12px;
-      color: #6b7280;
-    }
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px 16px;
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"wrapper\">
-    <div class=\"container\">
-      <span class=\"pill\">Industry Analysis Report</span>
-      <h1>{{ $json.output.identifiedIndustry || \"Industry Analysis\" }}</h1>
-
-      <!-- Top summary -->
-      <div class=\"grid-2\">
-        <div>
-          <div class=\"field-label\">Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.sector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Sub-Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.subSector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Confidence Level</div>
-          <div class=\"field-value\">
-            {{ (Math.round(($json.output.industryIdentification.confidenceLevel || 0) * 100)) + \"%\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Classification Rationale</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.rationale || \"N/A\" }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Industry Deep Dive -->
-      <h2>Industry Deep Dive</h2>
-      <h3>Overview</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.overview || \"N/A\" }}</p>
-      </div>
-
-      <h3>Market Size &amp; Growth</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.marketSizeAndGrowth || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Segments</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keySegments || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Players (Summary)</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keyPlayers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Growth Drivers</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.growthDrivers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Challenges &amp; Risks</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.challengesAndRisks || \"N/A\" }}</p>
-      </div>
-
-      <h3>Opportunities</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.opportunities || \"N/A\" }}</p>
-      </div>
-
-      <!-- Competitive Landscape -->
-      <h2>Competitive Landscape</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.competitiveLandscape || []).map(c =>
-              `<li>
-                <strong>${c.name || \"Unnamed Competitor\"}</strong><br/>
-                <span class=\"small\">${c.marketPositioning || \"\"}</span><br/>
-                ${c.description ? c.description + \"<br/>\" : \"\"}
-                ${c.strengths ? \"<strong>Strengths:</strong> \" + c.strengths + \"<br/>\" : \"\"}
-                ${c.weaknesses ? \"<strong>Weaknesses:</strong> \" + c.weaknesses + \"<br/>\" : \"\"}
-                ${c.strategicInitiatives ? \"<strong>Initiatives:</strong> \" + c.strategicInitiatives : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Trend Analysis -->
-      <h2>Trend Analysis</h2>
-
-      <h3>Technological Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.technological) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}${t.timeHorizon ? \" <span class='small'>(Time horizon: \" + t.timeHorizon + \")</span>\" : \"\"}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Regulatory Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.regulatory) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Economic Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.economic) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Consumer Behavior Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.consumerBehavior) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Strategic Insights -->
-      <h2>Strategic Insights &amp; Recommendations</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.strategicInsights || []).map(s =>
-              `<li>
-                <strong>${s.recommendation}</strong><br/>
-                ${s.rationale ? \"<strong>Rationale:</strong> \" + s.rationale + \"<br/>\" : \"\"}
-                ${s.expectedImpact ? \"<strong>Expected Impact:</strong> \" + s.expectedImpact + \"<br/>\" : \"\"}
-                ${s.priority ? \"<strong>Priority:</strong> \" + s.priority : \"\" }
-                ${s.timeHorizon ? \" <span class='small'>(Time horizon: \" + s.timeHorizon + \")</span>\" : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <p class=\"small\">
-        This report is based on the latest AI-generated analysis of the customer's industry and market context.
-      </p>
-    </div>
-  </div>
-</body>
-</html>","options":{"appendAttribution":false}},"type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[1552,-240],"id":"10af86a8-6713-416a-b4ea-8419d5ff9475","name":"Send AI Outlook Email to MST Team","webhookId":"79ea3ea2-f50a-4caa-bb06-403d9940d63f","credentials":{"gmailOAuth2":{"id":"BTKh5C4ujrbOxvPI","name":"Rashad.barnett@gmail.com"}}},{"parameters":{"operation":"getAll","team":"45036767","space":"90113958311","folder":"90117171427","list":"901112199521","filters":{}},"type":"n8n-nodes-base.clickUp","typeVersion":1,"position":[-208,224],"id":"afb1e7db-3ac2-4804-9e52-8463debd75a4","name":"Get many tasks","credentials":{"clickUpApi":{"id":"c2MfrYBgHU3wIuVM","name":"MST ClickUp Credentials"}}},{"parameters":{"jsCode":"const tasks = $input.all();
-const isEmpty = (obj) => Object.keys(obj).length === 0;
-const watchers = tasks.map((task) => { 
-  if(task.json.assignees.length === 0) return {};
-  return {
-  \"assignees\": task?.json?.assignees
-  }
-}).filter(x => !isEmpty(x));
-return watchers;
-"},"type":"n8n-nodes-base.code","typeVersion":2,"position":[-16,224],"id":"97badf40-2f29-4757-8d98-fc7e4b65de2d","name":"Code in JavaScript"},{"parameters":{},"type":"n8n-nodes-base.merge","typeVersion":3.2,"position":[176,240],"id":"dd0e3b70-bc28-478d-877d-bc52397ae9e3","name":"Merge"},{"parameters":{"toRecipients":"={{ $('Get Customer Data').item.json.body.primary_email }}","subject":"=Thank You for Completing Your Client Information Form","bodyContent":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>MST – Thank You</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4ff;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #333333;
-    }
-    .email-wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .email-container {
-      max-width: 640px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-top: 6px solid #4f46e5;
-    }
-    .email-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-    .email-header h1 {
-      margin: 0;
-      font-size: 24px;
-      color: #4f46e5;
-    }
-    .email-badge {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #4338ca;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-    .email-body p {
-      line-height: 1.6;
-      font-size: 15px;
-      margin: 10px 0;
-    }
-    .email-body strong {
-      color: #1d4ed8;
-    }
-    .highlight-box {
-      margin: 18px 0;
-      padding: 14px 16px;
-      border-radius: 10px;
-      background: #ecfeff;
-      border: 1px solid #a5f3fc;
-      font-size: 14px;
-      color: #0f172a;
-    }
-    .cta-button {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: #4f46e5;
-      color: #ffffff !important;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .cta-button:hover {
-      background: #4338ca;
-    }
-    .email-footer {
-      text-align: center;
-      margin-top: 22px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <div class=\"email-wrapper\">
-    <div class=\"email-container\">
-      <div class=\"email-header\">
-        <h1>Welcome to MST</h1>
-        <div class=\"email-badge\">New Client</div>
-      </div>
-
-      <div class=\"email-body\">
-        <p>Dear {{ $('Get Customer Data').item.json.body.client_name }},</p>
-
-        <p>
-          Thank you for taking the time to complete the
-          <strong>MST Client Information Document</strong>.
-          We truly appreciate you providing these important details.
-        </p>
-
-        <div class=\"highlight-box\">
-          Our team is now reviewing your information. Once the review is complete,
-          we’ll reach out with any follow-up questions and to walk you through the next steps.
-        </div>
-
-        <p>
-          We’re excited to welcome you to <strong>MST</strong> and look forward to supporting your needs.
-          Our goal is to make things as smooth and stress-free as possible for you.
-        </p>
-
-        <p>
-          If you have any questions in the meantime, please feel free to contact us.
-          We’re here to ensure a seamless experience every step of the way.
-        </p>
-
-        <p>
-          Thank you again for choosing MST — we look forward to working with you.
-        </p>
-
-        <p>
-          Warm regards,<br />
-          <strong>MST Team</strong>
-        </p>
-
-        <!-- Optional CTA (you can remove this if you don’t want a button) -->
-        <!--
-        <a href=\"#\" class=\"cta-button\">Visit Our Website</a>
-        -->
-      </div>
-
-      <div class=\"email-footer\">
-        © {{ new Date().getFullYear() }} MST. All rights reserved.
-      </div>
-    </div>
-  </div>
-</body>
-</html>","additionalFields":{"bodyContentType":"html"}},"type":"n8n-nodes-base.microsoftOutlook","typeVersion":2,"position":[704,0],"id":"21484e2d-8001-461f-9004-1701423422b0","name":"Send Email Confirmation to Customer","webhookId":"789ddd20-355c-4406-9128-8685bb8d70d0","credentials":{"microsoftOutlookOAuth2Api":{"id":"RS6O6ncyKxJLSof7","name":"MST Microsoft No-reply"}}},{"parameters":{"toRecipients":"rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST | Client Intake Summary – {{ $json.body.client_name }}","bodyContent":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Client Information Summary</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f7;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 20px 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    h1, h2 {
-      margin-top: 0;
-      color: #222;
-    }
-    h1 {
-      font-size: 22px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 25px;
-      border-left: 4px solid #4a90e2;
-      padding-left: 8px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 30px;
-    }
-    .field {
-      margin-bottom: 6px;
-    }
-    .label {
-      font-weight: bold;
-      display: inline-block;
-      min-width: 160px;
-    }
-    .value {
-      display: inline-block;
-    }
-    .full-width {
-      grid-column: 1 / -1;
-    }
-    .tag-list {
-      margin: 4px 0 0 0;
-      padding-left: 18px;
-    }
-    .tag-list li {
-      margin-bottom: 4px;
-    }
-    .note {
-      font-size: 12px;
-      color: #777;
-      margin-top: 10px;
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .label {
-        min-width: 120px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"container\">
-    <h1>Client Information Summary</h1>
-
-    <!-- Client Overview -->
-    <h2>Client Overview</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Client Name:</span>
-        <span class=\"value\">{{ $json.body.client_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Client Short Name:</span>
-        <span class=\"value\">{{ $json.body.client_short_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Address:</span>
-        <span class=\"value\">{{ $json.body.client_address || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Industry:</span>
-        <span class=\"value\">{{ $json.body.industry || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Softwares Used:</span>
-        <span class=\"value\">{{ $json.body.softwares_used || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Business Operations Summary:</span>
-        <span class=\"value\">{{ $json.body.business_ops_summary || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Contacts -->
-    <h2>Primary Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name &amp; Title:</span>
-        <span class=\"value\">{{ $json.body.primary_name_title || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.primary_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.primary_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">
-          {{ $json.body.primary_contact_for || \"N/A\" }}
-          {{ $json.body.primary_contact_other ? \" (\" + $json.primary_contact_other + \")\" : \"\" }}
-        </span>
-      </div>
-    </div>
-
-    <h2>Other Contact</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Name:</span>
-        <span class=\"value\">{{ $json.body.other_name || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Phone:</span>
-        <span class=\"value\">{{ $json.body.other_phone || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Email:</span>
-        <span class=\"value\">{{ $json.body.other_email || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Contact For:</span>
-        <span class=\"value\">{{ $json.body.other_contact_for || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Associated Entities -->
-    <h2>Associated Entities</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Entity 1:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_1 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 2:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_2 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 3:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_3 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Entity 4:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_4 || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Entity 5:</span>
-        <span class=\"value\">{{ $json.body.associated_entity_5 || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Services & Needs -->
-    <h2>Services &amp; Needs</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Client Services (Notes):</span>
-        <span class=\"value\">
-          {{
-            [
-              $json.body.client_services_1,
-              $json.body.client_services_2,
-              $json.body.client_services_3,
-              $json.body.client_services_4,
-              $json.body.client_services_5,
-              $json.body.client_services_6
-            ].filter(s => s).join(\"; \")
-            || \"N/A\"
-          }}
-        </span>
-      </div>
-
-      <div class=\"field full-width\">
-        <span class=\"label\">Service Needs:</span>
-        <ul class=\"tag-list\">
-          <li>Accounting: {{ $json.body.needs_accounting ? \"Yes\" : \"No\" }}</li>
-          <li>Payroll: {{ $json.body.needs_payroll ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_payroll_states ? \"(States: \" + $json.needs_payroll_states + \")\" : \"\" }}
-          </li>
-          <li>Sales Tax: {{ $json.body.needs_sales_tax ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_sales_tax_states ? \"(States: \" + $json.body.needs_sales_tax_states + \")\" : \"\" }}
-          </li>
-          <li>Federal Income Tax Prep: {{ $json.body.needs_federal_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.federal_tax_type ? \"(Type: \" + $json.body.federal_tax_type + \")\" : \"\" }}
-          </li>
-          <li>State Income Tax Prep: {{ $json.body.needs_state_income_tax_prep ? \"Yes\" : \"No\" }} 
-            {{ $json.body.needs_state_tax_states ? \"(States: \" + $json.needs_state_tax_states + \")\" : \"\" }}
-          </li>
-        </ul>
-      </div>
-
-      <div class=\"field\">
-        <span class=\"label\">Financial Statements Method:</span>
-        <span class=\"value\">{{ $json.body.financial_statements_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Income Tax Return Method:</span>
-        <span class=\"value\">{{ $json.body.income_tax_return_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Franchise Tax Method:</span>
-        <span class=\"value\">{{ $json.body.franchise_tax_method || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Property Tax Exemptions:</span>
-        <span class=\"value\">{{ $json.body.property_tax_exemptions ? \"Yes\" : \"No\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Reporting Frequency:</span>
-        <span class=\"value\">{{ $json.body.reporting_frequency || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Report Due Date:</span>
-        <span class=\"value\">{{ $json.body.report_due_date || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Sales Tax Deadlines:</span>
-        <span class=\"value\">{{ $json.body.sales_tax_deadlines || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Payroll Processing Period:</span>
-        <span class=\"value\">{{ $json.body.payroll_processing_period || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Other Deadlines:</span>
-        <span class=\"value\">{{ $json.body.other_deadlines || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Additional Details -->
-    <h2>Additional Details</h2>
-    <div class=\"grid\">
-      <div class=\"field full-width\">
-        <span class=\"label\">Additional Requests:</span>
-        <span class=\"value\">{{ $json.body.additional_requests || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Unique GL Accounts:</span>
-        <span class=\"value\">{{ $json.body.unique_gl_accounts || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Payroll Procedures:</span>
-        <span class=\"value\">{{ $json.body.client_payroll_procedures || \"N/A\" }}</span>
-      </div>
-      <div class=\"field full-width\">
-        <span class=\"label\">Expectations:</span>
-        <span class=\"value\">{{ $json.body.expectations || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <!-- Personal & Relationship Info -->
-    <h2>Personal & Relationship Info</h2>
-    <div class=\"grid\">
-      <div class=\"field\">
-        <span class=\"label\">Birthday:</span>
-        <span class=\"value\">{{ $json.body.birthday || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Company Anniversary:</span>
-        <span class=\"value\">{{ $json.body.company_anniversary || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Favorite Dessert:</span>
-        <span class=\"value\">{{ $json.body.favorite_dessert || \"N/A\" }}</span>
-      </div>
-      <div class=\"field\">
-        <span class=\"label\">Hobbies:</span>
-        <span class=\"value\">{{ $json.body.hobbies || \"N/A\" }}</span>
-      </div>
-    </div>
-
-    <p class=\"note\">
-      *This summary is based on the latest client information provided in the MST Client Information Document.
-    </p>
-  </div>
-</body>
-</html>","additionalFields":{"from":"MST Confirmation","bodyContentType":"html"}},"type":"n8n-nodes-base.microsoftOutlook","typeVersion":2,"position":[464,0],"id":"1101fd7f-74e4-42be-8984-f47645e1a920","name":"Send Backup Email to MST Team","webhookId":"789ddd20-355c-4406-9128-8685bb8d70d0","credentials":{"microsoftOutlookOAuth2Api":{"id":"RS6O6ncyKxJLSof7","name":"MST Microsoft No-reply"}}},{"parameters":{"toRecipients":"rashadbarnett@gmail.com, michelle.turner@mstcpatx.com","subject":"=MST Industry Analysis Report – {{ $('Get Customer Data').item.json.body.client_name }}","bodyContent":"=<!DOCTYPE html>
-<html>
-<head>
-  <meta charset=\"UTF-8\" />
-  <title>Industry Analysis Summary</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f3f4f6;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #111827;
-    }
-    .wrapper {
-      width: 100%;
-      padding: 20px 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 24px 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      border-top: 6px solid #2563eb;
-    }
-    h1, h2, h3 {
-      margin-top: 0;
-      color: #111827;
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 12px;
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 24px;
-      margin-bottom: 8px;
-      border-left: 4px solid #2563eb;
-      padding-left: 8px;
-    }
-    h3 {
-      font-size: 15px;
-      margin-top: 16px;
-      margin-bottom: 6px;
-      color: #1f2937;
-    }
-    p {
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 6px 0 10px 0;
-    }
-    .pill {
-      display: inline-block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 20px;
-    }
-    .field-label {
-      font-size: 12px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #6b7280;
-    }
-    .field-value {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .box {
-      background: #f9fafb;
-      border-radius: 8px;
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
-      margin-top: 6px;
-    }
-    ul {
-      padding-left: 18px;
-      margin: 6px 0 10px 0;
-    }
-    li {
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .small {
-      font-size: 12px;
-      color: #6b7280;
-    }
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px 16px;
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class=\"wrapper\">
-    <div class=\"container\">
-      <span class=\"pill\">Industry Analysis Report</span>
-      <h1>{{ $json.output.identifiedIndustry || \"Industry Analysis\" }}</h1>
-
-      <!-- Top summary -->
-      <div class=\"grid-2\">
-        <div>
-          <div class=\"field-label\">Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.sector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Sub-Sector</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.subSector || \"N/A\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Confidence Level</div>
-          <div class=\"field-value\">
-            {{ (Math.round(($json.output.industryIdentification.confidenceLevel || 0) * 100)) + \"%\" }}
-          </div>
-        </div>
-        <div>
-          <div class=\"field-label\">Classification Rationale</div>
-          <div class=\"field-value\">
-            {{ $json.output.industryIdentification.rationale || \"N/A\" }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Industry Deep Dive -->
-      <h2>Industry Deep Dive</h2>
-      <h3>Overview</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.overview || \"N/A\" }}</p>
-      </div>
-
-      <h3>Market Size &amp; Growth</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.marketSizeAndGrowth || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Segments</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keySegments || \"N/A\" }}</p>
-      </div>
-
-      <h3>Key Players (Summary)</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.keyPlayers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Growth Drivers</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.growthDrivers || \"N/A\" }}</p>
-      </div>
-
-      <h3>Challenges &amp; Risks</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.challengesAndRisks || \"N/A\" }}</p>
-      </div>
-
-      <h3>Opportunities</h3>
-      <div class=\"box\">
-        <p>{{ $json.output.industryDeepDive.opportunities || \"N/A\" }}</p>
-      </div>
-
-      <!-- Competitive Landscape -->
-      <h2>Competitive Landscape</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.competitiveLandscape || []).map(c =>
-              `<li>
-                <strong>${c.name || \"Unnamed Competitor\"}</strong><br/>
-                <span class=\"small\">${c.marketPositioning || \"\"}</span><br/>
-                ${c.description ? c.description + \"<br/>\" : \"\"}
-                ${c.strengths ? \"<strong>Strengths:</strong> \" + c.strengths + \"<br/>\" : \"\"}
-                ${c.weaknesses ? \"<strong>Weaknesses:</strong> \" + c.weaknesses + \"<br/>\" : \"\"}
-                ${c.strategicInitiatives ? \"<strong>Initiatives:</strong> \" + c.strategicInitiatives : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Trend Analysis -->
-      <h2>Trend Analysis</h2>
-
-      <h3>Technological Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.technological) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}${t.timeHorizon ? \" <span class='small'>(Time horizon: \" + t.timeHorizon + \")</span>\" : \"\"}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Regulatory Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.regulatory) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Economic Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.economic) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <h3>Consumer Behavior Trends</h3>
-      <div class=\"box\">
-        <ul>
-          {{
-            (($json.output.trendAnalysis && $json.output.trendAnalysis.consumerBehavior) || []).map(t =>
-              `<li><strong>${t.trend}</strong><br/>${t.impact}</li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <!-- Strategic Insights -->
-      <h2>Strategic Insights &amp; Recommendations</h2>
-      <div class=\"box\">
-        <ul>
-          {{
-            ($json.output.strategicInsights || []).map(s =>
-              `<li>
-                <strong>${s.recommendation}</strong><br/>
-                ${s.rationale ? \"<strong>Rationale:</strong> \" + s.rationale + \"<br/>\" : \"\"}
-                ${s.expectedImpact ? \"<strong>Expected Impact:</strong> \" + s.expectedImpact + \"<br/>\" : \"\"}
-                ${s.priority ? \"<strong>Priority:</strong> \" + s.priority : \"\" }
-                ${s.timeHorizon ? \" <span class='small'>(Time horizon: \" + s.timeHorizon + \")</span>\" : \"\"}
-              </li>`
-            ).join(\"\")
-          }}
-        </ul>
-      </div>
-
-      <p class=\"small\">
-        This report is based on the latest AI-generated analysis of the customer's industry and market context.
-      </p>
-    </div>
-  </div>
-</body>
-</html>","additionalFields":{"bodyContentType":"html"}},"type":"n8n-nodes-base.microsoftOutlook","typeVersion":2,"position":[1568,0],"id":"58e38dcd-2b3a-4f1a-a80f-7c7e49af67ae","name":"Send Analysis Email to MST Team","webhookId":"789ddd20-355c-4406-9128-8685bb8d70d0","credentials":{"microsoftOutlookOAuth2Api":{"id":"RS6O6ncyKxJLSof7","name":"MST Microsoft No-reply"}}},{"parameters":{"model":{"__rl":true,"mode":"list","value":"gpt-4.1-mini"},"builtInTools":{},"options":{}},"type":"@n8n/n8n-nodes-langchain.lmChatOpenAi","typeVersion":1.3,"position":[1232,288],"id":"c85ae3ea-65d2-4ad0-9ce5-8c6e5a31b758","name":"OpenAI Chat Model1","credentials":{"openAiApi":{"id":"51hIFZmWsjzQuJAg","name":"Rashad's OpenAi Account"}}}],"connections":{"Webhook":{"main":[[{"node":"Get Customer Data","type":"main","index":0}]]},"Respond to Webhook":{"main":[[{"node":"AI Agent","type":"main","index":0}]]},"Get Customer Data":{"main":[[{"node":"Send Backup Email to MST Team","type":"main","index":0}]]},"OpenAI Chat Model":{"ai_languageModel":[[{"node":"AI Agent","type":"ai_languageModel","index":0}]]},"AI Agent":{"main":[[{"node":"Send Analysis Email to MST Team","type":"main","index":0}]]},"Structured Output Parser":{"ai_outputParser":[[{"node":"AI Agent","type":"ai_outputParser","index":0}]]},"Send Email to Customer":{"main":[[]]},"Send Email to MST Team":{"main":[[{"node":"Send Email to Customer","type":"main","index":0}]]},"Get many tasks":{"main":[[{"node":"Code in JavaScript","type":"main","index":0}]]},"Code in JavaScript":{"main":[[{"node":"Merge","type":"main","index":0}]]},"Merge":{"main":[[]]},"Send Backup Email to MST Team":{"main":[[{"node":"Send Email Confirmation to Customer","type":"main","index":0}]]},"Send Email Confirmation to Customer":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]},"OpenAI Chat Model1":{"ai_languageModel":[[{"node":"AI Agent","type":"ai_languageModel","index":1}]]}},"authors":"Rashad  ","name":null,"description":null}}
+  "staticData": null,
+  "tags": [],
+  "createdAt": "2025-11-25T00:48:02.299Z",
+  "description": null
+}

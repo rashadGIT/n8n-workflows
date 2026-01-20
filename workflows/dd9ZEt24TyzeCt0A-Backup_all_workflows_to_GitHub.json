@@ -1,11 +1,387 @@
-{"updatedAt":"2025-11-28T03:32:26.000Z","createdAt":"2025-11-28T03:32:26.348Z","id":"dd9ZEt24TyzeCt0A","name":"Backup all workflows to GitHub","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"triggerTimes":{"item":[{"mode":"everyHour","minute":59}]}},"id":"45decd23-5cd3-4aaf-9d2b-c8b149eea6d8","name":"Cron","type":"n8n-nodes-base.cron","typeVersion":1,"position":[16,160]},{"parameters":{"authentication":"headerAuth","url":"http://localhost:5678/api/v1/workflows","options":{}},"id":"4685b341-3167-4ad1-80dd-5820f8ff550b","name":"List Workflows","type":"n8n-nodes-base.httpRequest","typeVersion":1,"position":[256,160],"alwaysOutputData":false},{"parameters":{"functionCode":"const data = items[0].json.data || [];
-return data.map(wf => ({ json: wf }));"},"id":"30c638e8-af64-4b5d-b834-db75d1b9d578","name":"Extract Workflows","type":"n8n-nodes-base.function","typeVersion":1,"position":[448,160]},{"parameters":{"batchSize":1,"options":{}},"id":"04f5a697-9a80-43e6-b5da-415dd975f8cf","name":"Split In Batches","type":"n8n-nodes-base.splitInBatches","typeVersion":1,"position":[656,160]},{"parameters":{"authentication":"headerAuth","url":"={{ 'http://localhost:5678/api/v1/workflows/' + $json.id }}","options":{}},"id":"b27e4dd5-c78d-4ffa-861e-f36fda0d3b52","name":"Get Workflow JSON","type":"n8n-nodes-base.httpRequest","typeVersion":1,"position":[848,160]},{"parameters":{"functionCode":"const wf = items[0].json;
-const safeName = (wf.name || 'workflow').split(' ').join('_');
-return [
-  {
-    json: {
-      path: 'workflows/' + wf.id + '-' + safeName + '.json',
-      content: JSON.stringify(wf, null, 2),
+{
+  "id": "dd9ZEt24TyzeCt0A",
+  "name": "Backup all workflows to GitHub",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour",
+              "minute": 59
+            }
+          ]
+        }
+      },
+      "id": "45decd23-5cd3-4aaf-9d2b-c8b149eea6d8",
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        16,
+        160
+      ]
     },
+    {
+      "parameters": {
+        "url": "https://rashadbarnett.app.n8n.cloud/api/v1/workflows",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNDUyNDllYi03YWVlLTQyZjUtODFhZi1lNGM5M2EwZDdjNDEiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY3NzQ5NDgxfQ.Kn-FK8JSwoWaQkq9rhkzVYdAl9JdCNHHZ47h7WM8Jnw"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4685b341-3167-4ad1-80dd-5820f8ff550b",
+      "name": "List Workflows",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        256
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = items[0].json.data || [];\nreturn data.map(wf => ({ json: wf }));"
+      },
+      "id": "30c638e8-af64-4b5d-b834-db75d1b9d578",
+      "name": "Extract Workflows",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        464,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ \"https://rashadbarnett.app.n8n.cloud/api/v1/workflows/\" + $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNDUyNDllYi03YWVlLTQyZjUtODFhZi1lNGM5M2EwZDdjNDEiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY3NzQ5NDgxfQ.Kn-FK8JSwoWaQkq9rhkzVYdAl9JdCNHHZ47h7WM8Jnw"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b27e4dd5-c78d-4ffa-861e-f36fda0d3b52",
+      "name": "Get Workflow JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        688,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const wf = items[0].json;\nconst safeName = (wf.name || 'workflow').split(' ').join('_');\n\n// Extract only essential fields for backup\nconst essentialWorkflow = {\n  id: wf.id,\n  name: wf.name,\n  active: wf.active,\n  nodes: wf.nodes,\n  connections: wf.connections,\n  settings: wf.settings,\n  staticData: wf.staticData,\n  tags: wf.tags,\n  // Keep these for reference but they won't cause false changes\n  createdAt: wf.createdAt,\n  description: wf.description\n};\n\nreturn [\n  {\n    json: {\n      path: 'workflows/' + wf.id + '-' + safeName + '.json',\n      content: JSON.stringify(essentialWorkflow, null, 2),\n    },\n  },\n];\n"
+      },
+      "id": "2b8037fc-27bf-46cf-aa8c-5d38d6e8dd5f",
+      "name": "Format JSON File",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        912,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ \"https://api.github.com/repos/rashadGIT/n8n-workflows/contents/\" + $json.path }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.githubBody) }}",
+        "options": {}
+      },
+      "id": "30372cc4-03b9-4fb1-99a9-b5368433e703",
+      "name": "GitHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2480,
+        256
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "ogGBMxrbdHqFiCRO",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "manual-trigger-123456",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        16,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ \"https://api.github.com/repos/rashadGIT/n8n-workflows/contents/\" + $json.path }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubOAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "get-file-sha-node",
+      "name": "Get File SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1136,
+        256
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "ogGBMxrbdHqFiCRO",
+          "name": "GitHub account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "const changeData = $input.item.json;\nconst body = {\n  message: \"n8n backup: \" + changeData.path,\n  content: Buffer.from(changeData.content).toString(\"base64\")\n};\n\nif (changeData.sha) {\n  body.sha = changeData.sha;\n}\n\nreturn {\n  json: {\n    path: changeData.path,\n    githubBody: body\n  }\n};\n"
+      },
+      "id": "prepare-github-body",
+      "name": "Prepare GitHub Body",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2256,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Get merged data from previous node\nconst data = $input.item.json;\n\n// Helper function to create a stable hash/signature of workflow\nfunction createWorkflowSignature(workflowJSON) {\n  // Extract truly essential fields - the ACTUAL workflow logic\n  const signature = {\n    name: workflowJSON.name,\n    active: workflowJSON.active,\n\n    // For nodes, we need to be more careful about what we include\n    nodes: workflowJSON.nodes ? workflowJSON.nodes.map(node => ({\n      id: node.id,\n      name: node.name,\n      type: node.type,\n      typeVersion: node.typeVersion,\n      position: node.position,\n      parameters: node.parameters,\n      // Exclude things like disabled, notesInFlow, etc. that might change\n    })) : [],\n\n    connections: workflowJSON.connections || {},\n    settings: workflowJSON.settings || {},\n    staticData: workflowJSON.staticData || null,\n    tags: workflowJSON.tags || []\n  };\n\n  // Sort keys recursively to ensure consistent comparison\n  return JSON.stringify(signature, Object.keys(signature).sort());\n}\n\n// Check if file exists in GitHub\nif (!data.existingSha || !data.existingContent) {\n  // File doesn't exist - this is a new file, proceed\n  return {\n    json: {\n      path: data.path,\n      content: data.newContent,\n      sha: null,\n      isNew: true,\n      hasChanges: true,\n      debugInfo: \"New file - no comparison needed\"\n    }\n  };\n}\n\n// File exists - compare content\nconst existingContent = Buffer.from(data.existingContent, 'base64').toString('utf8');\nconst newContent = data.newContent;\n\nlet hasChanges = true;\nlet debugInfo = \"\";\n\ntry {\n  const existingJSON = JSON.parse(existingContent);\n  const newJSON = JSON.parse(newContent);\n\n  // Create signatures for comparison\n  const existingSig = createWorkflowSignature(existingJSON);\n  const newSig = createWorkflowSignature(newJSON);\n\n  if (existingSig === newSig) {\n    hasChanges = false;\n    debugInfo = \"No changes detected - signatures match\";\n  } else {\n    hasChanges = true;\n    // Find what changed\n    const existingObj = JSON.parse(existingSig);\n    const newObj = JSON.parse(newSig);\n\n    const diffs = [];\n    if (existingObj.name !== newObj.name) diffs.push(\"name\");\n    if (existingObj.active !== newObj.active) diffs.push(\"active\");\n    if (JSON.stringify(existingObj.nodes) !== JSON.stringify(newObj.nodes)) diffs.push(\"nodes\");\n    if (JSON.stringify(existingObj.connections) !== JSON.stringify(newObj.connections)) diffs.push(\"connections\");\n    if (JSON.stringify(existingObj.settings) !== JSON.stringify(newObj.settings)) diffs.push(\"settings\");\n    if (JSON.stringify(existingObj.staticData) !== JSON.stringify(newObj.staticData)) diffs.push(\"staticData\");\n    if (JSON.stringify(existingObj.tags) !== JSON.stringify(newObj.tags)) diffs.push(\"tags\");\n\n    debugInfo = \"Changes detected in: \" + diffs.join(\", \");\n  }\n} catch (e) {\n  hasChanges = true;\n  debugInfo = \"Error comparing: \" + e.message;\n}\n\n// Always return an item with hasChanges flag\nreturn {\n  json: {\n    path: data.path,\n    content: data.newContent,\n    sha: data.existingSha,\n    isNew: false,\n    hasChanges: hasChanges,\n    debugInfo: debugInfo\n  }\n};\n"
+      },
+      "id": "detect-changes-node",
+      "name": "Detect Changes",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Get data from Format JSON File (previous node's input)\nconst formatData = $items(\"Format JSON File\")[0].json;\n\n// Get data from Get File SHA (current input)\nconst githubData = $input.item.json;\n\n// Merge both datasets\nreturn {\n  json: {\n    // From Format JSON File\n    path: formatData.path,\n    newContent: formatData.content,\n\n    // From Get File SHA (if file exists)\n    existingSha: githubData && githubData.sha ? githubData.sha : null,\n    existingContent: githubData && githubData.content ? githubData.content : null\n  }\n};\n"
+      },
+      "id": "merge-data-node",
+      "name": "Merge Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Log debug info and ensure hasChanges is a proper boolean\nconst item = $input.item.json;\n\n// Ensure hasChanges is a boolean, not a string\nconst hasChanges = item.hasChanges === true || item.hasChanges === \"true\";\n\nconsole.log(\"[DEBUG] Workflow:\", item.path);\nconsole.log(\"[DEBUG] Has Changes:\", hasChanges, \"(type:\", typeof hasChanges, \")\");\nconsole.log(\"[DEBUG] Info:\", item.debugInfo);\nconsole.log(\"---\");\n\n// Return with properly typed hasChanges\nreturn {\n  json: {\n    ...item,\n    hasChanges: hasChanges  // Ensure it's a boolean\n  }\n};\n"
+      },
+      "id": "debug-logger-node",
+      "name": "Debug Logger",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1808,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.hasChanges}}",
+              "value2": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "switch-changes-node",
+      "name": "Filter Unchanged",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        256
+      ]
+    }
+  ],
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "List Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows": {
+      "main": [
+        [
+          {
+            "node": "Extract Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Workflows": {
+      "main": [
+        [
+          {
+            "node": "Get Workflow JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Workflow JSON": {
+      "main": [
+        [
+          {
+            "node": "Format JSON File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format JSON File": {
+      "main": [
+        [
+          {
+            "node": "Get File SHA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        []
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "List Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File SHA": {
+      "main": [
+        [
+          {
+            "node": "Merge Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare GitHub Body": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Changes": {
+      "main": [
+        [
+          {
+            "node": "Debug Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Data": {
+      "main": [
+        [
+          {
+            "node": "Detect Changes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Unchanged": {
+      "main": [
+        [
+          {
+            "node": "Prepare GitHub Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debug Logger": {
+      "main": [
+        [
+          {
+            "node": "Filter Unchanged",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
-];"},"id":"2b8037fc-27bf-46cf-aa8c-5d38d6e8dd5f","name":"Format JSON File","type":"n8n-nodes-base.function","typeVersion":1,"position":[1056,160]},{"parameters":{"resource":"file","owner":{"__rl":true,"value":"rashadGIT","mode":""},"repository":{"__rl":true,"value":"n8n-workflows","mode":""},"filePath":"={{ $json[\"path\"] }}","fileContent":"={{ $json[\"content\"] }}","commitMessage":"={{ 'n8n backup: ' + $json[\"path\"] }}"},"id":"30372cc4-03b9-4fb1-99a9-b5368433e703","name":"GitHub","type":"n8n-nodes-base.github","typeVersion":1,"position":[1248,160],"webhookId":"78a24463-0a57-4852-9852-47af063ae3e6"},{"parameters":{"conditions":{"boolean":[{"value1":true,"value2":"={{$node[\"Split In Batches\"].context[\"noItemsLeft\"]}}"}]}},"id":"f4ee0a8a-2fad-4f01-a5fc-c6c4c67f2925","name":"Check more","type":"n8n-nodes-base.if","typeVersion":1,"position":[1456,160]}],"connections":{"Cron":{"main":[[{"node":"List Workflows","type":"main","index":0}]]},"List Workflows":{"main":[[{"node":"Extract Workflows","type":"main","index":0}]]},"Extract Workflows":{"main":[[{"node":"Split In Batches","type":"main","index":0}]]},"Split In Batches":{"main":[[{"node":"Get Workflow JSON","type":"main","index":0}]]},"Get Workflow JSON":{"main":[[{"node":"Format JSON File","type":"main","index":0}]]},"Format JSON File":{"main":[[{"node":"GitHub","type":"main","index":0}]]},"GitHub":{"main":[[{"node":"Check more","type":"main","index":0}]]},"Check more":{"main":[[],[{"node":"Split In Batches","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":null,"pinData":{},"versionId":"7259a782-dfa7-4ca0-a85b-6fdbd608482b","activeVersionId":null,"versionCounter":2,"triggerCount":0,"shared":[{"updatedAt":"2025-11-28T03:32:26.352Z","createdAt":"2025-11-28T03:32:26.352Z","role":"workflow:owner","workflowId":"dd9ZEt24TyzeCt0A","projectId":"2CC780LxenTRdi7P","project":{"updatedAt":"2025-10-08T01:35:29.647Z","createdAt":"2025-10-08T01:35:29.647Z","id":"2CC780LxenTRdi7P","name":"My project","type":"team","icon":{"type":"icon","value":"layers"},"description":null,"projectRelations":[{"updatedAt":"2025-10-08T01:35:29.649Z","createdAt":"2025-10-08T01:35:29.649Z","userId":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","projectId":"2CC780LxenTRdi7P","user":{"updatedAt":"2026-01-06T11:49:29.000Z","createdAt":"2025-10-08T00:25:30.019Z","id":"d45249eb-7aee-42f5-81af-e4c93a0d7c41","email":"rashad.barnett@gmail.com","firstName":"Rashad","lastName":" ","personalizationAnswers":null,"settings":{"userActivated":false,"easyAIWorkflowOnboarded":true,"userClaimedAiCredits":true},"disabled":false,"mfaEnabled":true,"lastActiveAt":"2026-01-06","isPending":false}}]}}],"tags":[],"activeVersion":null}
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "tags": [],
+  "createdAt": "2025-11-28T03:32:26.348Z",
+  "description": null
+}

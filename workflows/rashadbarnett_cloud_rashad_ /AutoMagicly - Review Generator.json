@@ -1,7 +1,6 @@
 {
   "id": "Z2v97fyXLSbr51pK",
   "name": "AutoMagicly - Review Generator",
-  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -16,7 +15,6 @@
         -512,
         -160
       ],
-      "id": "8fbab308-c624-47a7-95a5-499fcd117c7a",
       "name": "Webhook",
       "webhookId": "7afeb5de-86be-445a-80a4-0440b9b3e492"
     },
@@ -32,7 +30,6 @@
         288,
         -160
       ],
-      "id": "ab28301f-dd52-431f-910e-bf488206d05f",
       "name": "Respond to Webhook"
     },
     {
@@ -47,7 +44,6 @@
         -288,
         -160
       ],
-      "id": "4f055467-33a5-4092-9a50-e01c2bb8fc3b",
       "name": "Edit Fields"
     },
     {
@@ -56,7 +52,7 @@
         "text": "=Generate a customer review with the following details:\n\nRATING: {{$json.rating}}/5 stars\n\nTONE: {{$json.tone}}\n\nCUSTOMER ANSWERS:\n{{$json.answers.map((qa, i) => `Q: ${qa.question}\\nA: ${qa.answer || 'Not provided'}`).join('\\n\\n')}}\n\nWrite a review that:\n- Matches the {{$json.rating}}-star rating sentiment\n- Uses a {{$json.tone}} tone\n- Incorporates insights from the answers WITHOUT revealing PII\n- Is maximum 250 characters\n- Tells a natural before/during/after story\n\nReturn only the review text.",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "You are an expert at writing authentic, human-sounding customer reviews. Your task is to create a review based on the customer's rating, preferred tone, and their answers to questions about their experience.\n\nCRITICAL RULES:\n1. Write in FIRST PERSON (\"We\", \"I\", \"Our\")\n2. Match the sentiment to the star rating (5 stars = very positive, 1 star = critical)\n3. Use the specified tone (professional, enthusiastic, or casual)\n4. MAXIMUM LENGTH: 250 characters (strict limit)\n5. NEVER include PII: no names, company names, emails, phone numbers, or identifying details\n6. NO profanity or inappropriate language\n7. Sound like a real person, not AI\n8. Tell a story: problem \u2192 solution \u2192 results\n9. Be specific but concise\n10. Return ONLY the review text - no quotes, no extra formatting\n\nTONE GUIDELINES:\n- Professional: Clear, articulate, business-focused\n- Enthusiastic: Energetic, excited, highly positive\n- Casual: Conversational, friendly, relaxed\n\nRATING SENTIMENT:\n- 5 stars: Exceptional, exceeded expectations, glowing praise\n- 4 stars: Very good, positive with realistic nuance\n- 3 stars: Satisfactory, balanced, met basic expectations\n- 2 stars: Disappointing, constructive criticism\n- 1 star: Poor experience, significant issues"
+          "systemMessage": "You are an expert at writing authentic, human-sounding customer reviews. Your task is to create a review based on the customer's rating, preferred tone, and their answers to questions about their experience.\n\nCRITICAL RULES:\n1. Write in FIRST PERSON (\"We\", \"I\", \"Our\")\n2. Match the sentiment to the star rating (5 stars = very positive, 1 star = critical)\n3. Use the specified tone (professional, enthusiastic, or casual)\n4. MAXIMUM LENGTH: 250 characters (strict limit)\n5. NEVER include PII: no names, company names, emails, phone numbers, or identifying details\n6. NO profanity or inappropriate language\n7. Sound like a real person, not AI\n8. Tell a story: problem → solution → results\n9. Be specific but concise\n10. Return ONLY the review text - no quotes, no extra formatting\n\nTONE GUIDELINES:\n- Professional: Clear, articulate, business-focused\n- Enthusiastic: Energetic, excited, highly positive\n- Casual: Conversational, friendly, relaxed\n\nRATING SENTIMENT:\n- 5 stars: Exceptional, exceeded expectations, glowing praise\n- 4 stars: Very good, positive with realistic nuance\n- 3 stars: Satisfactory, balanced, met basic expectations\n- 2 stars: Disappointing, constructive criticism\n- 1 star: Poor experience, significant issues"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -65,7 +61,6 @@
         -64,
         -160
       ],
-      "id": "ac5640c3-3339-4d82-aebc-407134552722",
       "name": "AI Agent"
     },
     {
@@ -78,7 +73,6 @@
         128,
         32
       ],
-      "id": "baa5901e-bc88-47c3-88ca-d66811125f1b",
       "name": "Structured Output Parser1"
     },
     {
@@ -97,7 +91,6 @@
         -112,
         32
       ],
-      "id": "9c9bb5e6-21f5-45ed-80a8-42e458dbf897",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
@@ -164,11 +157,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
+  "settings": {},
   "tags": [],
-  "createdAt": "2026-01-06T03:42:59.268Z",
-  "description": null
+  "active": true
 }

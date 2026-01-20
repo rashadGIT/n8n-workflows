@@ -1,0 +1,24 @@
+# Backup scripts
+n8n_backup.sh
+
+# Environment files
+.env
+.env.local
+*.key
+*.pem
+
+# MCP configuration (contains API keys)
+.mcp.json
+
+# Logs
+backup.log
+*.log
+
+# MacOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.vscode/
+.claude/

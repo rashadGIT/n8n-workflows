@@ -1,13 +1,11 @@
 {
   "id": "8kyCIAkfqsGub3a6",
   "name": "Chat with a database using AI",
-  "active": false,
   "nodes": [
     {
       "parameters": {
         "content": "## Try me out\nClick the 'chat' button at the bottom of the canvas and paste in:\n\n_Which tables are available?_"
       },
-      "id": "9974e3e8-fd58-4ad7-aa18-d734d30d1e55",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -23,7 +21,6 @@
         "width": 677,
         "color": 7
       },
-      "id": "019bcef3-9140-4244-bf13-f877b738dcc6",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -36,7 +33,6 @@
       "parameters": {
         "options": {}
       },
-      "id": "58806f69-c5c4-49a7-8419-c3963ba67a9f",
       "name": "When chat message received",
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "position": [
@@ -52,7 +48,6 @@
         "query": "{{ $fromAI('sql_statement') }}",
         "options": {}
       },
-      "id": "5d404faf-dedf-4b51-b4db-b98cc225e547",
       "name": "Postgres",
       "type": "n8n-nodes-base.postgresTool",
       "position": [
@@ -63,7 +58,6 @@
     },
     {
       "parameters": {},
-      "id": "a0933fdc-4f3e-4f18-bd9f-cc1e95c2aa33",
       "name": "Simple Memory",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "position": [
@@ -76,7 +70,6 @@
       "parameters": {
         "options": {}
       },
-      "id": "ecdbbb70-a075-403b-9280-33888b1f348e",
       "name": "AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "position": [
@@ -94,7 +87,6 @@
         },
         "options": {}
       },
-      "id": "01919290-e99f-42c2-84bf-23f38ee6a7ff",
       "name": "OpenAI Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "position": [
@@ -150,11 +142,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
+  "settings": {},
   "tags": [],
-  "createdAt": "2025-12-05T02:22:18.898Z",
-  "description": null
+  "active": false
 }

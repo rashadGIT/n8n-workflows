@@ -1,7 +1,6 @@
 {
   "id": "uDBp1gmglRaFc7l7",
   "name": "MST - Proposal Work Flow",
-  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -10,7 +9,6 @@
         "fileName": "=intake/{{ $json.id }}/{{ $json.name }}",
         "additionalFields": {}
       },
-      "id": "6f972d85-e6af-4673-8c0b-ddd59e8b77a1",
       "name": "Upload to S3",
       "type": "n8n-nodes-base.awsS3",
       "typeVersion": 1,
@@ -41,7 +39,6 @@
         -1488,
         120
       ],
-      "id": "73d0acac-6edd-42dc-b3cd-0f4799b40ac8",
       "name": "Download file",
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -78,7 +75,6 @@
         -1712,
         120
       ],
-      "id": "2d416f39-3d09-4563-9972-9162f0deea00",
       "name": "New Audio File",
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -99,7 +95,6 @@
         -1488,
         520
       ],
-      "id": "0be9bbe1-49d1-4dd6-b813-5cf03081dd78",
       "name": "Create transcriptionJob",
       "credentials": {
         "aws": {
@@ -120,7 +115,6 @@
         -1040,
         448
       ],
-      "id": "35a9c833-e8e0-404e-9791-3b07f5797dbe",
       "name": "Get transcriptionJob",
       "credentials": {
         "aws": {
@@ -139,7 +133,6 @@
         -1264,
         520
       ],
-      "id": "87972f80-f06d-4cc1-bbf1-5b1e788f7160",
       "name": "Wait",
       "webhookId": "dff39215-7918-4d94-aad4-d481f364d27e"
     },
@@ -175,7 +168,6 @@
         -816,
         520
       ],
-      "id": "ba49cde7-8139-4f24-bc5c-ec7de03d3648",
       "name": "If"
     },
     {
@@ -184,7 +176,7 @@
         "text": "={{ $json.text }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "## Agent Prompt \u2014 Audio Transcript \u2192 Proposal Data Extractor (Google Sheet KB + Single Best Option)\n\n**Role**\nYou are an AI agent whose job is to analyze an **audio transcript of a client conversation** and extract **proposal-ready data** for an accounting/tax services engagement.\n\nYou will be provided:\n\n1. The **transcript** of the client conversation, and\n2. You have access to Googe Sheet with\u00a0**service catalog** (rows) as a knowledge base.\n\nYour job is to (a) identify **the problems we are solving**, (b) determine which **services** from the service catalog are relevant to the client, and (c) choose **exactly one** best-fit option (Option 1, Option 2, or Option 3).\n\n---\n\n### Inputs\n\n**Transcript**\n\n* A plain-text transcript of the meeting.\n\n**Service Catalog (Google Sheet export)**\n\n* A list of rows with at minimum:\n\n  * `service_name`\n  * `default_option_1` (boolean)\n  * `default_option_2` (boolean)\n  * `default_option_3` (boolean)\n* The catalog represents your standard table rows.\n\n**Important:** If the service catalog is not provided in the current input, you must still output valid JSON and add an `open_questions` item requesting the catalog.\n\n---\n\n### Primary Focus: Problems We Are Solving\n\nDetermine and articulate the **business/accounting problems** the client is facing, based strictly on the transcript.\n\n* Do **not** invent problems.\n* Include issues explicitly stated or clearly implied.\n\n---\n\n### Service Relevance (MANDATORY)\n\nFor each `service_name` in the provided service catalog:\n\n* Decide whether the service is **relevant** to this client\u2019s needs based on the transcript.\n* Set `relevant_to_client` to `true` or `false`.\n* Add a short `notes` justification when relevance is `true` **or** when uncertain.\n\n---\n\n### Single Best Option Selection (MANDATORY)\n\nYou must choose **exactly one** best-fit option for the client:\n\n* `best_option` must be one of: `option_1`, `option_2`, `option_3`\n* Exactly one of these must be `true` in `option_selection`.\n\n**Decision guidance** (use transcript evidence):\n\n* Option 1 (cleanup) if the main need is **one-time cleanup/catch-up** and ongoing support is not requested.\n* Option 2 (ongoing accounting) if they need **ongoing bookkeeping, reconciliations, monthly reporting/review**.\n* Option 3 (ongoing + tax/budgeting) if they need Option 2 **plus** tax planning/prep and/or budgeting/forecasting.\n\nDo not pick multiple options. If ambiguous, pick the most defensible option and add an `open_questions` item.\n\n---\n\n### Extraction Rules\n\n* Transcript is the **single source of truth** for client needs.\n* The service catalog is the **single source of truth** for service row names.\n* Do not assume pricing or scope beyond what is discussed.\n* Booleans must be true/false only.\n\n---\n\n### Output Format (STRICT \u2014 JSON ONLY)\n\nReturn **ONLY** a single, syntactically valid JSON object.\n\n**Hard requirements (do not violate):**\n\n* The response must start with `{` and end with `}`.\n* **No** markdown, **no** code fences, **no** extra text.\n* **No** extra top-level keys beyond the schema.\n* Use `null` for unknown string fields and `[]` for unknown list fields.\n* Arrays must always be arrays.\n\n---\n\n### Option Flag Rules (IMPORTANT)\n\n* For each row in `services_table`, set option flags according to the **selected best option**:\n\n  * If `best_option = option_1`, then each row must have `option_1=true`, `option_2=false`, `option_3=false`.\n  * If `best_option = option_2`, then each row must have `option_1=false`, `option_2=true`, `option_3=false`.\n  * If `best_option = option_3`, then each row must have `option_1=false`, `option_2=false`, `option_3=true`.\n\nThis enforces the rule: **Only one option is true overall.**\n\n---\n\n### Quality Bar\n\n* Output must be deterministic and table-ready.\n* Service names must match the service catalog exactly.\n* Relevance decisions must be justified in `notes` when needed.\n\n---\n\n### Final Rule\n\nIf the required inputs (transcript or service catalog) are missing or unclear, do not guess\u2014add an item to `open_questions` and keep output valid JSON.\n"
+          "systemMessage": "## Agent Prompt — Audio Transcript → Proposal Data Extractor (Google Sheet KB + Single Best Option)\n\n**Role**\nYou are an AI agent whose job is to analyze an **audio transcript of a client conversation** and extract **proposal-ready data** for an accounting/tax services engagement.\n\nYou will be provided:\n\n1. The **transcript** of the client conversation, and\n2. You have access to Googe Sheet with **service catalog** (rows) as a knowledge base.\n\nYour job is to (a) identify **the problems we are solving**, (b) determine which **services** from the service catalog are relevant to the client, and (c) choose **exactly one** best-fit option (Option 1, Option 2, or Option 3).\n\n---\n\n### Inputs\n\n**Transcript**\n\n* A plain-text transcript of the meeting.\n\n**Service Catalog (Google Sheet export)**\n\n* A list of rows with at minimum:\n\n  * `service_name`\n  * `default_option_1` (boolean)\n  * `default_option_2` (boolean)\n  * `default_option_3` (boolean)\n* The catalog represents your standard table rows.\n\n**Important:** If the service catalog is not provided in the current input, you must still output valid JSON and add an `open_questions` item requesting the catalog.\n\n---\n\n### Primary Focus: Problems We Are Solving\n\nDetermine and articulate the **business/accounting problems** the client is facing, based strictly on the transcript.\n\n* Do **not** invent problems.\n* Include issues explicitly stated or clearly implied.\n\n---\n\n### Service Relevance (MANDATORY)\n\nFor each `service_name` in the provided service catalog:\n\n* Decide whether the service is **relevant** to this client’s needs based on the transcript.\n* Set `relevant_to_client` to `true` or `false`.\n* Add a short `notes` justification when relevance is `true` **or** when uncertain.\n\n---\n\n### Single Best Option Selection (MANDATORY)\n\nYou must choose **exactly one** best-fit option for the client:\n\n* `best_option` must be one of: `option_1`, `option_2`, `option_3`\n* Exactly one of these must be `true` in `option_selection`.\n\n**Decision guidance** (use transcript evidence):\n\n* Option 1 (cleanup) if the main need is **one-time cleanup/catch-up** and ongoing support is not requested.\n* Option 2 (ongoing accounting) if they need **ongoing bookkeeping, reconciliations, monthly reporting/review**.\n* Option 3 (ongoing + tax/budgeting) if they need Option 2 **plus** tax planning/prep and/or budgeting/forecasting.\n\nDo not pick multiple options. If ambiguous, pick the most defensible option and add an `open_questions` item.\n\n---\n\n### Extraction Rules\n\n* Transcript is the **single source of truth** for client needs.\n* The service catalog is the **single source of truth** for service row names.\n* Do not assume pricing or scope beyond what is discussed.\n* Booleans must be true/false only.\n\n---\n\n### Output Format (STRICT — JSON ONLY)\n\nReturn **ONLY** a single, syntactically valid JSON object.\n\n**Hard requirements (do not violate):**\n\n* The response must start with `{` and end with `}`.\n* **No** markdown, **no** code fences, **no** extra text.\n* **No** extra top-level keys beyond the schema.\n* Use `null` for unknown string fields and `[]` for unknown list fields.\n* Arrays must always be arrays.\n\n---\n\n### Option Flag Rules (IMPORTANT)\n\n* For each row in `services_table`, set option flags according to the **selected best option**:\n\n  * If `best_option = option_1`, then each row must have `option_1=true`, `option_2=false`, `option_3=false`.\n  * If `best_option = option_2`, then each row must have `option_1=false`, `option_2=true`, `option_3=false`.\n  * If `best_option = option_3`, then each row must have `option_1=false`, `option_2=false`, `option_3=true`.\n\nThis enforces the rule: **Only one option is true overall.**\n\n---\n\n### Quality Bar\n\n* Output must be deterministic and table-ready.\n* Service names must match the service catalog exactly.\n* Relevance decisions must be justified in `notes` when needed.\n\n---\n\n### Final Rule\n\nIf the required inputs (transcript or service catalog) are missing or unclear, do not guess—add an item to `open_questions` and keep output valid JSON.\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -193,7 +185,6 @@
         -984,
         16
       ],
-      "id": "45b272df-9cdb-4050-8aac-a4debce938c6",
       "name": "AI Agent"
     },
     {
@@ -212,7 +203,6 @@
         -1040,
         240
       ],
-      "id": "11753f93-277b-4b05-9e6f-888f7f01fb92",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
@@ -232,7 +222,6 @@
         -784,
         240
       ],
-      "id": "6ea2ed06-21b1-4f6b-ab39-c4dfdfd9b7eb",
       "name": "Structured Output Parser"
     },
     {
@@ -247,7 +236,6 @@
         -592,
         520
       ],
-      "id": "74265f79-87dd-44d0-8d52-970c248f70b1",
       "name": "Edit Fields"
     },
     {
@@ -274,7 +262,6 @@
         -912,
         240
       ],
-      "id": "66622655-7872-462d-8e57-3b1a1d964ab3",
       "name": "Get row(s) in sheet in Google Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -287,7 +274,7 @@
       "parameters": {
         "sendTo": "rashad.barnett@gmail.com",
         "subject": "Test",
-        "message": "=<div style=\"font-family: Arial, Helvetica, sans-serif; color:#111; line-height:1.4; max-width: 760px; margin: 0 auto;\">\n  <!-- Header -->\n  <div style=\"padding: 18px 18px 10px 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 22px; font-weight: 700; margin: 0 0 6px 0;\">\n      {{ $json.client_name || \"Proposal\" }}\n    </div>\n    <div style=\"font-size: 13px; color:#4b5563;\">\n      Prepared for: <b>{{ $json.client_name || \"Client\" }}</b>\n      &nbsp;&middot;&nbsp;\n      Date: <b>{{ $json.proposal_date || new Date().toLocaleDateString() }}</b>\n    </div>\n  </div>\n\n  <!-- Problems -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 16px; font-weight: 700; margin-bottom: 10px;\">\n      Problems We Are Solving\n    </div>\n    <ul style=\"margin: 0; padding-left: 18px;\">\n      {{ $json.output.problems_html }}\n    </ul>\n  </div>\n\n  <!-- Pain Points -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 15px; font-weight: 700; margin-bottom: 8px;\">\n      Key Pain Points\n    </div>\n    <ul style=\"margin: 0; padding-left: 18px;\">\n      {{ $json.output.pain_points_html || \"\" }}\n    </ul>\n  </div>\n\n  <!-- Risks & Concerns -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 15px; font-weight: 700; margin-bottom: 8px;\">\n      Risks & Concerns\n    </div>\n    <ul style=\"margin: 0; padding-left: 18px;\">\n      {{ $json.output.risks_or_concerns_html || \"\" }}\n    </ul>\n  </div>\n\n  <!-- Options Table -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 16px; font-weight: 700; margin-bottom: 10px;\">\n      Service Options\n    </div>\n\n    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\n           style=\"width:100%; border-collapse: collapse; table-layout: fixed; font-size: 13px;\">\n      <thead>\n        <tr>\n          <th style=\"text-align:left; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 30%;\">Service</th>\n          <th style=\"text-align:center; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 14%;\">Option 1</th>\n          <th style=\"text-align:center; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 14%;\">Option 2</th>\n          <th style=\"text-align:center; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 14%;\">Option 3</th>\n          <th style=\"text-align:left; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 28%;\">Notes</th>\n        </tr>\n      </thead>\n\n      <tbody>\n        {{ $json.output.services_table_rows_html }}\n      </tbody>\n\n      <tfoot>\n        <tr>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; font-weight:700;\">Monthly Investment:</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; text-align:center;\">{{ $json.service_options?.option_1?.monthly_investment || \"$TBD\" }}</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; text-align:center;\">{{ $json.service_options?.option_2?.monthly_investment || \"$TBD\" }}</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; text-align:center;\">{{ $json.service_options?.option_3?.monthly_investment || \"$TBD\" }}</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; color:#6b7280;\">Final pricing confirmed after review</td>\n        </tr>\n      </tfoot>\n    </table>\n\n    <div style=\"margin-top: 10px; font-size: 13px;\">\n      <b>Recommended option:</b> {{ $json.output.best_option.replaceAll(\"_\",\" \") }}\n    </div>\n\n    <!-- Confidence -->\n    <div style=\"margin-top: 8px; font-size: 12px; color:#374151;\">\n      <b>Confidence level:</b>\n      <span style=\"text-transform: capitalize;\">{{ $json.output.confidence || \"medium\" }}</span>\n    </div>\n\n    <div style=\"margin-top: 6px; font-size: 12px; color:#6b7280;\">\n      Note: Assumes responses to transaction questions are handled within 24 hours. Additional out-of-scope items may require a separate agreement.\n    </div>\n  </div>\n\n  <!-- Footer -->\n  <div style=\"margin-top: 14px; padding: 16px 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 13px; font-weight:700; margin-bottom: 6px;\">\n      Run Your Business with MST Accounting and Bookkeeping Services PLLC\n    </div>\n    <div style=\"font-size: 12px; color:#6b7280;\">\n      Reply to this email with \u201cApproved\u201d or any requested changes.\n    </div>\n  </div>\n</div>",
+        "message": "=<div style=\"font-family: Arial, Helvetica, sans-serif; color:#111; line-height:1.4; max-width: 760px; margin: 0 auto;\">\n  <!-- Header -->\n  <div style=\"padding: 18px 18px 10px 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 22px; font-weight: 700; margin: 0 0 6px 0;\">\n      {{ $json.client_name || \"Proposal\" }}\n    </div>\n    <div style=\"font-size: 13px; color:#4b5563;\">\n      Prepared for: <b>{{ $json.client_name || \"Client\" }}</b>\n      &nbsp;&middot;&nbsp;\n      Date: <b>{{ $json.proposal_date || new Date().toLocaleDateString() }}</b>\n    </div>\n  </div>\n\n  <!-- Problems -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 16px; font-weight: 700; margin-bottom: 10px;\">\n      Problems We Are Solving\n    </div>\n    <ul style=\"margin: 0; padding-left: 18px;\">\n      {{ $json.output.problems_html }}\n    </ul>\n  </div>\n\n  <!-- Pain Points -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 15px; font-weight: 700; margin-bottom: 8px;\">\n      Key Pain Points\n    </div>\n    <ul style=\"margin: 0; padding-left: 18px;\">\n      {{ $json.output.pain_points_html || \"\" }}\n    </ul>\n  </div>\n\n  <!-- Risks & Concerns -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 15px; font-weight: 700; margin-bottom: 8px;\">\n      Risks & Concerns\n    </div>\n    <ul style=\"margin: 0; padding-left: 18px;\">\n      {{ $json.output.risks_or_concerns_html || \"\" }}\n    </ul>\n  </div>\n\n  <!-- Options Table -->\n  <div style=\"margin-top: 14px; padding: 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 16px; font-weight: 700; margin-bottom: 10px;\">\n      Service Options\n    </div>\n\n    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\n           style=\"width:100%; border-collapse: collapse; table-layout: fixed; font-size: 13px;\">\n      <thead>\n        <tr>\n          <th style=\"text-align:left; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 30%;\">Service</th>\n          <th style=\"text-align:center; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 14%;\">Option 1</th>\n          <th style=\"text-align:center; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 14%;\">Option 2</th>\n          <th style=\"text-align:center; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 14%;\">Option 3</th>\n          <th style=\"text-align:left; padding:10px 8px; border:1px solid #e5e7eb; background:#f9fafb; width: 28%;\">Notes</th>\n        </tr>\n      </thead>\n\n      <tbody>\n        {{ $json.output.services_table_rows_html }}\n      </tbody>\n\n      <tfoot>\n        <tr>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; font-weight:700;\">Monthly Investment:</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; text-align:center;\">{{ $json.service_options?.option_1?.monthly_investment || \"$TBD\" }}</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; text-align:center;\">{{ $json.service_options?.option_2?.monthly_investment || \"$TBD\" }}</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; text-align:center;\">{{ $json.service_options?.option_3?.monthly_investment || \"$TBD\" }}</td>\n          <td style=\"padding:10px 8px; border:1px solid #e5e7eb; color:#6b7280;\">Final pricing confirmed after review</td>\n        </tr>\n      </tfoot>\n    </table>\n\n    <div style=\"margin-top: 10px; font-size: 13px;\">\n      <b>Recommended option:</b> {{ $json.output.best_option.replaceAll(\"_\",\" \") }}\n    </div>\n\n    <!-- Confidence -->\n    <div style=\"margin-top: 8px; font-size: 12px; color:#374151;\">\n      <b>Confidence level:</b>\n      <span style=\"text-transform: capitalize;\">{{ $json.output.confidence || \"medium\" }}</span>\n    </div>\n\n    <div style=\"margin-top: 6px; font-size: 12px; color:#6b7280;\">\n      Note: Assumes responses to transaction questions are handled within 24 hours. Additional out-of-scope items may require a separate agreement.\n    </div>\n  </div>\n\n  <!-- Footer -->\n  <div style=\"margin-top: 14px; padding: 16px 18px; border:1px solid #e5e7eb; border-radius: 10px;\">\n    <div style=\"font-size: 13px; font-weight:700; margin-bottom: 6px;\">\n      Run Your Business with MST Accounting and Bookkeeping Services PLLC\n    </div>\n    <div style=\"font-size: 12px; color:#6b7280;\">\n      Reply to this email with “Approved” or any requested changes.\n    </div>\n  </div>\n</div>",
         "options": {
           "appendAttribution": false
         }
@@ -298,7 +285,6 @@
         -352,
         120
       ],
-      "id": "12272eff-58d9-47f2-ba6f-6f45f5ec7267",
       "name": "Send a message",
       "webhookId": "501d1a5e-d4f1-4b25-942c-4c754afbe586",
       "credentials": {
@@ -318,7 +304,6 @@
         -576,
         120
       ],
-      "id": "7209ec72-906e-4531-b8a8-94666b5afe2d",
       "name": "Code in JavaScript"
     },
     {
@@ -346,7 +331,6 @@
         -128,
         120
       ],
-      "id": "303133e0-dd46-4998-b777-9e351b3ac199",
       "name": "Move file",
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -367,7 +351,6 @@
         -1264,
         120
       ],
-      "id": "8b9583f0-6ebf-45b4-a87c-8904649d2303",
       "name": "Transcribe a recording",
       "credentials": {
         "openAiApi": {
@@ -545,15 +528,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": {
-    "node:New Audio File": {
-      "lastTimeChecked": "2026-01-19T16:30:41Z"
-    }
-  },
+  "settings": {},
   "tags": [],
-  "createdAt": "2026-01-16T03:17:35.329Z",
-  "description": null
+  "active": true
 }

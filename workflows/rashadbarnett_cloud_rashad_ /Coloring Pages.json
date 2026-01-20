@@ -1,7 +1,6 @@
 {
   "id": "3h9l7htubUjXkyxh",
   "name": "Coloring Pages",
-  "active": false,
   "nodes": [
     {
       "parameters": {
@@ -20,7 +19,6 @@
         -16,
         912
       ],
-      "id": "d3558fe9-af5f-47ff-8564-479cc47a2af2",
       "name": "Schedule Trigger"
     },
     {
@@ -34,7 +32,6 @@
         656,
         912
       ],
-      "id": "f2d665ad-f2bb-4e75-aa0f-10490829d723",
       "name": "Download a file",
       "credentials": {
         "s3": {
@@ -58,7 +55,6 @@
         208,
         912
       ],
-      "id": "0a349290-883f-4f98-8844-46674e600e25",
       "name": "Get many files",
       "credentials": {
         "s3": {
@@ -71,7 +67,6 @@
       "parameters": {
         "jsCode": "// Get all input items\nconst items = $input.all();\n\n// Select a random item\nconst randomIndex = Math.floor(Math.random() * items.length);\nconst randomItem = items[randomIndex];\n\n// Return the random item\nreturn [randomItem];"
       },
-      "id": "85de7190-6ebe-4374-ae87-f5e1d0a1f241",
       "name": "Pick Random File",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -116,11 +111,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
+  "settings": {},
   "tags": [],
-  "createdAt": "2025-12-02T01:26:34.734Z",
-  "description": null
+  "active": false
 }

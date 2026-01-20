@@ -1,7 +1,6 @@
 {
   "id": "L7UaexzsnsyFFM7e",
   "name": "AutoMagicly - Booking Workflow",
-  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -10,7 +9,6 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "1a69fb45-ccce-4dc1-a79f-10743ce53cdc",
       "name": "Webhook - Booking",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
@@ -43,7 +41,6 @@
           "visibility": "public"
         }
       },
-      "id": "996deeaa-bb92-408f-94ee-e24c957a3275",
       "name": "Google Calendar - Create Event",
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1,
@@ -61,16 +58,15 @@
     {
       "parameters": {
         "resource": "message",
-        "subject": "Your AI Audit is Confirmed! \ud83c\udf89",
+        "subject": "Your AI Audit is Confirmed! 🎉",
         "includeHtml": true,
-        "htmlMessage": "=<h2>Hi {{ $('Edit Fields').item.json.name }},</h2>\n\n<p>Your AI Audit has been confirmed! \ud83c\udf89</p>\n\n<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">\n  <h3>Booking Details:</h3>\n  <p><strong>Date:</strong> {{ $('Edit Fields').item.json.date.toDateTime().format('DDD') }}</p>\n  <p><strong>Time:</strong> {{ $('Edit Fields').item.json.time.toDateTime().format('t') }} ({{ $('Edit Fields').item.json.timezone }})</p>\n  <p><strong>Duration:</strong> 15 minutes</p>\n</div>\n\n<!-- CTA Button -->\n<p style=\"margin: 30px 0;\">\n  <a href=\"{{ $('Create a Zoom Link').item.json.join_url }}\"\n     target=\"_blank\"\n     rel=\"noopener noreferrer\"\n     style=\"\n       background-color:#2563eb;\n       color:#ffffff;\n       padding:12px 20px;\n       text-decoration:none;\n       border-radius:8px;\n       font-weight:bold;\n       display:inline-block;\n     \">\n    Join Zoom Meeting\n  </a>\n</p>\n\n<h3>What to Expect:</h3>\n<ul>\n  <li>We'll review your current workflows</li>\n  <li>Identify automation opportunities</li>\n  <li>Discuss estimated time savings</li>\n  <li>Answer all your questions</li>\n</ul>\n\n<h3>Before the Call:</h3>\n<p>Think about:</p>\n<ul>\n  <li>Which tasks take the most time</li>\n  <li>What tools you currently use</li>\n  <li>Your biggest pain points</li>\n</ul>\n\n<p><strong>Add to Calendar:</strong> A calendar invite has been sent to you separately.</p>\n\n<hr>\n\n<p>Questions? Reply to this email or visit our FAQ: https://automagicly.com#faq</p>\n\n<p>See you soon!<br>\nThe AutoMagicly Team</p>",
+        "htmlMessage": "=<h2>Hi {{ $('Edit Fields').item.json.name }},</h2>\n\n<p>Your AI Audit has been confirmed! 🎉</p>\n\n<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">\n  <h3>Booking Details:</h3>\n  <p><strong>Date:</strong> {{ $('Edit Fields').item.json.date.toDateTime().format('DDD') }}</p>\n  <p><strong>Time:</strong> {{ $('Edit Fields').item.json.time.toDateTime().format('t') }} ({{ $('Edit Fields').item.json.timezone }})</p>\n  <p><strong>Duration:</strong> 15 minutes</p>\n</div>\n\n<!-- CTA Button -->\n<p style=\"margin: 30px 0;\">\n  <a href=\"{{ $('Create a Zoom Link').item.json.join_url }}\"\n     target=\"_blank\"\n     rel=\"noopener noreferrer\"\n     style=\"\n       background-color:#2563eb;\n       color:#ffffff;\n       padding:12px 20px;\n       text-decoration:none;\n       border-radius:8px;\n       font-weight:bold;\n       display:inline-block;\n     \">\n    Join Zoom Meeting\n  </a>\n</p>\n\n<h3>What to Expect:</h3>\n<ul>\n  <li>We'll review your current workflows</li>\n  <li>Identify automation opportunities</li>\n  <li>Discuss estimated time savings</li>\n  <li>Answer all your questions</li>\n</ul>\n\n<h3>Before the Call:</h3>\n<p>Think about:</p>\n<ul>\n  <li>Which tasks take the most time</li>\n  <li>What tools you currently use</li>\n  <li>Your biggest pain points</li>\n</ul>\n\n<p><strong>Add to Calendar:</strong> A calendar invite has been sent to you separately.</p>\n\n<hr>\n\n<p>Questions? Reply to this email or visit our FAQ: https://automagicly.com#faq</p>\n\n<p>See you soon!<br>\nThe AutoMagicly Team</p>",
         "message": "=",
         "toList": [
           "={{ $('Edit Fields').item.json.email }}"
         ],
         "additionalFields": {}
       },
-      "id": "bca17e39-7608-49dd-a251-fdf7bc5d56d5",
       "name": "Gmail - Send Confirmation",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 1,
@@ -91,7 +87,6 @@
         "responseBody": "={{ { \"success\": true, \"message\": \"Booking confirmed! Check your email for details.\", \"bookingId\": $node[\"Google Calendar - Create Event\"].json.id } }}",
         "options": {}
       },
-      "id": "a748474a-8af5-4579-a208-a76dd76c6df1",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -112,7 +107,6 @@
         -528,
         48
       ],
-      "id": "c04ce61c-5244-4388-bfa6-60405494986c",
       "name": "Edit Fields"
     },
     {
@@ -135,7 +129,6 @@
         -80,
         48
       ],
-      "id": "6b930c9e-2f13-466a-8e1c-2dc27b094331",
       "name": "Create a Zoom Link",
       "credentials": {
         "zoomOAuth2Api": {
@@ -289,7 +282,6 @@
         -304,
         48
       ],
-      "id": "63d789c5-4a4f-4196-85cc-2491c1ed8dd7",
       "name": "Append row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -367,11 +359,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
+  "settings": {},
   "tags": [],
-  "createdAt": "2025-12-23T04:13:11.760Z",
-  "description": null
+  "active": true
 }

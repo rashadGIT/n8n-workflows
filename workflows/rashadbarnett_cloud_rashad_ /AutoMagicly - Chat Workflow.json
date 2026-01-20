@@ -1,7 +1,6 @@
 {
   "id": "Ndxnf18G7HEBnPrL",
   "name": "AutoMagicly - Chat Workflow",
-  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -11,7 +10,6 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "webhook-node",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -70,7 +68,6 @@
         },
         "options": {}
       },
-      "id": "validate-input-node",
       "name": "Validate Input",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -87,7 +84,6 @@
           "responseCode": 400
         }
       },
-      "id": "error-response-node",
       "name": "Return Validation Error",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -120,7 +116,6 @@
           "returnAllMatches": false
         }
       },
-      "id": "check-rate-limit-node",
       "name": "Check Rate Limit",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
@@ -141,7 +136,6 @@
       "parameters": {
         "jsCode": "// Rate limiting logic: 10 requests per minute per session\nconst rateLimitData = $input.first().json;\nconst sessionId = $('Webhook').first().json.body.sessionId\n  // $('Webhook').item.json.body.sessionId;\n\nconst now = new Date();\nconst oneMinuteAgo = new Date(now.getTime() - 60000);\n\nlet requestCount = 0;\nlet lastRequestTime = null;\n\nif (rateLimitData && rateLimitData.lastRequestTime) {\n  lastRequestTime = new Date(rateLimitData.lastRequestTime);\n  requestCount = parseInt(rateLimitData.requestCount || 0);\n  \n  // Reset count if last request was more than 1 minute ago\n  if (lastRequestTime < oneMinuteAgo) {\n    requestCount = 0;\n  }\n}\n\n// Increment request count\nrequestCount++;\n\nconst isRateLimited = requestCount > 10;\n\nreturn {\n  json: {\n    sessionId,\n    requestCount,\n    lastRequestTime: now.toISOString(),\n    isRateLimited,\n    rateLimitRemaining: Math.max(0, 10 - requestCount)\n  }\n};"
       },
-      "id": "calculate-rate-limit-node",
       "name": "Calculate Rate Limit",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -172,7 +166,6 @@
         },
         "options": {}
       },
-      "id": "check-if-rate-limited-node",
       "name": "Is Rate Limited?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -189,7 +182,6 @@
           "responseCode": 429
         }
       },
-      "id": "rate-limit-response-node",
       "name": "Return Rate Limited",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -221,7 +213,6 @@
         },
         "options": {}
       },
-      "id": "update-rate-limit-node",
       "name": "Update Rate Limit",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
@@ -249,7 +240,6 @@
         1616,
         96
       ],
-      "id": "format-input-node",
       "name": "Format Input"
     },
     {
@@ -277,7 +267,6 @@
         },
         "options": {}
       },
-      "id": "log-input-node",
       "name": "Log Input",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
@@ -305,7 +294,6 @@
         1904,
         240
       ],
-      "id": "ai-agent-node",
       "name": "AI Agent",
       "continueOnFail": true
     },
@@ -322,7 +310,6 @@
         1840,
         464
       ],
-      "id": "openai-model-node",
       "name": "OpenAI Model",
       "retryOnFail": true,
       "maxTries": 3,
@@ -345,7 +332,6 @@
         1968,
         464
       ],
-      "id": "memory-node",
       "name": "Chat Memory"
     },
     {
@@ -368,7 +354,6 @@
         2096,
         464
       ],
-      "id": "faq-tool-node",
       "name": "FAQ Knowledge Base",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -401,7 +386,6 @@
         },
         "options": {}
       },
-      "id": "check-ai-success-node",
       "name": "Check AI Success",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -437,7 +421,6 @@
         },
         "options": {}
       },
-      "id": "log-success-node",
       "name": "Log Success",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
@@ -459,7 +442,6 @@
         "responseBody": "={{ { \"reply\": $('AI Agent').item.json.output, \"sessionId\": $('Format Input').item.json.sessionId, \"timestamp\": $now.toISO() } }}",
         "options": {}
       },
-      "id": "success-response-node",
       "name": "Return Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -494,7 +476,6 @@
         },
         "options": {}
       },
-      "id": "log-error-node",
       "name": "Log Error",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
@@ -513,7 +494,7 @@
     {
       "parameters": {
         "resource": "message",
-        "subject": "=\ud83d\udea8 AutoMagicly Chat Error - {{ $('Format Input').item.json.sessionId }}",
+        "subject": "=🚨 AutoMagicly Chat Error - {{ $('Format Input').item.json.sessionId }}",
         "includeHtml": true,
         "htmlMessage": "=<h2>Chat Workflow Error Alert</h2>\n\n<p><strong>Time:</strong> {{ $now.format('fff') }}</p>\n<p><strong>Session ID:</strong> {{ $('Format Input').item.json.sessionId }}</p>\n<p><strong>User Email:</strong> {{ $('Format Input').item.json.userEmail }}</p>\n\n<h3>User Message:</h3>\n<pre>{{ $('Format Input').item.json.chatInput }}</pre>\n\n<h3>Error Details:</h3>\n<pre>{{ $('AI Agent').item.json.error || 'AI Agent failed to generate response' }}</pre>\n\n<hr>\n\n<p><strong>Action Required:</strong> Check n8n workflow execution logs</p>\n<p><strong>Workflow:</strong> AutoMagicly - Chat Workflow</p>\n<p><strong>Execution ID:</strong> {{ $execution.id }}</p>\n\n<p>View logs: <a href=\"https://rashadbarnett.app.n8n.cloud/workflow/Ndxnf18G7HEBnPrL\">Open Workflow</a></p>",
         "message": "Chat Workflow Error Alert",
@@ -522,7 +503,6 @@
         ],
         "additionalFields": {}
       },
-      "id": "send-error-email-node",
       "name": "Send Error Email",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 1,
@@ -544,7 +524,6 @@
         "responseBody": "={{ { \"reply\": \"I apologize, but I'm experiencing technical difficulties right now. Please try again in a moment, or contact support at support@automagicly.com for immediate assistance.\", \"sessionId\": $('Format Input').item.json.sessionId, \"timestamp\": $now.toISO(), \"error\": true } }}",
         "options": {}
       },
-      "id": "fallback-response-node",
       "name": "Return Fallback",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -747,13 +726,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1",
-    "callerPolicy": "workflowsFromSameOwner",
-    "availableInMCP": false
-  },
-  "staticData": null,
+  "settings": {},
   "tags": [],
-  "createdAt": "2025-12-29T03:17:52.323Z",
-  "description": null
+  "active": true
 }

@@ -1,7 +1,6 @@
 {
   "id": "WNASYOYNvb4ACp9t",
   "name": "AutoMagicly - Referrals Workflow",
-  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -10,7 +9,6 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "294e5cb3-c67a-4d4f-b516-4ae59815ee23",
       "name": "Webhook - Referrals",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
@@ -139,7 +137,6 @@
         },
         "options": {}
       },
-      "id": "c9f2c236-d8da-4f3f-992e-c2b5ac1dc00f",
       "name": "Google Sheets - Save Referral",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
@@ -157,16 +154,15 @@
     {
       "parameters": {
         "resource": "message",
-        "subject": "Thank You for Your Referral! \ud83c\udf81",
+        "subject": "Thank You for Your Referral! 🎁",
         "includeHtml": true,
-        "htmlMessage": "=<h2>Hi {{ $json.yourName }},</h2>\n\n<p>Thank you so much for referring {{ $json.referralName }} from {{ $json.referralCompany }} to AutoMagicly! \ud83c\udf89</p>\n\n<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">\n  <h3>What Happens Next?</h3>\n  <ol>\n    <li>We'll reach out to {{ $json.referralName }} within 24 hours</li>\n    <li>If they book a consultation, you'll receive a $100 Amazon gift card</li>\n    <li>If they become a client, you'll get an additional $500 bonus!</li>\n  </ol>\n</div>\n\n<h3>Your Referral Details:</h3>\n<ul>\n  <li><strong>Name:</strong> {{ $json.referralName }}</li>\n  <li><strong>Company:</strong> {{ $json.referralCompany }}</li>\n  <li><strong>Email:</strong> {{ $json.referralEmail }}</li>\n</ul>\n\n<p>We'll keep you updated on the progress of your referral.</p>\n\n<p><strong>Know more businesses that could benefit from automation?</strong><br>\nSend more referrals at: https://automagicly.com#referrals</p>\n\n<p>Thanks again for spreading the word!<br>\nThe AutoMagicly Team</p>",
+        "htmlMessage": "=<h2>Hi {{ $json.yourName }},</h2>\n\n<p>Thank you so much for referring {{ $json.referralName }} from {{ $json.referralCompany }} to AutoMagicly! 🎉</p>\n\n<div style=\"background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;\">\n  <h3>What Happens Next?</h3>\n  <ol>\n    <li>We'll reach out to {{ $json.referralName }} within 24 hours</li>\n    <li>If they book a consultation, you'll receive a $100 Amazon gift card</li>\n    <li>If they become a client, you'll get an additional $500 bonus!</li>\n  </ol>\n</div>\n\n<h3>Your Referral Details:</h3>\n<ul>\n  <li><strong>Name:</strong> {{ $json.referralName }}</li>\n  <li><strong>Company:</strong> {{ $json.referralCompany }}</li>\n  <li><strong>Email:</strong> {{ $json.referralEmail }}</li>\n</ul>\n\n<p>We'll keep you updated on the progress of your referral.</p>\n\n<p><strong>Know more businesses that could benefit from automation?</strong><br>\nSend more referrals at: https://automagicly.com#referrals</p>\n\n<p>Thanks again for spreading the word!<br>\nThe AutoMagicly Team</p>",
         "message": "=",
         "toList": [
           "={{ $json.yourEmail }}"
         ],
         "additionalFields": {}
       },
-      "id": "62d1912f-a43d-43ef-b469-141deeb5e28e",
       "name": "Gmail - Thank Referrer",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 1,
@@ -193,7 +189,6 @@
         ],
         "additionalFields": {}
       },
-      "id": "2a633782-00c8-4757-8061-3091ca1a2c4c",
       "name": "Gmail - Introduce to Referral",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 1,
@@ -214,7 +209,6 @@
         "responseBody": "={ \"success\": true, \"message\": \"Thank you for your referral! We've sent an introduction to {{ $('Google Sheets - Save Referral').item.json.referralName }}. You'll receive $100 if they book a consultation and $500 if they become a client!\"\n}",
         "options": {}
       },
-      "id": "db250e72-72fb-48e0-aac5-e34cfef5bfb6",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -235,7 +229,6 @@
         -544,
         32
       ],
-      "id": "6829c091-309c-4800-a07d-d2b58f1fbd28",
       "name": "Edit Fields"
     }
   ],
@@ -290,11 +283,7 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
+  "settings": {},
   "tags": [],
-  "createdAt": "2025-12-24T22:23:03.199Z",
-  "description": null
+  "active": true
 }
